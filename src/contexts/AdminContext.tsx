@@ -28,10 +28,9 @@ import { initialNotifications, initialActivityLogs } from '../data/notifications
 import { initialInspections } from '../data/inspectionsData';
 import { initialMeetings } from '../data/meetingsData';
 import { initialMissions } from '../data/missionsData';
-import { findUserByCredentials, findUserById, SystemUser } from '../data/usersData';
-
-// Sessions created before the password check existed used a different prefix and are rejected.
-const SESSION_TOKEN_PREFIX = 'FO5-AUTH-V2-';
+import { profileForEmail } from '../data/usersData';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import type { Session } from '@supabase/supabase-js';
 
 interface ToastState {
   id: string;
@@ -63,10 +62,12 @@ interface AdminContextType {
   currentRole: Role;
   currentUser: Personnel;
   isAuthenticated: boolean;
+  /** false ระหว่างตรวจ session ที่เก็บไว้กับ Supabase ครั้งแรก (กันหน้าแรกกะพริบ) */
+  authReady: boolean;
   userSession: UserSession | null;
   isLoginModalOpen: boolean;
   setIsLoginModalOpen: (open: boolean) => void;
-  login: (username: string, password: string, role?: Role, rememberMe?: boolean) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   activeMenu: string;
   activeSubMenu?: string;
@@ -171,37 +172,11 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [inspections, setInspections] = useState<DocumentInspection[]>(initialInspections);
   const [meetings, setMeetings] = useState<Meeting[]>(initialMeetings);
   const [missions, setMissions] = useState<Mission[]>(initialMissions);
-  // Retrieve stored session if exists
-  const getStoredSession = (): UserSession | null => {
-    if (typeof window === 'undefined') return null;
-    try {
-      const raw = localStorage.getItem('sac_session') || sessionStorage.getItem('sac_session');
-      if (!raw) return null;
-      const parsed = JSON.parse(raw) as UserSession;
-      const valid =
-        typeof parsed?.token === 'string' &&
-        parsed.token.startsWith(SESSION_TOKEN_PREFIX) &&
-        typeof parsed.expiresAt === 'number' &&
-        parsed.expiresAt > Date.now() &&
-        !!findUserById(parsed.user?.id);
-      if (valid) return parsed;
-      localStorage.removeItem('sac_session');
-      localStorage.removeItem('sac_auth');
-      sessionStorage.removeItem('sac_session');
-    } catch {
-      return null;
-    }
-    return null;
-  };
-
-  const initialStoredSession = getStoredSession();
-
-  const [userSession, setUserSession] = useState<UserSession | null>(initialStoredSession);
-  const [currentRole, setRoleState] = useState<Role>(() => {
-    if (initialStoredSession?.user?.role) return initialStoredSession.user.role;
-    return 'SUPER_ADMIN';
-  });
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => !!initialStoredSession);
+  // Session comes from Supabase Auth (persisted by supabase-js). Old sac_* keys from the mock login are removed.
+  const [userSession, setUserSession] = useState<UserSession | null>(null);
+  const [currentRole, setRoleState] = useState<Role>('SUPER_ADMIN');
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [authReady, setAuthReady] = useState<boolean>(!isSupabaseConfigured);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
   const getInitialModule = (): AppModule => {
@@ -335,67 +310,85 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setActivityLogs(prev => [newLog, ...prev.slice(0, 40)]);
   }, [currentUser]);
 
-  const login = useCallback(async (identifier: string, password: string, overrideRole?: Role, rememberMe: boolean = true) => {
-    const matchedUser: SystemUser | undefined = await findUserByCredentials(identifier, password);
-    if (!matchedUser) {
+  const applySession = useCallback((session: Session | null) => {
+    if (!session?.user?.email) {
+      setUserSession(null);
+      setIsAuthenticated(false);
+      return;
+    }
+    const profile = profileForEmail(session.user.email);
+    setUserSession({
+      token: session.access_token,
+      user: {
+        id: session.user.id,
+        username: profile.username,
+        name: profile.name,
+        rank: profile.rank,
+        position: profile.position,
+        department: profile.department,
+        email: profile.email,
+        role: profile.role,
+      },
+      loginAt: session.user.last_sign_in_at || new Date().toISOString(),
+      rememberMe: true,
+      expiresAt: (session.expires_at || 0) * 1000,
+    });
+    setRoleState(profile.role);
+    setIsAuthenticated(true);
+  }, []);
+
+  React.useEffect(() => {
+    try {
+      localStorage.removeItem('sac_session');
+      localStorage.removeItem('sac_auth');
+      sessionStorage.removeItem('sac_session');
+    } catch {
+      // ไม่มี storage ก็ข้าม
+    }
+    if (!isSupabaseConfigured) return;
+    let alive = true;
+    supabase.auth.getSession().then(({ data }) => {
+      if (!alive) return;
+      applySession(data.session);
+      setAuthReady(true);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      applySession(session);
+    });
+    return () => {
+      alive = false;
+      sub.subscription.unsubscribe();
+    };
+  }, [applySession]);
+
+  const login = useCallback(async (email: string, password: string) => {
+    if (!isSupabaseConfigured) return false;
+    const { data, error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+    if (error || !data.session) {
       return false;
     }
-
-    const assignedRole: DepartmentRole = (overrideRole as DepartmentRole) || matchedUser.role;
-
-    const newSession: UserSession = {
-      token: `${SESSION_TOKEN_PREFIX}${Date.now().toString(36).toUpperCase()}`,
-      user: {
-        id: matchedUser.id,
-        username: matchedUser.username,
-        name: matchedUser.name,
-        rank: matchedUser.rank,
-        position: matchedUser.position,
-        department: matchedUser.department,
-        email: matchedUser.email,
-        role: assignedRole,
-      },
-      loginAt: new Date().toISOString(),
-      rememberMe,
-      expiresAt: Date.now() + (rememberMe ? 7 * 24 * 60 * 60 * 1000 : 12 * 60 * 60 * 1000),
-    };
-
-    setUserSession(newSession);
-    setRoleState(assignedRole);
-    setIsAuthenticated(true);
-
-    if (rememberMe) {
-      localStorage.setItem('sac_session', JSON.stringify(newSession));
-      localStorage.setItem('sac_auth', 'true');
-      sessionStorage.removeItem('sac_session');
-    } else {
-      sessionStorage.setItem('sac_session', JSON.stringify(newSession));
-      localStorage.setItem('sac_auth', 'true');
-      localStorage.removeItem('sac_session');
-    }
+    applySession(data.session);
+    const profile = profileForEmail(data.session.user.email || '');
 
     logActivity(
       'เข้าสู่ระบบสำเร็จ',
       'ระบบ',
-      `ผู้ใช้งาน ${matchedUser.rank} ${matchedUser.name} (${assignedRole}) เข้าสู่ระบบสำเร็จ`,
+      `ผู้ใช้งาน ${profile.rank} ${profile.name} (${profile.role}) เข้าสู่ระบบสำเร็จ`,
       'status'
     );
 
-    showToast(`ยินดีต้อนรับ ${matchedUser.rank} ${matchedUser.name}`, 'success');
+    showToast(`ยินดีต้อนรับ ${profile.rank} ${profile.name}`, 'success');
 
     // Requirement: Always redirect to central /dashboard after login
-    // "สร้างระบบศูนย์กลางที่ใช้ Login เพียงครั้งเดียว และหลัง Login แล้ว ผู้ใช้สามารถเข้าถึงและใช้งานทุกฝ่าย ผ่าน Dashboard เดียวได้ทั้งหมด"
     navigateModule('dashboard');
 
     return true;
-  }, [logActivity, showToast, navigateModule]);
+  }, [applySession, logActivity, showToast, navigateModule]);
 
   const logout = useCallback(() => {
+    void supabase.auth.signOut();
     setIsAuthenticated(false);
     setUserSession(null);
-    localStorage.removeItem('sac_auth');
-    localStorage.removeItem('sac_session');
-    sessionStorage.removeItem('sac_session');
 
     if (typeof window !== 'undefined') {
       window.history.replaceState(null, '', '/');
@@ -870,6 +863,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         currentRole,
         currentUser,
         isAuthenticated,
+        authReady,
         userSession,
         isLoginModalOpen,
         setIsLoginModalOpen,

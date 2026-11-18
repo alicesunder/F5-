@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAdmin } from '../contexts/AdminContext';
 import { GlobalSearchModal } from '../components/common/GlobalSearchModal';
 import { HeaderThemeSwitcher } from '../components/layout/HeaderThemeSwitcher';
-import { isLoginConfigured } from '../data/usersData';
+import { isSupabaseConfigured } from '../lib/supabase';
 import {
   Lock,
   Search,
@@ -48,12 +48,12 @@ export const LandingPage: React.FC = () => {
       setErrorMsg('กรุณากรอกรหัสผ่าน');
       return;
     }
-    if (!isLoginConfigured()) {
+    if (!isSupabaseConfigured) {
       setErrorMsg('ระบบเข้าสู่ระบบยังไม่ได้ตั้งค่า กรุณาติดต่อผู้ดูแลระบบ');
       return;
     }
     setIsLoading(true);
-    login(email.trim(), password, undefined, true)
+    login(email.trim(), password)
       .then(success => {
         if (!success) {
           setErrorMsg('อีเมลหรือรหัสผ่านไม่ถูกต้อง');

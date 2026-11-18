@@ -21,7 +21,15 @@ import { checkModuleAccess } from './data/departmentsData';
 import { GlobalLayout } from './layouts/GlobalLayout';
 
 const AppContent: React.FC = () => {
-  const { activeModule, currentRole, isAuthenticated } = useAdmin();
+  const { activeModule, currentRole, isAuthenticated, authReady } = useAdmin();
+
+  if (!authReady) {
+    return (
+      <div role="status" className="min-h-screen flex items-center justify-center text-sm text-slate-500">
+        กำลังตรวจสอบการเข้าสู่ระบบ...
+      </div>
+    );
+  }
 
   const renderModule = () => {
     if (activeModule === 'home' || activeModule === 'login' || !isAuthenticated) {

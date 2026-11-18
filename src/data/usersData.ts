@@ -13,6 +13,7 @@ export interface SystemUser {
   avatar?: string;
 }
 
+// ข้อมูลโปรไฟล์สำหรับแสดงผลเท่านั้น การยืนยันตัวตนทำโดย Supabase Auth (ไม่มีรหัสผ่านหรือแฮชในโค้ด)
 export const PRESET_USERS: SystemUser[] = [
   {
     id: 'USR-CHAIROT-01',
@@ -28,31 +29,19 @@ export const PRESET_USERS: SystemUser[] = [
   },
 ];
 
-// ไม่เก็บรหัสผ่านไว้ในโค้ด เก็บเฉพาะค่า SHA-256 ผ่านตัวแปร VITE_FO5_ADMIN_PASSWORD_SHA256
-// (ตั้งใน Vercel หรือ .env.local) การตรวจนี้ยังทำในเบราว์เซอร์ จะปลอดภัยจริงเมื่อย้ายไป Supabase Auth
-const ADMIN_PASSWORD_SHA256 = String(import.meta.env.VITE_FO5_ADMIN_PASSWORD_SHA256 || '')
-  .trim()
-  .toLowerCase();
-
-export const isLoginConfigured = (): boolean => /^[0-9a-f]{64}$/.test(ADMIN_PASSWORD_SHA256);
-
-const sha256Hex = async (text: string): Promise<string> => {
-  const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-  return Array.from(new Uint8Array(bytes))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
+/** โปรไฟล์ของอีเมลที่ล็อกอิน ถ้าไม่มีในรายการจะใช้โปรไฟล์กลางที่ไม่ระบุตัวบุคคล และสิทธิ์ผู้ตรวจการณ์ */
+export const profileForEmail = (email: string): SystemUser => {
+  const found = PRESET_USERS.find(u => u.email.toLowerCase() === email.trim().toLowerCase());
+  if (found) return found;
+  return {
+    id: `USR-${email}`,
+    username: email.split('@')[0],
+    email,
+    name: email,
+    rank: '',
+    position: 'ผู้ใช้งานระบบ',
+    department: 'ฝ่ายอำนวยการ ๕ บช.ตชด.',
+    phone: '',
+    role: 'VIEWER',
+  };
 };
-
-export const findUserByCredentials = async (
-  identifier: string,
-  password: string
-): Promise<SystemUser | undefined> => {
-  if (!isLoginConfigured() || !password) return undefined;
-  const id = identifier.trim().toLowerCase();
-  const user = PRESET_USERS.find(u => u.email.toLowerCase() === id || u.username.toLowerCase() === id);
-  if (!user) return undefined;
-  const hash = await sha256Hex(password);
-  return hash === ADMIN_PASSWORD_SHA256 ? user : undefined;
-};
-
-export const findUserById = (id: string): SystemUser | undefined => PRESET_USERS.find(u => u.id === id);

@@ -1,6 +1,6 @@
-import React, { useMemo, useState, useSyncExternalStore } from 'react';
-import { Search, MessageSquareText, Image as ImageIcon, CheckCircle2, ChevronLeft, FlaskConical, RotateCcw } from 'lucide-react';
-import { lineReportService } from '../../services/lineReportService';
+import React, { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { Search, MessageSquareText, Image as ImageIcon, CheckCircle2, ChevronLeft, AlertTriangle, RefreshCw } from 'lucide-react';
+import { lineReportService, LineReportsLoadState } from '../../services/lineReportService';
 import {
   LINE_DEPT_META,
   LINE_STATUS_META,
@@ -26,12 +26,33 @@ const formatWhen = (iso: string) => {
   return sameDay ? `วันนี้ ${time} น.` : `${d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })} ${time} น.`;
 };
 
-const useReports = (): LineReport[] => {
-  const snap = useSyncExternalStore(
+const useLineReports = (): { reports: LineReport[]; state: LineReportsLoadState; error: string } => {
+  const version = useSyncExternalStore(
     cb => lineReportService.subscribe(cb),
-    () => JSON.stringify(lineReportService.getAll())
+    () => lineReportService.getVersion()
   );
-  return useMemo(() => JSON.parse(snap) as LineReport[], [snap]);
+  return useMemo(
+    () => ({ reports: lineReportService.getAll(), ...lineReportService.getState() }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [version]
+  );
+};
+
+const useSignedUrls = (paths: string[]): string[] => {
+  const key = paths.join('|');
+  const [urls, setUrls] = useState<string[]>([]);
+  useEffect(() => {
+    let alive = true;
+    setUrls([]);
+    if (paths.length) {
+      lineReportService.getMediaUrls(paths).then(u => alive && setUrls(u));
+    }
+    return () => {
+      alive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+  return urls;
 };
 
 const DeptBadge: React.FC<{ dept: LineReportDept }> = ({ dept }) => (
@@ -44,7 +65,7 @@ const DeptBadge: React.FC<{ dept: LineReportDept }> = ({ dept }) => (
 );
 
 export const LineReportsView: React.FC<Props> = ({ dept }) => {
-  const all = useReports();
+  const { reports: all, state, error } = useLineReports();
   const [deptFilter, setDeptFilter] = useState<LineReportDept | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<LineReportStatus | 'all'>('all');
   const [query, setQuery] = useState('');
@@ -63,7 +84,7 @@ export const LineReportsView: React.FC<Props> = ({ dept }) => {
   }, [scoped, deptFilter, statusFilter, query, dept]);
 
   const selected = visible.find(r => r.id === selectedId) || null;
-  const hasSamples = all.some(r => r.isSample);
+  const imageUrls = useSignedUrls(selected?.mediaPaths ?? []);
   const countBy = <K extends string>(key: (r: LineReport) => K, value: K) => scoped.filter(r => key(r) === value).length;
 
   const chip = (active: boolean) =>
@@ -101,19 +122,23 @@ export const LineReportsView: React.FC<Props> = ({ dept }) => {
         </div>
       </header>
 
-      {hasSamples && (
-        <div className="flex flex-wrap items-center gap-2 rounded-xl border border-amber-300/60 bg-amber-50 dark:bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-200">
-          <FlaskConical className="w-4 h-4 shrink-0" />
-          <span className="flex-1 min-w-[12rem]">
-            ข้อมูลตัวอย่าง: ยังไม่ได้เชื่อมบอท LINE รายการด้านล่างเป็นข้อความสมมติสำหรับทดสอบหน้าจอ
-          </span>
+      {state === 'loading' && all.length === 0 && (
+        <div role="status" className="rounded-xl border border-slate-200 dark:border-white/10 px-3 py-2 text-xs text-slate-500">
+          กำลังโหลดรายงาน...
+        </div>
+      )}
+
+      {state === 'error' && (
+        <div role="alert" className="flex flex-wrap items-center gap-2 rounded-xl border border-rose-300/60 bg-rose-50 dark:bg-rose-500/10 px-3 py-2 text-xs text-rose-800 dark:text-rose-200">
+          <AlertTriangle className="w-4 h-4 shrink-0" />
+          <span className="flex-1 min-w-[12rem]">โหลดหรือบันทึกรายงานไม่สำเร็จ: {error}</span>
           <button
             type="button"
-            onClick={() => lineReportService.resetSamples()}
+            onClick={() => void lineReportService.reload()}
             className="inline-flex items-center gap-1 font-semibold underline underline-offset-2 cursor-pointer"
           >
-            <RotateCcw className="w-3 h-3" />
-            รีเซ็ตตัวอย่าง
+            <RefreshCw className="w-3 h-3" />
+            ลองใหม่
           </button>
         </div>
       )}
@@ -144,9 +169,9 @@ export const LineReportsView: React.FC<Props> = ({ dept }) => {
 
       <div className="grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-4 items-start">
         <ul className={`space-y-2 ${selected ? 'hidden lg:block' : ''}`}>
-          {visible.length === 0 && (
+          {visible.length === 0 && state !== 'loading' && (
             <li className="rounded-2xl border border-dashed border-slate-300 dark:border-white/15 p-8 text-center text-sm text-slate-500">
-              ไม่พบรายงานตามตัวกรองนี้
+              {all.length === 0 ? 'ยังไม่มีรายงานจาก LINE' : 'ไม่พบรายงานตามตัวกรองนี้'}
             </li>
           )}
           {visible.map(r => (
@@ -202,15 +227,19 @@ export const LineReportsView: React.FC<Props> = ({ dept }) => {
                 <span className={`text-[11px] px-2 py-0.5 rounded-md font-semibold ${LINE_STATUS_META[selected.status].tone}`}>
                   {LINE_STATUS_META[selected.status].label}
                 </span>
-                {selected.isSample && (
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-800">
-                    ข้อมูลตัวอย่าง
-                  </span>
-                )}
               </div>
               <p className="text-sm sm:text-base text-slate-900 dark:text-slate-100 whitespace-pre-wrap leading-relaxed">
                 {selected.text}
               </p>
+              {imageUrls.length > 0 && (
+                <div className="grid grid-cols-2 gap-2">
+                  {imageUrls.map(u => (
+                    <a key={u} href={u} target="_blank" rel="noreferrer">
+                      <img src={u} alt="รูปที่แนบจาก LINE" loading="lazy" className="w-full rounded-xl border border-slate-200 dark:border-white/10 object-cover max-h-64" />
+                    </a>
+                  ))}
+                </div>
+              )}
               <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-xs text-slate-600 dark:text-slate-300">
                 <dt className="font-semibold">ผู้ส่ง</dt>
                 <dd>{selected.senderName}</dd>
@@ -221,7 +250,7 @@ export const LineReportsView: React.FC<Props> = ({ dept }) => {
                 <dt className="font-semibold">เวลา</dt>
                 <dd>{formatWhen(selected.receivedAt)}</dd>
                 <dt className="font-semibold">รูปที่แนบ</dt>
-                <dd>{selected.imageCount > 0 ? `${selected.imageCount} รูป (จะแสดงเมื่อเชื่อมบอท)` : 'ไม่มี'}</dd>
+                <dd>{selected.imageCount > 0 ? `${selected.imageCount} รูป` : 'ไม่มี'}</dd>
                 <dt className="font-semibold">จัดแผนกโดย</dt>
                 <dd>{selected.matchedKeyword ? `คำสำคัญ "${selected.matchedKeyword}"` : 'ผู้ใช้ระบุเอง / ไม่พบคำสำคัญ'}</dd>
               </dl>
