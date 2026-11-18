@@ -261,7 +261,6 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
 
   return (
     <div className="w-full pb-16 space-y-8 select-none iridescent-ambient liquid-glass-card rounded-3xl p-4 sm:p-6">
-      <TodayDutyCard />
       {/* ========================================================================= */}
       {/* ROW 1: PANORAMIC COMMAND STUDIO HERO & RADIAL ENERGY DIAL                 */}
       {/* ========================================================================= */}
@@ -566,6 +565,8 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
           </div>
         </div>
       </section>
+
+      <TodayDutyCard />
 
       {/* ========================================================================= */}
       {/* ROW 2: 4 COLORFUL DEPARTMENT PORTAL CARDS WITH QUICK-PEEK & DIRECT LAUNCH */}
