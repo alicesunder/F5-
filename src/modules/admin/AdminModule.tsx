@@ -38,6 +38,7 @@ import {
 import { DEPARTMENT_COLORS } from '../../types';
 import { SmartOpsWorkspace } from '../../components/smart/SmartOpsWorkspace';
 import { LineReportsView } from '../../components/line/LineReportsView';
+import { DutyRosterEditor } from '../../components/duty/DutyRosterEditor';
 
 export const AdminModule: React.FC = () => {
   const { activeMenu, navigate, navigateModule, incomingDocs = [], outgoingDocs = [], missions = [] } = useAdmin();
@@ -45,6 +46,7 @@ export const AdminModule: React.FC = () => {
 
   const subNavItems = [
     { id: 'dashboard', label: 'ภาพรวมระบบ', icon: LayoutDashboard },
+    { id: 'duty-officers', label: 'ตารางเวร ร้อยเวร/สิบเวร', icon: ShieldCheck },
     { id: 'line-reports', label: 'รายงานจาก LINE', icon: MessageSquareText },
     { id: 'incoming', label: 'หนังสือรับ', icon: Inbox, badge: incomingDocs.length },
     { id: 'outgoing', label: 'หนังสือส่ง', icon: Send, badge: outgoingDocs.length },
@@ -65,6 +67,8 @@ export const AdminModule: React.FC = () => {
     switch (activeMenu) {
       case 'dashboard':
         return <Dashboard />;
+      case 'duty-officers':
+        return <DutyRosterEditor />;
       case 'line-reports':
         return <LineReportsView dept="admin" />;
       case 'ai-inspection':

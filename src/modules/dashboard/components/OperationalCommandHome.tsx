@@ -39,6 +39,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { formatThaiDate } from '../../../utils/formatters';
+import { TodayDutyCard } from '../../../components/duty/TodayDutyCard';
 
 interface OperationalCommandHomeProps {
   missions: UnifiedMission[];
@@ -260,6 +261,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
 
   return (
     <div className="w-full pb-16 space-y-8 select-none iridescent-ambient liquid-glass-card rounded-3xl p-4 sm:p-6">
+      <TodayDutyCard />
       {/* ========================================================================= */}
       {/* ROW 1: PANORAMIC COMMAND STUDIO HERO & RADIAL ENERGY DIAL                 */}
       {/* ========================================================================= */}
@@ -1433,24 +1435,6 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
                   </div>
                 </div>
 
-                {/* Duty Roster Footer Shortcut */}
-                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-purple-50 via-sky-50 to-emerald-50 dark:from-white/5 dark:to-white/10 border border-purple-200/60 dark:border-white/10 flex items-center justify-between">
-                  <div>
-                    <div className="text-[11px] font-bold text-[#5B2A86] dark:text-purple-300">
-                      นายตำรวจเวรอำนวยการวันนี้
-                    </div>
-                    <div className="text-xs font-extrabold text-slate-900 dark:text-white">
-                      ดูในเมนูตารางเวร
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => navigateModule('duty-roster')}
-                    className="px-3 py-1.5 rounded-xl bg-white dark:bg-white/10 text-xs font-extrabold text-[#5B2A86] dark:text-white shadow-2xs cursor-pointer"
-                  >
-                    ตารางเวร →
-                  </button>
-                </div>
               </div>
             </motion.div>
           )}
