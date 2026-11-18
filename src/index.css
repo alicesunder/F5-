@@ -1,0 +1,1035 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
+
+@layer base {
+  :root {
+    /* Brand Theme Colors - ฝอ.5 Official Identity */
+    --brand-primary-purple: #5B2A86;
+    --brand-secondary-purple: #7B3FC6;
+    --brand-light-purple: #EDE4F7;
+    --brand-very-light-purple: #F7F4FA;
+    --brand-purple-surface: #FBFAFD;
+    --brand-purple-section: #FBFAFD;
+    --brand-text-dark: #2D2A32;
+    --brand-text-secondary: #5A5764;
+
+    /* Semantic Status Colors */
+    --status-complete-green: #059669;
+    --status-inprogress-orange: #D97706;
+    --status-pending-purple: #5B2A86;
+    --status-unset-rose: #E11D48;
+    --status-canceled-gray: #6B7280;
+
+    /* Four Official Department Colors */
+    --dept-admin-purple: #5B2A86;
+    --dept-relations-blue: #2583D8;
+    --dept-disaster-amber: #E89B22;
+    --dept-volunteer-green: #42A77A;
+
+    /* Neutrals - Clean Modern Government Hierarchy */
+    --background: #F7F7F9;
+    --surface: #FFFFFF;
+    --surface-soft: #FBFAFD;
+    --surface-elevated: #FFFFFF;
+    --text-primary: #25202B;
+    --text-secondary: #6B6973;
+    --text-muted: #8C8993;
+    --border: rgba(37, 32, 43, 0.08);
+    --border-subtle: rgba(37, 32, 43, 0.08);
+    --border-strong: rgba(37, 32, 43, 0.14);
+
+    /* Sidebar Tokens */
+    --sidebar-background: #FFFFFF;
+    --sidebar-bg: #FFFFFF;
+    --sidebar-text: #4A4751;
+    --sidebar-icon: #8A8792;
+    --sidebar-active: #EDE4F7;
+    --sidebar-active-bg: #EDE4F7;
+    --sidebar-active-text: #5B2A86;
+    --sidebar-hover-bg: #F7F4FA;
+
+    /* Header Tokens */
+    --header-background: #FFFFFF;
+
+    /* Centralized Motion Tokens — Cinematic Government Command Center */
+    --motion-fast: 180ms;
+    --motion-normal: 280ms;
+    --motion-emphasis: 450ms;
+    --ease-command: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Legacy Tokens Preserved */
+    --primary-purple: #5B2A86;
+    --deep-purple: #27265B;
+    --light-purple: #7B3FC6;
+    --footer-purple: #24145C;
+    --surface-lavender: #FBFAFD;
+    --admin-green: #7F9B83;
+    --relations-pink: #EE7E9E;
+    --disaster-blue: #8191BA;
+    --volunteer-yellow: #EFBB4B;
+    --bg-primary: #F7F7F9;
+    --bg-secondary: #FBFAFD;
+    --surface-deep: #F7F7F9;
+    --line-hairline: rgba(37, 32, 43, 0.08);
+    --line-strong: rgba(37, 32, 43, 0.14);
+  }
+
+  /* Dark Mode Tokens — Carefully calibrated Enterprise Government Theme */
+  html.dark,
+  html[data-theme="dark"] {
+    /* Neutrals - Dark Mode */
+    --background: #0E1014;
+    --surface: #1A1F29;
+    --surface-soft: #151A22;
+    --surface-elevated: #202633;
+    --text-primary: #F5F7FA;
+    --text-secondary: #A9AFBB;
+    --text-muted: #7D8490;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.14);
+
+    /* Brand Purple in Dark Mode (Brighter for readability) */
+    --brand-primary-purple: #A98BEB;
+    --brand-secondary-purple: #B3A0E8;
+    --brand-light-purple: rgba(139, 108, 207, 0.22);
+    --brand-very-light-purple: rgba(139, 108, 207, 0.12);
+    --brand-purple-surface: #171622;
+    --brand-text-dark: #F5F7FA;
+    --brand-text-secondary: #A9AFBB;
+
+    /* Four Official Department Colors in Dark Mode (Vibrant & Legible) */
+    --dept-admin-purple: #A98BEB;
+    --dept-relations-blue: #58A6F0;
+    --dept-disaster-amber: #F1A84A;
+    --dept-volunteer-green: #54C58D;
+
+    /* Sidebar Tokens - Dark */
+    --sidebar-background: #11141A;
+    --sidebar-bg: #11141A;
+    --sidebar-text: #C8CDD5;
+    --sidebar-icon: #7D8490;
+    --sidebar-active: rgba(139, 108, 207, 0.18);
+    --sidebar-active-bg: rgba(139, 108, 207, 0.18);
+    --sidebar-active-text: #B3A0E8;
+    --sidebar-hover-bg: rgba(255, 255, 255, 0.04);
+
+    /* Header Tokens - Dark */
+    --header-background: #11141A;
+
+    /* Legacy Tokens Preserved */
+    --primary-purple: #A98BEB;
+    --deep-purple: #8B6CCF;
+    --light-purple: #B3A0E8;
+    --footer-purple: #120F1D;
+    --surface-lavender: #171622;
+    --admin-green: #54C58D;
+    --relations-pink: #F472B6;
+    --disaster-blue: #58A6F0;
+    --volunteer-yellow: #F1A84A;
+    --bg-primary: #0E1014;
+    --bg-secondary: #151821;
+    --surface-deep: #1A1F29;
+    --line-hairline: rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.14);
+  }
+
+  /* Theme Transition scoped to root layout surfaces */
+  html,
+  body,
+  .theme-transition {
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+                color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Scalable Font Size Settings */
+  html[data-fontsize="small"] {
+    font-size: 90%;
+  }
+  html[data-fontsize="normal"] {
+    font-size: 100%;
+  }
+  html[data-fontsize="large"] {
+    font-size: 115%;
+  }
+
+  /* Display Density Variations */
+  html[data-density="comfortable"] .density-pad {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  html[data-density="compact"] .density-pad {
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+  }
+
+  /* Reduced motion class */
+  html.reduced-motion *,
+  html.reduced-motion *::before,
+  html.reduced-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Root and Body Theming - Single Source of Truth */
+  html,
+  body,
+  #root {
+    color: var(--text-primary);
+    background-color: var(--background);
+    min-height: 100vh;
+  }
+
+  html.dark body,
+  html[data-theme="dark"] body {
+    color: var(--text-primary);
+    background-color: var(--background);
+  }
+
+  html.dark h1,
+  html.dark h2,
+  html.dark h3,
+  html.dark h4,
+  html.dark h5,
+  html.dark h6,
+  html[data-theme="dark"] h1,
+  html[data-theme="dark"] h2,
+  html[data-theme="dark"] h3,
+  html[data-theme="dark"] h4,
+  html[data-theme="dark"] h5,
+  html[data-theme="dark"] h6 {
+    color: var(--text-primary);
+  }
+
+  body {
+    font-family: 'DM Sans', 'IBM Plex Sans Thai', 'Noto Sans Thai', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text-primary);
+    background-color: var(--background);
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', 'Noto Sans Thai', 'IBM Plex Sans Thai', sans-serif;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+}
+
+/* Restrained Neumorphic Accent Layer (5% visual depth, accessible, clean government) */
+.neu-card {
+  background: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(40, 35, 50, 0.03), 0 4px 12px rgba(40, 35, 50, 0.025);
+  border: 1px solid rgba(40, 35, 50, 0.07);
+}
+
+.neu-card-sm {
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(40, 35, 50, 0.04);
+  border: 1px solid rgba(40, 35, 50, 0.07);
+}
+
+.neu-soft {
+  background: #FBFAFD;
+  box-shadow: 0 1px 3px rgba(40, 35, 50, 0.03);
+  border: 1px solid rgba(40, 35, 50, 0.06);
+}
+
+.neu-inset {
+  background: #F7F7F9;
+  box-shadow: inset 1px 1px 3px rgba(40, 35, 50, 0.05);
+  border: 1px solid rgba(40, 35, 50, 0.07);
+}
+
+.neu-inset-deep {
+  background: #F2F2F5;
+  box-shadow: inset 2px 2px 5px rgba(40, 35, 50, 0.07);
+  border: 1px solid rgba(40, 35, 50, 0.08);
+}
+
+.neu-hover {
+  transition: transform 180ms ease-out, box-shadow 180ms ease-out;
+}
+.neu-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 35, 50, 0.06);
+}
+
+.neu-button {
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(40, 35, 50, 0.04);
+  border: 1px solid rgba(40, 35, 50, 0.08);
+  transition: transform 160ms ease-out, box-shadow 160ms ease-out, background-color 160ms ease-out;
+}
+.neu-button:hover {
+  background: #F7F4FA;
+  box-shadow: 0 2px 6px rgba(40, 35, 50, 0.07);
+}
+.neu-button:active {
+  box-shadow: inset 1px 1px 2px rgba(40, 35, 50, 0.08);
+}
+
+/* Department Card Hover Transitions */
+.dept-card {
+  transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.dept-card:hover {
+  transform: translateY(-4px);
+}
+.dept-card:hover .dept-card-icon {
+  transform: scale(1.05);
+}
+.dept-card:hover .dept-card-arrow {
+  transform: translateX(4px);
+}
+.dept-card-icon, .dept-card-arrow {
+  transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Subtle Engineering / Intelligence Grid Background */
+.editorial-grid-bg {
+  background-color: #EEF2F4;
+  background-image:
+    radial-gradient(circle at 75% 12%, rgba(255, 255, 255, 0.82) 0%, transparent 45%),
+    radial-gradient(circle at 20% 85%, rgba(215, 222, 226, 0.45) 0%, transparent 50%),
+    linear-gradient(to right, rgba(20, 30, 40, 0.032) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(20, 30, 40, 0.032) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+}
+
+/* Liquid Glass Surface Classes */
+.glass {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.9),
+    0 10px 30px -5px rgba(40, 35, 50, 0.04),
+    0 1px 3px 0 rgba(40, 35, 50, 0.02);
+}
+
+.glass-soft {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(14px) saturate(115%);
+  -webkit-backdrop-filter: blur(14px) saturate(115%);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.8),
+    0 8px 24px rgba(40, 35, 50, 0.03);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(24px) saturate(125%);
+  -webkit-backdrop-filter: blur(24px) saturate(125%);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.95),
+    0 20px 50px rgba(40, 35, 50, 0.07),
+    0 2px 4px rgba(40, 35, 50, 0.03);
+}
+
+.glass-solid {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(40, 35, 50, 0.08);
+  box-shadow: 0 12px 32px rgba(40, 35, 50, 0.04);
+}
+
+/* ==================================================
+   LIQUID GLASS SURFACE LANGUAGE & IRIDESCENT LIGHT
+   ================================================== */
+
+/* Subtle Low-Frequency Breathing Keyframes for Iridescent Ambient Surfaces */
+@keyframes iridescent-breathe {
+  0% {
+    background-position: 0% 0%, 100% 0%, 50% 100%, 85% 85%, 15% 80%;
+    background-size: 145% 145%, 150% 150%, 140% 140%, 155% 155%, 145% 145%;
+  }
+  33% {
+    background-position: 25% 15%, 75% 20%, 60% 85%, 70% 65%, 30% 60%;
+    background-size: 165% 160%, 140% 155%, 160% 150%, 145% 165%, 160% 150%;
+  }
+  66% {
+    background-position: 10% 30%, 90% 35%, 40% 90%, 92% 72%, 22% 88%;
+    background-size: 155% 170%, 165% 145%, 150% 165%, 160% 145%, 150% 165%;
+  }
+  100% {
+    background-position: 35% 10%, 65% 15%, 55% 95%, 78% 90%, 12% 70%;
+    background-size: 170% 155%, 155% 165%, 165% 155%, 150% 160%, 165% 155%;
+  }
+}
+
+/* Ambient Iridescent Light Refraction (Vibrant Pearlescent Fluid Atmosphere with Slow Breathing) */
+.iridescent-ambient {
+  background-image:
+    radial-gradient(ellipse 90% 65% at 12% -5%, rgba(168, 85, 247, 0.24) 0%, rgba(237, 228, 247, 0.50) 35%, transparent 65%),
+    radial-gradient(ellipse 85% 55% at 88% 4%, rgba(56, 189, 248, 0.24) 0%, rgba(219, 234, 254, 0.44) 35%, transparent 60%),
+    radial-gradient(ellipse 75% 50% at 50% 102%, rgba(52, 211, 153, 0.20) 0%, rgba(207, 250, 254, 0.34) 40%, transparent 60%),
+    radial-gradient(ellipse 65% 45% at 85% 82%, rgba(251, 191, 36, 0.20) 0%, rgba(254, 243, 199, 0.30) 40%, transparent 55%),
+    radial-gradient(ellipse 65% 45% at 16% 78%, rgba(244, 114, 182, 0.18) 0%, rgba(252, 231, 243, 0.28) 40%, transparent 55%);
+  background-size: 150% 150%;
+  animation: iridescent-breathe 22s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+}
+
+/* Top Navigation Bar: sticky, pristine translucent glass */
+.liquid-glass-nav {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border-bottom: 1px solid var(--border);
+  box-shadow:
+    0 1px 2px 0 rgba(40, 35, 50, 0.02),
+    0 4px 16px -2px rgba(40, 35, 50, 0.03);
+  position: relative;
+}
+
+/* Modal Window Glass: refined backdrop blur, inner glow, soft shadow */
+.liquid-glass-modal {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(26px) saturate(140%);
+  -webkit-backdrop-filter: blur(26px) saturate(140%);
+  border: 1px solid var(--border);
+  box-shadow:
+    0 20px 50px -10px rgba(40, 35, 50, 0.12),
+    0 1px 3px 0 rgba(40, 35, 50, 0.04);
+  position: relative;
+}
+
+/* Card Glass: fluid translucent surface with specular highlight & soft depth */
+.liquid-glass-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.84) 0%, rgba(255, 255, 255, 0.68) 100%);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.92),
+    0 10px 30px -6px rgba(91, 42, 134, 0.07),
+    0 2px 6px 0 rgba(37, 131, 216, 0.04);
+  position: relative;
+}
+
+/* Dark Mode Liquid Glass Overrides */
+html.dark .iridescent-ambient,
+[data-theme="dark"] .iridescent-ambient {
+  background-image:
+    radial-gradient(ellipse 90% 60% at 15% -5%, rgba(139, 108, 207, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 85% 5%, rgba(88, 166, 240, 0.16) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 45% at 50% 105%, rgba(84, 197, 141, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 82% 85%, rgba(241, 168, 74, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 18% 78%, rgba(244, 114, 182, 0.10) 0%, transparent 50%);
+  background-size: 150% 150%;
+  animation: iridescent-breathe 22s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+}
+
+html.dark .liquid-glass-nav,
+[data-theme="dark"] .liquid-glass-nav {
+  background: rgba(17, 20, 26, 0.85);
+  backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+  border-bottom: 1px solid var(--border);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    0 4px 20px -2px rgba(0, 0, 0, 0.4);
+}
+
+html.dark .liquid-glass-modal,
+[data-theme="dark"] .liquid-glass-modal {
+  background: rgba(26, 31, 41, 0.94);
+  backdrop-filter: blur(24px) saturate(130%);
+  -webkit-backdrop-filter: blur(24px) saturate(130%);
+  border: 1px solid var(--border);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.1),
+    0 24px 60px -12px rgba(0, 0, 0, 0.6);
+}
+
+html.dark .liquid-glass-card,
+[data-theme="dark"] .liquid-glass-card {
+  background: linear-gradient(145deg, rgba(30, 36, 50, 0.78) 0%, rgba(21, 25, 36, 0.68) 100%);
+  backdrop-filter: blur(20px) saturate(135%);
+  -webkit-backdrop-filter: blur(20px) saturate(135%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.1),
+    0 12px 32px -6px rgba(0, 0, 0, 0.45);
+}
+
+html.dark .liquid-glass-control,
+[data-theme="dark"] .liquid-glass-control {
+  background: rgba(21, 26, 34, 0.85);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+html.dark .glass,
+[data-theme="dark"] .glass {
+  background: rgba(26, 31, 41, 0.75);
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.08), 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+}
+
+html.dark .glass-soft,
+[data-theme="dark"] .glass-soft {
+  background: rgba(21, 24, 33, 0.7);
+  border: 1px solid var(--border);
+}
+
+html.dark .neu-card,
+[data-theme="dark"] .neu-card,
+html.dark .neu-card-sm,
+[data-theme="dark"] .neu-card-sm {
+  background: var(--surface);
+  border-color: var(--border);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+html.dark .neu-inset,
+[data-theme="dark"] .neu-inset {
+  background: var(--surface-soft);
+  border-color: var(--border);
+}
+
+/* Interactive Glass Card Hover */
+.liquid-glass-hover {
+  transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.liquid-glass-hover:hover {
+  background: #FFFFFF;
+  transform: translateY(-2px);
+  border-color: rgba(91, 42, 134, 0.25);
+  box-shadow:
+    0 12px 28px -4px rgba(40, 35, 50, 0.08),
+    0 2px 4px 0 rgba(40, 35, 50, 0.03);
+}
+
+/* Floating Control / Filter Bar Glass */
+.liquid-glass-control {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px) saturate(115%);
+  -webkit-backdrop-filter: blur(16px) saturate(115%);
+  border: 1px solid rgba(40, 35, 50, 0.12);
+  box-shadow: 0 1px 2px 0 rgba(40, 35, 50, 0.03);
+  position: relative;
+}
+
+/* Pearlescent Iridescent Edge Highlight (Simulating light refraction through optical glass) */
+.iridescent-edge {
+  position: relative;
+}
+.iridescent-edge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: linear-gradient(
+    90deg,
+    rgba(237, 228, 247, 0.8) 0%,   /* lavender */
+    rgba(219, 234, 254, 0.7) 25%,  /* cool blue */
+    rgba(207, 250, 254, 0.6) 50%,  /* soft cyan */
+    rgba(254, 243, 199, 0.6) 75%,  /* warm yellow */
+    rgba(252, 231, 243, 0.7) 100%  /* subtle pink */
+  );
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Subtle Iridescent Glow on Accent States */
+.iridescent-glow {
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 24px -4px rgba(237, 228, 247, 0.5),
+    0 8px 24px -4px rgba(40, 35, 50, 0.04);
+}
+
+/* Fallback for browsers without backdrop-filter support */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass, .glass-soft, .glass-strong {
+    background: rgba(255, 255, 255, 0.94);
+  }
+}
+
+/* Custom Minimalist Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(17, 19, 21, 0.15);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(17, 19, 21, 0.28);
+}
+
+/* Micro-Typography & Hairline Helpers */
+.hairline-b {
+  border-bottom: 1px solid rgba(17, 19, 21, 0.09);
+}
+.hairline-t {
+  border-top: 1px solid rgba(17, 19, 21, 0.09);
+}
+.hairline-r {
+  border-right: 1px solid rgba(17, 19, 21, 0.09);
+}
+.hairline-l {
+  border-left: 1px solid rgba(17, 19, 21, 0.09);
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+  }
+}
+
+/* Official Google Sign-In Button Styles */
+.gsi-material-button {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -webkit-appearance: none;
+  background-color: #ffffff;
+  background-image: none;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  box-sizing: border-box;
+  color: #1f1f1f;
+  cursor: pointer;
+  font-size: 14px;
+  height: 40px;
+  letter-spacing: 0.25px;
+  outline: none;
+  overflow: hidden;
+  padding: 0 16px;
+  position: relative;
+  text-align: center;
+  transition: background-color .2s, border-color .2s, box-shadow .2s;
+  vertical-align: middle;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.gsi-material-button:hover {
+  background-color: #f8fafc;
+  border-color: #c7cbd1;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.gsi-material-button-content-wrapper {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
+}
+.gsi-material-button-icon {
+  height: 18px;
+  min-width: 18px;
+  width: 18px;
+  display: flex;
+  align-items: center;
+}
+.gsi-material-button-contents {
+  font-weight: 500;
+  font-size: 14px;
+  color: #374151;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* PREMIUM MICRO-INTERACTION & MOTION SYSTEM (ฝอ.๕ บก.อก.บช.ตชด.)             */
+/* -------------------------------------------------------------------------- */
+:root {
+  --bpp-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --bpp-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --bpp-dur-micro: 240ms;
+  --bpp-dur-panel: 350ms;
+  --bpp-dur-page: 450ms;
+}
+
+/* 1. Global Button Press Animation */
+button,
+a,
+[role="button"],
+.bpp-btn-press {
+  position: relative;
+  transition:
+    transform var(--bpp-dur-micro) var(--bpp-ease),
+    box-shadow var(--bpp-dur-micro) var(--bpp-ease),
+    background-color var(--bpp-dur-micro) ease,
+    border-color var(--bpp-dur-micro) ease,
+    color var(--bpp-dur-micro) ease,
+    opacity var(--bpp-dur-micro) ease;
+}
+
+button:hover:not(:disabled),
+a:hover,
+[role="button"]:hover {
+  transform: translateY(-1px);
+}
+
+button:active:not(:disabled),
+a:active,
+[role="button"]:active,
+.bpp-btn-press:active {
+  transform: translateY(1px) scale(0.98) !important;
+  box-shadow: 0 1px 2px rgba(40, 35, 50, 0.08) !important;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Keyboard Accessible Focus Glow */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid rgba(91, 42, 134, 0.5);
+  outline-offset: 2px;
+}
+
+/* 2. Refined Card Hover Animation (250ms, translateY(-2px), luminosity & border brighter) */
+.bpp-card-interactive {
+  transition:
+    transform 250ms var(--bpp-ease),
+    box-shadow 250ms var(--bpp-ease),
+    border-color 250ms ease,
+    background-color 250ms ease;
+  transform: translateY(0);
+}
+
+.bpp-card-interactive:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.95);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.95),
+    0 12px 28px -4px rgba(40, 35, 50, 0.07),
+    0 2px 4px 0 rgba(40, 35, 50, 0.02);
+}
+
+/* 3. Subtle Liquid Glass Hover Reflection (400–700ms subtle moving light sheen) */
+.liquid-glass-sheen {
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-glass-sheen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.18) 50%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+  transition: left 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 10;
+}
+
+.liquid-glass-sheen:hover::after {
+  left: 140%;
+}
+
+/* 4. Ambient Background Motion (Subtle 8-15s Floating Light Orbs) */
+@keyframes bpp-ambient-float-1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.035;
+  }
+  50% {
+    transform: translate(30px, -20px) scale(1.08);
+    opacity: 0.055;
+  }
+}
+
+@keyframes bpp-ambient-float-2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.03;
+  }
+  50% {
+    transform: translate(-25px, 25px) scale(1.05);
+    opacity: 0.05;
+  }
+}
+
+.ambient-orb-lavender {
+  animation: bpp-ambient-float-1 12s ease-in-out infinite alternate;
+}
+
+.ambient-orb-blue {
+  animation: bpp-ambient-float-2 15s ease-in-out infinite alternate;
+}
+
+/* 5. Skeleton Loading System (Soft neutral shimmer, 1.8s) */
+@keyframes bpp-skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.bpp-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(40, 35, 50, 0.04) 25%,
+    rgba(40, 35, 50, 0.08) 37%,
+    rgba(40, 35, 50, 0.04) 63%
+  );
+  background-size: 400% 100%;
+  animation: bpp-skeleton-shimmer 1.8s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+/* 6. Form Error Nudge Animation (200ms) */
+@keyframes bpp-error-nudge {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
+}
+
+.bpp-input-error {
+  animation: bpp-error-nudge 200ms var(--bpp-ease);
+  border-color: #E11D48 !important;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.12) !important;
+}
+
+/* 7. Success / Completion Animation */
+@keyframes bpp-check-pop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  70% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.bpp-status-completed {
+  animation: bpp-check-pop 320ms var(--bpp-ease);
+}
+
+/* 8. Mission Detail Side Panel Slide-In (350ms, translateX(20px) -> 0) */
+@keyframes bpp-side-panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.bpp-panel-slide {
+  animation: bpp-side-panel-in 350ms var(--bpp-ease) forwards;
+}
+
+/* 9. Modal Entrance (300ms, opacity 0->1, scale 0.97->1, translateY(8px)->0) */
+@keyframes bpp-modal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.bpp-modal-box {
+  animation: bpp-modal-enter 300ms var(--bpp-ease) forwards;
+}
+
+/* 10. Page Stage Animation */
+.sac-page-stage {
+  animation: bpp-page-enter 320ms var(--bpp-ease) both;
+}
+
+@keyframes bpp-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 11. Table Row Interaction Helper */
+.bpp-table-row {
+  position: relative;
+  transition:
+    background-color 180ms ease,
+    transform 180ms var(--bpp-ease);
+}
+
+.bpp-table-row:hover {
+  background-color: rgba(247, 244, 250, 0.7);
+  transform: translateX(1px);
+}
+
+.bpp-table-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  border-radius: 0 4px 4px 0;
+  opacity: 0;
+  transition: opacity 180ms ease, transform 180ms var(--bpp-ease);
+  transform: scaleY(0.6);
+}
+
+.bpp-table-row:hover::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+/* 13. Liquid Glass Moving Light Reflection (Subtle & Elegant) */
+.liquid-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -150%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 42%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0) 58%,
+    transparent 100%
+  );
+  transform: rotate(15deg);
+  animation: liquid-light-sweep 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes liquid-light-sweep {
+  0% {
+    left: -150%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  30% {
+    left: 150%;
+    opacity: 1;
+  }
+  35%, 100% {
+    left: 150%;
+    opacity: 0;
+  }
+}
+
+/* Operational pulse for LIVE mission node */
+.radar-pulse-ring {
+  position: relative;
+}
+.radar-pulse-ring::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  border: 1.5px solid currentColor;
+  opacity: 0.7;
+  animation: radar-pulse 2.4s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+@keyframes radar-pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* 12. Accessibility: Strictly Respect Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .bpp-panel-slide,
+  .bpp-modal-box,
+  .sac-page-stage,
+  .bpp-status-completed,
+  .bpp-input-error,
+  .ambient-orb-lavender,
+  .ambient-orb-blue {
+    animation: none !important;
+    transform: none !important;
+  }
+}
