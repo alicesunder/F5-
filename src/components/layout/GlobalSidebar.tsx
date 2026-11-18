@@ -167,7 +167,7 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
               <div className="relative w-10 h-10 rounded-2xl p-0.5 bg-gradient-to-tr from-[#5B2A86] via-[#2583D8] to-[#E89B22] shadow-sm group-hover:scale-105 transition-transform shrink-0">
                 <div className="w-full h-full rounded-[14px] bg-white dark:bg-[#161B26] p-1 flex items-center justify-center">
                   <img
-                    src="/assets/fo5-logo.svg"
+                    src="/assets/fo5-logo.png"
                     alt="ฝอ.5 Logo"
                     className="w-full h-full object-contain"
                   />

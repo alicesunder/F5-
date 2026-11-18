@@ -25,7 +25,7 @@ export const PRESET_USERS: SystemUser[] = [
     department: 'ฝ่ายอำนวยการ ๕ บช.ตชด. (งานประชาสัมพันธ์)',
     phone: '02-282-8111',
     role: 'SUPER_ADMIN',
-    avatar: '/assets/fo5-logo.svg',
+    avatar: '/assets/fo5-logo.png',
   },
 ];
 

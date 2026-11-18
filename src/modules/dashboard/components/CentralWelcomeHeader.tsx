@@ -75,7 +75,7 @@ export const CentralWelcomeHeader: React.FC = () => {
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white p-1.5 shadow-md flex items-center justify-center flex-shrink-0 transition hover:scale-105 duration-200">
               <img
-                src="/assets/fo5-logo.svg"
+                src="/assets/fo5-logo.png"
                 alt="ฝอ 5 Logo"
                 className="w-full h-full object-contain"
               />

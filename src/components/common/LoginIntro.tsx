@@ -407,9 +407,9 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
                 ))}
                 <div className="absolute -inset-6 rounded-full blur-2xl" style={{ background: GRAD, opacity: 0.55 }} />
                 <img
-                  src="/assets/fo5-logo.svg"
+                  src="/assets/fo5-logo.png"
                   alt="โลโก้ ฝอ 5"
-                  className="relative w-36 h-36 sm:w-48 sm:h-48 rounded-full ring-4 ring-white/25 shadow-2xl"
+                  className="relative w-36 h-36 sm:w-48 sm:h-48 rounded-full bg-white p-1.5 object-contain ring-4 ring-white/25 shadow-2xl"
                 />
                 {/* แสงกวาดผ่านโลโก้ */}
                 <span className="absolute inset-0 rounded-full overflow-hidden pointer-events-none" aria-hidden>

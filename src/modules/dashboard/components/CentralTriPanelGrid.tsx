@@ -83,7 +83,7 @@ export const CentralTriPanelGrid: React.FC = () => {
       category: 'จิตอาสา',
       dept: 'ฝ่ายจิตอาสา',
       deptColor: DEPARTMENT_COLORS.volunteer, // #EFBB4B
-      image: '/assets/fo5-logo.svg',
+      image: '/assets/fo5-logo.png',
     },
   ];
 

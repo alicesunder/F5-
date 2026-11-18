@@ -68,7 +68,7 @@ export const CHAIROT_POLICE_RECORD = {
   savingsCoopDeduction: 0,
   taxDeduction: 0,
   
-  photoUrl: '/assets/fo5-logo.svg',
+  photoUrl: '/assets/fo5-logo.png',
 };
 
 // Official 4-period salary history from POLIS
