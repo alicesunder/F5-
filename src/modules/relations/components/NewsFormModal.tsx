@@ -75,8 +75,8 @@ export const NewsFormModal: React.FC<NewsFormModalProps> = ({
       setTitle('');
       setSummary('');
       setContent('');
-      setDate('10 ก.ย. 2569');
-      setAuthor('ร.ท. สุรชัย พลสื่อ (ฝ่ายประชาสัมพันธ์)');
+      setDate('');
+      setAuthor('');
       setCategory('ข่าวสารทั่วไป');
       setCoverImage(defaultCovers[0]);
       setGallery([]);

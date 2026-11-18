@@ -201,7 +201,7 @@ export const VolunteerProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const totalBeneficiaries = reports.reduce((sum, r) => sum + (r.participantBeneficiariesCount || 0), 0);
 
     const approvedReportsCount = reports.filter(r => r.status === 'APPROVED').length;
-    const onTimePercentage = totalMissions > 0 ? Math.round((approvedReportsCount / (totalMissions || 1)) * 100) : 94;
+    const onTimePercentage = totalMissions > 0 ? Math.round((approvedReportsCount / (totalMissions || 1)) * 100) : 0;
 
     return {
       totalMissions,

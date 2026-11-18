@@ -65,11 +65,11 @@ type Item = {
 };
 
 const toneClass: Record<NonNullable<Item['tone']>, string> = {
-  blue: 'bg-blue-600 text-white',
-  slate: 'bg-slate-700 text-white',
+  blue: 'bg-blue-100 text-blue-700',
+  slate: 'bg-slate-100 text-slate-600',
   red: 'bg-rose-600 text-white',
-  purple: 'bg-indigo-600 text-white',
-  amber: 'bg-amber-500 text-slate-900',
+  purple: 'bg-indigo-100 text-indigo-700',
+  amber: 'bg-amber-100 text-amber-800',
 };
 
 const Group: React.FC<{ title: string; items: Item[]; activeView: PRViewId; onChange: (view: PRViewId) => void }> = ({
@@ -79,7 +79,7 @@ const Group: React.FC<{ title: string; items: Item[]; activeView: PRViewId; onCh
   onChange,
 }) => (
   <section className="space-y-1">
-    <div className="px-3 text-[10px] font-black tracking-wider text-slate-400 uppercase">{title}</div>
+    <div className="px-3 pt-1 text-[11px] font-bold text-slate-400">{title}</div>
     {items.map(item => {
       const Icon = item.icon;
       const active = activeView === item.id;
@@ -89,14 +89,14 @@ const Group: React.FC<{ title: string; items: Item[]; activeView: PRViewId; onCh
           type="button"
           title={item.label}
           onClick={() => onChange(item.id)}
-          className={`w-full group flex items-center justify-between gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-semibold transition-all duration-150 ${
+          className={`w-full group flex items-center justify-between gap-2.5 rounded-xl px-3 py-2 text-left text-[13px] font-semibold cursor-pointer transition-all duration-150 ${
             active
-              ? 'bg-[#193779] text-white shadow-xs'
-              : 'text-slate-300 hover:bg-white/5 hover:text-white'
+              ? 'bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-sm'
+              : 'text-slate-700 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-white/5'
           }`}
         >
           <div className="flex items-center gap-2.5 min-w-0">
-            <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-pink-300' : 'text-slate-400 group-hover:text-slate-200'}`} />
+            <Icon className={`w-4 h-4 shrink-0 ${active ? 'text-white' : 'text-blue-600'}`} />
             <span className="truncate">{item.label}</span>
           </div>
           {item.badge && (
@@ -167,22 +167,45 @@ export const PRMonitoringSidebar: React.FC<PRMonitoringSidebarProps> = ({ active
     { id: 'analytics', label: 'PR Analytics', icon: BarChart3 },
   ];
 
-  return (
-    <aside className="w-full lg:w-[280px] shrink-0 rounded-2xl bg-[#081733] text-white p-3.5 shadow-xl border border-slate-800/70 sticky top-4 h-fit max-h-[calc(100vh-7rem)] overflow-y-auto">
-      <div className="px-2.5 pb-3 mb-3 border-b border-white/10">
-        <div className="text-[10px] uppercase tracking-[0.2em] text-pink-300 font-bold">บช.ตชด. • ฝอ.5</div>
-        <div className="text-base font-black text-white mt-0.5">PR OPERATIONS CENTER</div>
-        <div className="text-[10px] text-slate-400 mt-0.5">Media Monitor • Photo Ops • AI OCR</div>
-      </div>
+  const groups: { title: string; items: Item[] }[] = [
+    { title: 'ภาพรวม', items: commandCenter },
+    { title: 'ติดตามสื่อออนไลน์', items: monitoring },
+    { title: 'ภารกิจภาพถ่าย', items: operations },
+    { title: 'ตรวจเอกสาร', items: docsGroup },
+    { title: 'รายงานและสถิติ', items: reports },
+    { title: 'ผู้ช่วย AI', items: smart },
+  ];
 
-      <div className="space-y-4">
-        <Group title="COMMAND CENTER" items={commandCenter} activeView={activeView} onChange={onChange} />
-        <Group title="MEDIA MONITORING" items={monitoring} activeView={activeView} onChange={onChange} />
-        <Group title="PR PHOTO OPERATIONS" items={operations} activeView={activeView} onChange={onChange} />
-        <Group title="DOCUMENT INTELLIGENCE" items={docsGroup} activeView={activeView} onChange={onChange} />
-        <Group title="SMART OPERATIONS" items={smart} activeView={activeView} onChange={onChange} />
-        <Group title="REPORTS & ANALYTICS" items={reports} activeView={activeView} onChange={onChange} />
-      </div>
-    </aside>
+  return (
+    <>
+      {/* มือถือ/แท็บเล็ต: เลือกหน้าจากรายการเดียว */}
+      <label className="lg:hidden w-full block">
+        <span className="block text-xs font-bold text-slate-500 mb-1">เลือกหน้าในศูนย์ปฏิบัติการ PR</span>
+        <select
+          value={activeView}
+          onChange={e => onChange(e.target.value as PRViewId)}
+          className="w-full px-3 py-3 rounded-xl border border-blue-200 bg-white dark:bg-[#151A24] dark:border-white/10 text-[15px] font-semibold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+        >
+          {groups.map(g => (
+            <optgroup key={g.title} label={g.title}>
+              {g.items.map(it => (
+                <option key={it.id} value={it.id}>
+                  {it.label}
+                  {it.badge && /^\d+$/.test(it.badge) ? ` (${it.badge})` : ''}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+      </label>
+
+      <aside className="hidden lg:block w-[260px] shrink-0 rounded-2xl bg-white dark:bg-[#151A24] p-3 border border-slate-200/80 dark:border-white/10 sticky top-36 h-fit max-h-[calc(100vh-10rem)] overflow-y-auto">
+        <div className="space-y-3">
+          {groups.map(g => (
+            <Group key={g.title} title={g.title} items={g.items} activeView={activeView} onChange={onChange} />
+          ))}
+        </div>
+      </aside>
+    </>
   );
 };

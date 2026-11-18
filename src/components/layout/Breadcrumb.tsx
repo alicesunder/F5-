@@ -139,7 +139,7 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ customItems }) => {
       </div>
 
       {/* Right: Colorful 1-Click Switcher for the 4 Core Departments */}
-      <div className="hidden xl:flex items-center gap-1.5">
+      <div className="hidden">
         <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1 mr-1">
           <Sparkles className="w-3 h-3 text-[#5B2A86]" />
           <span>สลับสายงานด่วน:</span>

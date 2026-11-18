@@ -256,7 +256,7 @@ class DisasterService {
     const affectedPeople = this.incidents.reduce((acc, i) => acc + (i.affectedPeople || 0), 0);
 
     // Watch areas count based on active telemetry + watchpoints
-    const watchAreas = this.mapPoints.filter(p => p.category === 'watchpoints' || p.category === 'risk_zones').length + 8;
+    const watchAreas = this.mapPoints.filter(p => p.category === 'watchpoints' || p.category === 'risk_zones').length;
 
     const latest = this.incidents[0];
 
@@ -266,7 +266,7 @@ class DisasterService {
       watchAreasCount: watchAreas,
       affectedHouseholdsTotal: affectedHouseholds,
       affectedPeopleTotal: affectedPeople,
-      latestReportTime: latest?.reportedAt || '10 ก.ย. 2569 11:30 น.',
+      latestReportTime: latest?.reportedAt || '-',
       latestIncidentTitle: latest?.title || 'ไม่มีรายงานเหตุใหม่',
       criticalCount: critical,
       controlledCount: controlled,

@@ -53,8 +53,15 @@ export const PRDashboardView: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const todayThai = new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
+  const activeMissionCount = missions.filter(m => m.status !== 'completed').length;
+  const doneMissionCount = missions.filter(m => m.status === 'completed').length;
+  const pendingDocCount = documents.filter(d => d.status === 'pending' || d.status === 'review_required').length;
+  const openAlertCount = alerts.filter(a => !a.acknowledged).length;
+
   const todayMissions = missions
-    .filter((m) => m.date === '2026-09-07' || m.status === 'in_progress' || m.id.startsWith('PH-00'))
+    .filter((m) => m.date === todayIso || m.status === 'in_progress')
     .slice(0, 5);
 
   const pendingDocs = documents
@@ -80,21 +87,14 @@ export const PRDashboardView: React.FC = () => {
       <div className="bg-white border border-slate-200/80 p-5 rounded-2xl shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <span className="p-2.5 rounded-xl bg-pink-50 text-pink-700 border border-pink-200/80 shadow-xs">
-              <Shield className="w-6 h-6 text-[#27265B]" />
+            <span className="p-2 rounded-xl bg-blue-50 border border-blue-200/80">
+              <Shield className="w-5 h-5 text-blue-700" />
             </span>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-black text-[#1E1B4B] tracking-tight">
-                  ศูนย์บัญชาการปฏิบัติการข่าวสาร & ประชาสัมพันธ์
-                </h1>
-                <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-pink-100/70 text-pink-800 font-bold border border-pink-200/80">
-                  PR COMMAND INTELLIGENCE
-                </span>
+                <h2 className="text-base sm:text-lg font-black text-[#1E1B4B] tracking-tight">ภาพรวมศูนย์ปฏิบัติการ PR</h2>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">
-                ศูนย์กลางการเฝ้าฟัง ข่าวสาร สื่อดิจิทัล ภารกิจภาพถ่าย และการตรวจสอบเอกสารสารบรรณด้วย AI
-              </p>
+              <p className="text-xs text-slate-500 mt-0.5">ข่าวที่ติดตาม ภารกิจภาพถ่าย และเอกสารรอตรวจ</p>
             </div>
           </div>
         </div>
@@ -103,11 +103,11 @@ export const PRDashboardView: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <div className="bg-slate-50 border border-slate-200/80 px-3.5 py-2 rounded-xl flex items-center gap-2 shadow-2xs">
             <CalendarIcon className="w-4 h-4 text-[#27265B]" />
-            <span className="text-xs font-semibold text-slate-700">7 ก.ย. 2569</span>
+            <span className="text-xs font-semibold text-slate-700">{todayThai}</span>
             <span className="text-slate-300">|</span>
             <Clock className="w-4 h-4 text-slate-400" />
             <span className="text-xs font-mono font-bold text-[#1E1B4B]">
-              {currentTime || '09:42:18'} น.
+              {currentTime} น.
             </span>
           </div>
           <button
@@ -127,141 +127,62 @@ export const PRDashboardView: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. 8 KPI Summary Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-3">
-        {/* Card 1: ข่าววันนี้ */}
-        <div
+      {/* 2. KPI จากข้อมูลจริงเท่านั้น */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
+        <button
+          type="button"
           onClick={() => setActivePRView('latest')}
-          className="bg-white border border-slate-200/80 p-3.5 rounded-2xl hover:border-pink-400 hover:shadow-xs cursor-pointer transition flex flex-col justify-between group"
+          className="text-left bg-white border border-slate-200/80 p-3.5 rounded-2xl hover:border-blue-400 hover:shadow-xs cursor-pointer transition"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-500">ข่าววันนี้</span>
-            <Radio className="w-3.5 h-3.5 text-pink-600" />
-          </div>
-          <div className="my-1.5">
-            <div className="text-2xl font-black text-[#1E1B4B] tracking-tight">128</div>
-            <p className="text-[10px] text-emerald-600 font-medium flex items-center gap-0.5">
-              <ArrowUpRight className="w-3 h-3" />
-              <span>+18.4% จากเมื่อวาน</span>
-            </p>
-          </div>
-          <span className="text-[9px] text-slate-400">จาก 34 สื่อหลัก</span>
-        </div>
-
-        {/* Card 2: ข่าวที่เกี่ยวข้อง */}
-        <div
-          onClick={() => setActivePRView('latest')}
-          className="bg-white border border-slate-200/80 p-3.5 rounded-2xl hover:border-pink-400 hover:shadow-xs cursor-pointer transition flex flex-col justify-between group"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-500">ข่าวเกี่ยวกับ ตชด.</span>
-            <Shield className="w-3.5 h-3.5 text-[#27265B]" />
-          </div>
-          <div className="my-1.5">
-            <div className="text-2xl font-black text-[#27265B] tracking-tight">37</div>
-            <p className="text-[10px] text-emerald-600 font-medium flex items-center gap-0.5">
-              <ArrowUpRight className="w-3 h-3" />
-              <span>+12.2% วันนี้</span>
-            </p>
-          </div>
-          <span className="text-[9px] text-slate-400">เชิงบวก 65% ลบ 6%</span>
-        </div>
-
-        {/* Card 3: ภารกิจวันนี้ */}
-        <div
+          <div className="text-[12px] font-semibold text-slate-500">โพสต์ที่ติดตาม</div>
+          <div className="text-2xl font-black tracking-tight mt-1 text-[#1E1B4B]">{formatNumber(posts.length)}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">จากเพจที่ติดตาม {pages.length} เพจ</div>
+        </button>
+        <button
+          type="button"
           onClick={() => setActivePRView('photo-missions')}
-          className="bg-white border border-slate-200/80 p-3.5 rounded-2xl hover:border-pink-400 hover:shadow-xs cursor-pointer transition flex flex-col justify-between group"
+          className="text-left bg-white border border-slate-200/80 p-3.5 rounded-2xl hover:border-blue-400 hover:shadow-xs cursor-pointer transition"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-500">ภารกิจภาพถ่าย</span>
-            <Camera className="w-3.5 h-3.5 text-pink-600" />
-          </div>
-          <div className="my-1.5">
-            <div className="text-2xl font-black text-pink-700 tracking-tight">8</div>
-            <p className="text-[10px] text-pink-600 font-medium">กำลังดำเนินการ 3</p>
-          </div>
-          <span className="text-[9px] text-slate-400">เสร็จสิ้นแล้ว 5</span>
-        </div>
-
-        {/* Card 4: กำลังปฏิบัติหน้าที่ */}
-        <div
-          onClick={() => setActivePRView('photo-missions')}
-          className="bg-white border border-slate-200/80 p-3.5 rounded-2xl hover:border-amber-400 hover:shadow-xs cursor-pointer transition flex flex-col justify-between group"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-500">กำลังลงพื้นที่</span>
-            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-          </div>
-          <div className="my-1.5">
-            <div className="text-2xl font-black text-amber-600 tracking-tight">3</div>
-            <p className="text-[10px] text-slate-600 font-medium">ชุดช่างภาพสนาม</p>
-          </div>
-          <span className="text-[9px] text-slate-400">ส่งภาพแล้ว 115 รูป</span>
-        </div>
-
-        {/* Card 5: งานที่เสร็จสิ้น */}
-        <div
+          <div className="text-[12px] font-semibold text-slate-500">ภารกิจภาพถ่าย</div>
+          <div className="text-2xl font-black tracking-tight mt-1 text-pink-700">{formatNumber(activeMissionCount)}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">กำลังดำเนินการ</div>
+        </button>
+        <button
+          type="button"
           onClick={() => setActivePRView('completed')}
-          className="bg-white border border-slate-200/80 p-3.5 rounded-2xl hover:border-emerald-400 hover:shadow-xs cursor-pointer transition flex flex-col justify-between group"
+          className="text-left bg-white border border-slate-200/80 p-3.5 rounded-2xl hover:border-blue-400 hover:shadow-xs cursor-pointer transition"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-500">งานส่งมอบแล้ว</span>
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-          </div>
-          <div className="my-1.5">
-            <div className="text-2xl font-black text-emerald-600 tracking-tight">5</div>
-            <p className="text-[10px] text-emerald-700 font-medium">ความสำเร็จ 100%</p>
-          </div>
-          <span className="text-[9px] text-slate-400">คลังภาพ 225 ภาพ</span>
-        </div>
-
-        {/* Card 6: เอกสารรอตรวจ */}
-        <div
+          <div className="text-[12px] font-semibold text-slate-500">ส่งมอบแล้ว</div>
+          <div className="text-2xl font-black tracking-tight mt-1 text-emerald-600">{formatNumber(doneMissionCount)}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">ภารกิจที่เสร็จสิ้น</div>
+        </button>
+        <button
+          type="button"
           onClick={() => setActivePRView('pending-docs')}
-          className="bg-white border border-slate-200/80 p-3.5 rounded-2xl hover:border-amber-400 hover:shadow-xs cursor-pointer transition flex flex-col justify-between group"
+          className="text-left bg-white border border-slate-200/80 p-3.5 rounded-2xl hover:border-blue-400 hover:shadow-xs cursor-pointer transition"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-500">เอกสารรอตรวจ</span>
-            <Clock className="w-3.5 h-3.5 text-amber-600" />
-          </div>
-          <div className="my-1.5">
-            <div className="text-2xl font-black text-amber-600 tracking-tight">14</div>
-            <p className="text-[10px] text-rose-600 font-medium">ด่วนที่สุด 4 ฉบับ</p>
-          </div>
-          <span className="text-[9px] text-slate-400">ต้องเร่งพิจารณา</span>
-        </div>
-
-        {/* Card 7: ผ่านการตรวจ AI */}
-        <div
-          onClick={() => setActivePRView('ocr-results')}
-          className="bg-white border border-slate-200/80 p-3.5 rounded-2xl hover:border-emerald-400 hover:shadow-xs cursor-pointer transition flex flex-col justify-between group"
+          <div className="text-[12px] font-semibold text-slate-500">เอกสารรอตรวจ</div>
+          <div className="text-2xl font-black tracking-tight mt-1 text-amber-600">{formatNumber(pendingDocCount)}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">รอพิจารณา</div>
+        </button>
+        <button
+          type="button"
+          onClick={() => setActivePRView('keywords')}
+          className="text-left bg-white border border-slate-200/80 p-3.5 rounded-2xl hover:border-blue-400 hover:shadow-xs cursor-pointer transition"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-500">ตรวจผ่านแล้ว</span>
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-          </div>
-          <div className="my-1.5">
-            <div className="text-2xl font-black text-[#1E1B4B] tracking-tight">87</div>
-            <p className="text-[10px] text-emerald-600 font-medium">ความถูกต้อง 94.2%</p>
-          </div>
-          <span className="text-[9px] text-slate-400">สารบรรณ พ.ศ. 2526</span>
-        </div>
-
-        {/* Card 8: การแจ้งเตือนด่วน */}
-        <div
+          <div className="text-[12px] font-semibold text-slate-500">คำสำคัญที่ติดตาม</div>
+          <div className="text-2xl font-black tracking-tight mt-1 text-[#27265B]">{formatNumber(keywords.length)}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">Keyword ที่ตั้งไว้</div>
+        </button>
+        <button
+          type="button"
           onClick={() => setActivePRView('alerts')}
-          className="bg-white border border-slate-200/80 p-3.5 rounded-2xl hover:border-rose-400 hover:shadow-xs cursor-pointer transition flex flex-col justify-between group"
+          className="text-left bg-white border border-slate-200/80 p-3.5 rounded-2xl hover:border-blue-400 hover:shadow-xs cursor-pointer transition"
         >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold text-slate-500">เตือนภัย/เฝ้าระวัง</span>
-            <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
-          </div>
-          <div className="my-1.5">
-            <div className="text-2xl font-black text-rose-600 tracking-tight">4</div>
-            <p className="text-[10px] text-rose-700 font-medium">ประเด็นเสี่ยงวิกฤต</p>
-          </div>
-          <span className="text-[9px] text-slate-400">ต้องการการชี้แจง</span>
-        </div>
+          <div className="text-[12px] font-semibold text-slate-500">แจ้งเตือนค้าง</div>
+          <div className="text-2xl font-black tracking-tight mt-1 text-rose-600">{formatNumber(openAlertCount)}</div>
+          <div className="text-[11px] text-slate-400 mt-0.5">ยังไม่รับทราบ</div>
+        </button>
       </div>
 
       {/* 3. Command Center Multi-Panel Grid */}

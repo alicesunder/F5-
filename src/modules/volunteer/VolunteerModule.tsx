@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { VolunteerProvider, useVolunteer } from './context/VolunteerContext';
-import { VolunteerHeader } from './components/VolunteerHeader';
+import { VolunteerProvider, useVolunteer, VolunteerTab } from './context/VolunteerContext';
+import { VolunteerHeader, useVolunteerTabs } from './components/VolunteerHeader';
+import { QuickStartGrid } from '../../components/layout/DepartmentShell';
 import { VolunteerAttentionBanner } from './components/VolunteerAttentionBanner';
 import { VolunteerHeroStats } from './components/VolunteerHeroStats';
 import { VolunteerSignatureFlow } from './components/VolunteerSignatureFlow';
@@ -15,14 +16,13 @@ import { VolunteerSubmitReportModal } from './components/reports/VolunteerSubmit
 import { VolunteerPersonnelSection } from './components/personnel/VolunteerPersonnelSection';
 
 const VolunteerModuleContent: React.FC = () => {
-  const { activeTab } = useVolunteer();
+  const { activeTab, setActiveTab } = useVolunteer();
+  const tabs = useVolunteerTabs();
 
   return (
     <div className="min-h-screen iridescent-ambient text-[#25202B] dark:text-[#F5F7FA] font-sans antialiased pb-14">
       {/* Top Studio Hero Header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
-        <VolunteerHeader />
-      </div>
+      <VolunteerHeader />
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-6">
@@ -40,6 +40,7 @@ const VolunteerModuleContent: React.FC = () => {
               transition={{ duration: 0.2 }}
               className="space-y-6"
             >
+              <QuickStartGrid dept="volunteer" tabs={tabs.filter(t => t.id !== 'overview')} onSelect={id => setActiveTab(id as VolunteerTab)} />
               <VolunteerHeroStats />
 
               <div className="liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6">

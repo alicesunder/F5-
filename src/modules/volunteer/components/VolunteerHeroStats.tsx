@@ -27,7 +27,7 @@ export const VolunteerHeroStats: React.FC = () => {
                 กองบัญชาการตำรวจตระเวนชายแดน
               </span>
               <span className="text-xs font-bold text-[#047857] dark:text-emerald-300">
-                ปีงบประมาณ ๒๕๖๙
+                ปีงบประมาณ {new Date().getMonth() >= 9 ? new Date().getFullYear() + 544 : new Date().getFullYear() + 543}
               </span>
             </div>
             <div className="flex items-center gap-1.5 text-xs text-[#6B6973] dark:text-slate-300">
@@ -57,7 +57,7 @@ export const VolunteerHeroStats: React.FC = () => {
                 <span className="text-[11px] text-[#6B6973]">ภารกิจ</span>
               </div>
               <p className="text-[10px] text-[#047857] dark:text-emerald-300 mt-1 font-bold flex items-center gap-0.5">
-                <span>ครอบคลุม ๔ ภาค</span>
+                <span>ทุกหน่วย</span>
                 <ArrowUpRight className="w-2.5 h-2.5" />
               </p>
             </div>
@@ -104,7 +104,7 @@ export const VolunteerHeroStats: React.FC = () => {
                 <span className="text-[11px] text-[#6B6973]">ภารกิจ</span>
               </div>
               <p className="text-[10px] text-[#059669] mt-1 font-bold">
-                บรรลุผล 100%
+                ปิดภารกิจแล้ว
               </p>
             </div>
 

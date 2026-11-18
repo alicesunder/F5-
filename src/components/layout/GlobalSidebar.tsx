@@ -358,14 +358,14 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
                           </div>
                         </div>
 
-                        <span
+                        {item.count > 0 && <span
                           className={`text-[10px] font-mono tabular-nums font-extrabold px-1.5 py-0.5 rounded-lg shrink-0 ${
                             isActive ? 'bg-white/25 text-white' : 'bg-white/90 dark:bg-black/30'
                           }`}
                           style={!isActive ? { color: item.color } : undefined}
                         >
                           {item.count} งาน
-                        </span>
+                        </span>}
                       </div>
 
                       {/* Mini Progress Bar inside Department Button */}

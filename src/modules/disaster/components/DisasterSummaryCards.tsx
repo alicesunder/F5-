@@ -105,12 +105,12 @@ export const DisasterSummaryCards: React.FC<DisasterSummaryCardsProps> = ({
             <span className="text-xs text-slate-500 font-medium">จุดวิกฤต</span>
           </div>
           <p className="text-[11px] text-slate-500 mt-1.5 line-clamp-1">
-            ระดับน้ำแม่น้ำสาย/ยม/มูล แตะเตือนภัย
+            จุดเฝ้าระวังและพื้นที่เสี่ยงที่บันทึกไว้
           </p>
         </div>
         <div className="pt-2 border-t border-slate-200/60 dark:border-white/10 text-[11px] text-slate-500 flex items-center justify-between font-mono">
-          <span>เซนเซอร์ตรวจวัด 18 จุด</span>
-          <span className="text-emerald-600 font-bold">ONLINE</span>
+          <span>จุดเฝ้าระวังบนแผนที่</span>
+          <span />
         </div>
       </div>
 
@@ -131,12 +131,12 @@ export const DisasterSummaryCards: React.FC<DisasterSummaryCardsProps> = ({
             <span className="text-xs text-slate-500 font-medium">ครัวเรือน</span>
           </div>
           <p className="text-[11px] text-slate-500 mt-1.5">
-            ประชาชน {stats.affectedPeopleTotal.toLocaleString()} ราย (อพยพ 385 ราย)
+            ประชาชน {stats.affectedPeopleTotal.toLocaleString()} ราย
           </p>
         </div>
         <div className="pt-2 border-t border-slate-200/60 dark:border-white/10 text-[11px] text-slate-500 flex items-center justify-between">
-          <span>ศูนย์พักพิงเปิด 2 แห่ง</span>
-          <span className="text-sky-600 font-bold">ช่วยเหลือแล้ว</span>
+          <span>รวมจากเหตุที่บันทึก</span>
+          <span />
         </div>
       </div>
 

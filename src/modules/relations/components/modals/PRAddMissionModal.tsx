@@ -69,7 +69,7 @@ export const PRAddMissionModal: React.FC = () => {
       title,
       description: description || `ภารกิจบันทึกภาพ ${title} เพื่อใช้เป็นคลังภาพประชาสัมพันธ์ ฝอ.5 บช.ตชด.`,
       date,
-      displayDate: `${parseInt(date.split('-')[2])} ก.ย. 69`,
+      displayDate: date ? new Date(`${date}T12:00:00`).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }) : '',
       startTime,
       endTime,
       location: locationName,

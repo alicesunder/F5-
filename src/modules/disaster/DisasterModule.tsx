@@ -5,7 +5,9 @@ import { useAdmin } from '../../contexts/AdminContext';
 import {
   DisasterActiveTab,
   DisasterHeader,
+  DISASTER_TABS,
 } from './components/DisasterHeader';
+import { QuickStartGrid } from '../../components/layout/DepartmentShell';
 import { DisasterSummaryCards } from './components/DisasterSummaryCards';
 import { InteractiveDisasterMap } from './components/InteractiveDisasterMap';
 import { FloodMonitoringDashboard } from './components/FloodMonitoringDashboard';
@@ -150,6 +152,10 @@ export const DisasterModule: React.FC = () => {
 
       {/* Main Workspace */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        {activeTab === 'overview' && (
+          <QuickStartGrid dept="disaster" tabs={DISASTER_TABS.filter(t => t.id !== 'overview')} onSelect={id => setActiveTab(id as DisasterActiveTab)} />
+        )}
+
         {/* 2. Top Summary 5 Cards (Visible in Overview and Incidents tabs) */}
         {(activeTab === 'overview' || activeTab === 'incidents') && (
           <DisasterSummaryCards

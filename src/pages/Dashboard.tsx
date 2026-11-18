@@ -42,26 +42,39 @@ export const DashboardPage: React.FC = () => {
     navigate,
   } = useAdmin();
 
-  // Monthly document trend (Jan - Sep 2569)
-  const monthlyDocTrend = [
-    { month: 'ม.ค.', incoming: 38, outgoing: 32 },
-    { month: 'ก.พ.', incoming: 42, outgoing: 35 },
-    { month: 'มี.ค.', incoming: 55, outgoing: 48 },
-    { month: 'เม.ย.', incoming: 46, outgoing: 40 },
-    { month: 'พ.ค.', incoming: 50, outgoing: 44 },
-    { month: 'มิ.ย.', incoming: 62, outgoing: 51 },
-    { month: 'ก.ค.', incoming: 58, outgoing: 49 },
-    { month: 'ส.ค.', incoming: 74, outgoing: 63 },
-    { month: 'ก.ย.', incoming: Math.max(incomingDocs.length * 4, 30), outgoing: Math.max(outgoingDocs.length * 4, 25) },
-  ];
+  // แนวโน้มหนังสือรับ-ส่ง 6 เดือนล่าสุด (นับจากวันที่ในเอกสารจริง)
+  const monthlyDocTrend = Array.from({ length: 6 }, (_, k) => {
+    const d = new Date();
+    d.setDate(1);
+    d.setMonth(d.getMonth() - (5 - k));
+    const ym = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    return {
+      month: d.toLocaleDateString('th-TH', { month: 'short' }),
+      incoming: incomingDocs.filter(x => (x.received_date || '').startsWith(ym)).length,
+      outgoing: outgoingDocs.filter(x => (x.send_date || '').startsWith(ym)).length,
+    };
+  });
 
-  // Budget quarterly performance
-  const quarterlySpending = [
-    { quarter: 'Q1 ต.ค.-ธ.ค.', amount: 2.89, target: 3.12 },
-    { quarter: 'Q2 ม.ค.-มี.ค.', amount: 2.95, target: 3.12 },
-    { quarter: 'Q3 เม.ย.-มิ.ย.', amount: 2.71, target: 3.12 },
-    { quarter: 'Q4 ก.ค.-ก.ย.', amount: 2.43, target: 3.12 },
-  ];
+  // งบประมาณตามหมวด (ล้านบาท) จากรายการงบที่บันทึก
+  const quarterlySpending = Object.values(
+    budgets.reduce<Record<string, { quarter: string; amount: number; target: number }>>((acc, b) => {
+      const key = String(b.budget_category || 'อื่น ๆ');
+      acc[key] = acc[key] || { quarter: key, amount: 0, target: 0 };
+      acc[key].amount += (b.spent_amount || 0) / 1e6;
+      acc[key].target += (b.allocated_amount || 0) / 1e6;
+      return acc;
+    }, {})
+  ) as { quarter: string; amount: number; target: number }[];
+
+  const { missions = [] } = useAdmin();
+  const missionCounts = {
+    total: missions.length,
+    doing: missions.filter(m => m.status === 'กำลังดำเนินการ').length,
+    waiting: missions.filter(m => m.status === 'รอดำเนินการ' || m.status === 'วางแผน').length,
+    done: missions.filter(m => m.status === 'เสร็จสิ้น').length,
+  };
+  const totalBudget = budgets.reduce((a, b) => a + (b.allocated_amount || 0), 0);
+  const fiscalYear = new Date().getMonth() >= 9 ? new Date().getFullYear() + 544 : new Date().getFullYear() + 543;
 
   // Urgent pending incoming docs
   const urgentIncoming = incomingDocs
@@ -87,7 +100,7 @@ export const DashboardPage: React.FC = () => {
               <span>—</span>
               <span>SMART ADMINISTRATION CENTER</span>
               <span>—</span>
-              <span>ปีงบประมาณ 2569</span>
+              <span>ปีงบประมาณ {fiscalYear}</span>
             </div>
 
             <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-3">
@@ -167,7 +180,7 @@ export const DashboardPage: React.FC = () => {
             </div>
             <div className="mt-2 flex items-baseline gap-2">
               <span className="text-3xl sm:text-4xl font-bold font-mono tracking-tight text-[#17324F]">
-                24
+                {missionCounts.total}
               </span>
               <span className="text-xs text-[rgba(17,19,21,0.45)]">รายการ</span>
             </div>
@@ -188,7 +201,7 @@ export const DashboardPage: React.FC = () => {
             </div>
             <div className="mt-2 flex items-baseline gap-2">
               <span className="text-3xl sm:text-4xl font-bold font-mono tracking-tight text-amber-700">
-                12
+                {missionCounts.doing}
               </span>
               <span className="text-xs text-[rgba(17,19,21,0.45)]">รายการ</span>
             </div>
@@ -209,7 +222,7 @@ export const DashboardPage: React.FC = () => {
             </div>
             <div className="mt-2 flex items-baseline gap-2">
               <span className="text-3xl sm:text-4xl font-bold font-mono tracking-tight text-[#234A78]">
-                08
+                {missionCounts.waiting}
               </span>
               <span className="text-xs text-[rgba(17,19,21,0.45)]">รายการ</span>
             </div>
@@ -230,7 +243,7 @@ export const DashboardPage: React.FC = () => {
             </div>
             <div className="mt-2 flex items-baseline gap-2">
               <span className="text-3xl sm:text-4xl font-bold font-mono tracking-tight text-[#42695B]">
-                04
+                {missionCounts.done}
               </span>
               <span className="text-xs text-[rgba(17,19,21,0.45)]">รายการ</span>
             </div>
@@ -271,7 +284,7 @@ export const DashboardPage: React.FC = () => {
             <div className="mt-5 pt-3 border-t border-[rgba(17,19,21,0.06)]">
               <div className="flex items-center justify-between text-xs mb-1.5 font-mono">
                 <span className="text-[rgba(17,19,21,0.6)]">เบิกจ่ายแล้ว {kpis.spentPercentage.toFixed(1)}%</span>
-                <span className="text-[#42695B] font-medium">รวม ฿12.50M</span>
+                <span className="text-[#42695B] font-medium">รวม ฿{(totalBudget / 1e6).toFixed(2)}M</span>
               </div>
               <div className="w-full bg-[rgba(17,19,21,0.06)] h-1.5 rounded-full overflow-hidden">
                 <div

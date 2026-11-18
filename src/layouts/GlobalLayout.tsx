@@ -22,7 +22,7 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
   const [isNotificationsModalOpen, setIsNotificationsModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#F4F6FB] dark:bg-[#0B0D13] iridescent-ambient flex font-sans text-slate-900 dark:text-[#F5F7FA] antialiased selection:bg-[#5B2A86] selection:text-white relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#F4F6FB] dark:bg-[#0B0D13] iridescent-ambient flex font-sans text-slate-900 dark:text-[#F5F7FA] antialiased selection:bg-[#5B2A86] selection:text-white relative overflow-x-clip">
       {/* Dynamic Multi-Color Ambient Aurora Backdrop */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
         <div
@@ -64,7 +64,7 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
         />
 
         {/* Content Area with Breadcrumb */}
-        <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
+        <div className="flex-1 flex flex-col min-w-0 overflow-x-clip">
           {/* Global Breadcrumb */}
           <Breadcrumb />
 
