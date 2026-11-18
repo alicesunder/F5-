@@ -1,6 +1,7 @@
 import { DlaTemplate, DLA_TEMPLATES } from '../data/dlaTemplatesData';
 import { DocumentInspection } from '../types';
 import { initialInspections } from '../data/inspectionsData';
+import { aiFetch } from '../lib/aiFetch';
 
 export interface OfficialDraftResult {
   id: string;
@@ -147,11 +148,7 @@ export async function draftOfficialDocument(
       }
     };
 
-    const response = await fetch('/api/ai', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestPayload),
-    });
+    const response = await aiFetch(requestPayload);
 
     if (response.ok) {
       const data = await response.json();

@@ -30,6 +30,7 @@ import {
   BppMissionCategory,
   BppScheduleViewMode,
 } from './types';
+import { useCollection } from '../../lib/collections';
 
 interface BppMissionSchedulePageProps {
   initialTab?: 'missions' | 'duty';
@@ -47,7 +48,7 @@ export const BppMissionSchedulePage: React.FC<BppMissionSchedulePageProps> = ({
     }
   }, [initialTab]);
 
-  const [missions, setMissions] = useState<BppMissionItem[]>(INITIAL_BPP_MISSIONS);
+  const [missions, setMissions] = useCollection<BppMissionItem>('schedule.missions');
   const [viewMode, setViewMode] = useState<BppScheduleViewMode>('table');
 
   // Filter States

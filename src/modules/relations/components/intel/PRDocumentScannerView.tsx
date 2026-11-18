@@ -19,7 +19,7 @@ import { GovDocument, DocStatus } from '../../types/bppTypes';
 export const PRDocumentScannerView: React.FC = () => {
   const { addDocument, setSelectedDocument, setActivePRView } = usePRIntel();
 
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string>(SAMPLE_TEMPLATES[0].id);
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>(SAMPLE_TEMPLATES[0]?.id ?? '');
   const [isScanning, setIsScanning] = useState(false);
   const [scanStep, setScanStep] = useState(0);
   const [scannedResult, setScannedResult] = useState<GovDocument | null>(null);
@@ -34,6 +34,7 @@ export const PRDocumentScannerView: React.FC = () => {
 
   const handleStartScan = (templateId?: string) => {
     const tpl = SAMPLE_TEMPLATES.find((t) => t.id === (templateId || selectedTemplateId)) || SAMPLE_TEMPLATES[0];
+    if (!tpl) return; // ยังไม่ได้เชื่อมต่อระบบ OCR/AI จริง จึงไม่สร้างเอกสารสมมติ
     setIsScanning(true);
     setScanStep(0);
     setScannedResult(null);
@@ -179,6 +180,12 @@ export const PRDocumentScannerView: React.FC = () => {
               </span>
             </div>
 
+            {SAMPLE_TEMPLATES.length === 0 && (
+              <p className="text-xs text-slate-500">ฟีเจอร์สแกนเอกสารด้วย AI ยังไม่ได้เชื่อมต่อกับบริการ OCR จึงยังใช้งานไม่ได้ในขณะนี้</p>
+            )}
+            {SAMPLE_TEMPLATES.length === 0 && (
+              <p className="text-xs text-slate-500">ฟีเจอร์สแกนเอกสารด้วย AI ยังไม่ได้เชื่อมต่อกับบริการ OCR จึงยังใช้งานไม่ได้ในขณะนี้</p>
+            )}
             <div className="space-y-2">
               {SAMPLE_TEMPLATES.map((tpl) => {
                 const isSelected = selectedTemplateId === tpl.id;

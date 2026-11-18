@@ -11,65 +11,27 @@ import {
   KeyRound,
   Eye,
 } from 'lucide-react';
+import { supabase } from '../../../lib/supabase';
 
 export const SecurityAuditSection: React.FC = () => {
   const [loggedOutDevices, setLoggedOutDevices] = useState(false);
 
   const sessions = [
     {
-      id: 'SES-01',
-      device: 'Google Chrome บน macOS (เครื่องนี้)',
-      ip: '192.168.1.104 (เครือข่าย บช.ตชด. พหลโยธิน)',
+      id: 'SES-CURRENT',
+      device: 'เบราว์เซอร์นี้ (เซสชันปัจจุบัน)',
+      ip: 'ไม่แสดงที่อยู่ IP',
       time: 'กำลังใช้งานในปัจจุบัน',
       current: true,
       icon: Laptop,
     },
-    {
-      id: 'SES-02',
-      device: 'Safari บน iPhone 15 Pro',
-      ip: '182.232.xxx.xx (AIS 5G)',
-      time: 'เมื่อวานนี้ 19:45 น.',
-      current: false,
-      icon: Smartphone,
-    },
   ];
 
-  const auditLogs = [
-    {
-      id: 'AUD-01',
-      action: 'เข้าดูสลิปเงินเดือนประจำเดือนสิงหาคม 2569',
-      actor: 'ส.ต.อ.ชัยโรจน์ สหัสภูริพัฒน์ (เจ้าของบัญชี)',
-      ip: '192.168.1.104',
-      time: 'วันนี้ 10:15 น.',
-      status: 'สำเร็จ',
-    },
-    {
-      id: 'AUD-02',
-      action: 'ตรวจสอบสถานะเบี้ยเลี้ยงปฏิบัติการสนาม',
-      actor: 'ส.ต.อ.ชัยโรจน์ สหัสภูริพัฒน์ (เจ้าของบัญชี)',
-      ip: '192.168.1.104',
-      time: 'วันนี้ 09:20 น.',
-      status: 'สำเร็จ',
-    },
-    {
-      id: 'AUD-03',
-      action: 'เข้าสู่ระบบผ่านการยืนยันตัวตนสองชั้น (2FA)',
-      actor: 'ส.ต.อ.ชัยโรจน์ สหัสภูริพัฒน์',
-      ip: '192.168.1.104',
-      time: 'วันนี้ 08:28 น.',
-      status: 'สำเร็จ',
-    },
-    {
-      id: 'AUD-04',
-      action: 'เจ้าหน้าที่การเงิน ฝอ.๕ ตรวจสอบฎีกาเบี้ยเลี้ยงประจำรอบ',
-      actor: 'ร.ต.ท. ประสิทธิ์ การเงิน (เจ้าหน้าที่ธุรการ)',
-      ip: '192.168.1.15',
-      time: '12 ก.ย. 2569 14:10 น.',
-      status: 'สิทธิ์อนุญาต',
-    },
-  ];
+  // ยังไม่มีการบันทึกประวัติการเข้าถึงรายบุคคล: แสดงว่างแทนข้อมูลสมมติ
+  const auditLogs: { id: string; action: string; actor: string; ip: string; time: string; status: string }[] = [];
 
   const handleLogoutAll = () => {
+    void supabase.auth.signOut({ scope: 'others' });
     setLoggedOutDevices(true);
     setTimeout(() => setLoggedOutDevices(false), 4000);
   };

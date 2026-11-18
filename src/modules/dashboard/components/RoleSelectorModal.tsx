@@ -44,7 +44,7 @@ export const RoleSelectorModal: React.FC<RoleSelectorModalProps> = ({
   const roleOptions: RoleOption[] = [
     {
       role: 'SUPER_ADMIN',
-      name: 'ส.ต.อ.ชัยโรจน์ สหัสภูริพัฒน์',
+      name: 'ผู้ใช้งานระบบ',
       rank: 'ส.ต.อ.',
       title: 'ผู้ดูแลระบบสูงสุด (Super Admin)',
       department: 'ฝอ.๕ บช.ตชด. (งานประชาสัมพันธ์)',
@@ -53,7 +53,7 @@ export const RoleSelectorModal: React.FC<RoleSelectorModalProps> = ({
     },
     {
       role: 'ADMIN',
-      name: 'ส.ต.อ.ชัยโรจน์ สหัสภูริพัฒน์',
+      name: 'ผู้ใช้งานระบบ',
       rank: 'ส.ต.อ.',
       title: 'จัดการระบบกลาง (Central Admin)',
       department: 'ฝอ.๕ บช.ตชด. (งานประชาสัมพันธ์)',
@@ -62,7 +62,7 @@ export const RoleSelectorModal: React.FC<RoleSelectorModalProps> = ({
     },
     {
       role: 'ADMIN_DEPARTMENT',
-      name: 'ส.ต.อ.ชัยโรจน์ สหัสภูริพัฒน์',
+      name: 'ผู้ใช้งานระบบ',
       rank: 'ส.ต.อ.',
       title: 'เจ้าหน้าที่ฝ่ายอำนวยการ',
       department: 'ฝ่ายอำนวยการ ๕',
@@ -71,7 +71,7 @@ export const RoleSelectorModal: React.FC<RoleSelectorModalProps> = ({
     },
     {
       role: 'RELATIONS',
-      name: 'ส.ต.อ.ชัยโรจน์ สหัสภูริพัฒน์',
+      name: 'ผู้ใช้งานระบบ',
       rank: 'ส.ต.อ.',
       title: 'เจ้าหน้าที่งานประชาสัมพันธ์ (ภารกิจหลัก)',
       department: 'ฝ่ายอำนวยการ ๕ (งานประชาสัมพันธ์)',
@@ -80,7 +80,7 @@ export const RoleSelectorModal: React.FC<RoleSelectorModalProps> = ({
     },
     {
       role: 'DISASTER',
-      name: 'ส.ต.อ.ชัยโรจน์ สหัสภูริพัฒน์',
+      name: 'ผู้ใช้งานระบบ',
       rank: 'ส.ต.อ.',
       title: 'เจ้าหน้าที่ฝ่ายสาธารณภัย',
       department: 'ฝ่ายสาธารณภัย',
@@ -89,7 +89,7 @@ export const RoleSelectorModal: React.FC<RoleSelectorModalProps> = ({
     },
     {
       role: 'VOLUNTEER',
-      name: 'ส.ต.อ.ชัยโรจน์ สหัสภูริพัฒน์',
+      name: 'ผู้ใช้งานระบบ',
       rank: 'ส.ต.อ.',
       title: 'เจ้าหน้าที่ฝ่ายจิตอาสา',
       department: 'ฝ่ายจิตอาสา',
@@ -98,7 +98,7 @@ export const RoleSelectorModal: React.FC<RoleSelectorModalProps> = ({
     },
     {
       role: 'VIEWER',
-      name: 'ส.ต.อ.ชัยโรจน์ สหัสภูริพัฒน์',
+      name: 'ผู้ใช้งานระบบ',
       rank: 'ส.ต.อ.',
       title: 'โหมดผู้ตรวจการณ์ (Viewer Mode)',
       department: 'ส่วนตรวจการณ์',

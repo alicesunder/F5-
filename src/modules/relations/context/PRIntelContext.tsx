@@ -25,6 +25,7 @@ import {
 import { INITIAL_DOCUMENTS } from '../data/documentsData';
 import { PRViewId } from '../components/PRMonitoringSidebar';
 import { useAdmin } from '../../../contexts/AdminContext';
+import { useCollection } from '../../../lib/collections';
 
 interface PRIntelContextType {
   // Navigation
@@ -86,14 +87,14 @@ export const PRIntelProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const { showToast } = useAdmin();
 
   const [activePRView, setActivePRView] = useState<PRViewId>('dashboard');
-  const [pages, setPages] = useState<MonitoredPage[]>(INITIAL_PAGES);
-  const [posts, setPosts] = useState<PostItem[]>(INITIAL_POSTS);
-  const [keywords, setKeywords] = useState<MonitoredKeyword[]>(INITIAL_KEYWORDS);
-  const [alerts, setAlerts] = useState<AlertItem[]>(INITIAL_ALERTS);
-  const [missions, setMissions] = useState<PhotoMission[]>(ALL_INITIAL_MISSIONS);
-  const [personnel, setPersonnel] = useState<Personnel[]>(INITIAL_PERSONNEL);
-  const [locations, setLocations] = useState<MissionLocation[]>(INITIAL_LOCATIONS);
-  const [documents, setDocuments] = useState<GovDocument[]>(INITIAL_DOCUMENTS);
+  const [pages, setPages] = useCollection<MonitoredPage>('pr.pages');
+  const [posts, setPosts] = useCollection<PostItem>('pr.posts');
+  const [keywords, setKeywords] = useCollection<MonitoredKeyword>('pr.keywords');
+  const [alerts, setAlerts] = useCollection<AlertItem>('pr.alerts');
+  const [missions, setMissions] = useCollection<PhotoMission>('pr.missions');
+  const [personnel, setPersonnel] = useCollection<Personnel>('pr.personnel');
+  const [locations, setLocations] = useCollection<MissionLocation>('pr.locations');
+  const [documents, setDocuments] = useCollection<GovDocument>('pr.documents');
 
   const [selectedPageId, setSelectedPageId] = useState<string | null>(null);
   const [selectedPost, setSelectedPost] = useState<PostItem | null>(null);
@@ -101,32 +102,13 @@ export const PRIntelProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [selectedDocument, setSelectedDocument] = useState<GovDocument | null>(null);
 
   const [globalSearchQuery, setGlobalSearchQuery] = useState<string>('');
-  const [isSimulating, setIsSimulating] = useState(true);
+  const [isSimulating, setIsSimulating] = useState(false);
 
   const [isAddMissionOpen, setIsAddMissionOpen] = useState(false);
   const [prefilledMissionData, setPrefilledMissionData] = useState<Partial<PhotoMission> | null>(null);
   const [isAddKeywordOpen, setIsAddKeywordOpen] = useState(false);
   const [isAddPageOpen, setIsAddPageOpen] = useState(false);
 
-  // Live timer simulation
-  useEffect(() => {
-    if (!isSimulating) return;
-    const timer = setInterval(() => {
-      setPosts((prev) =>
-        prev.map((p) => ({
-          ...p,
-          minutesAgo: p.minutesAgo + 0.2,
-        }))
-      );
-      setAlerts((prev) =>
-        prev.map((a) => ({
-          ...a,
-          minutesAgo: a.minutesAgo + 0.2,
-        }))
-      );
-    }, 15000);
-    return () => clearInterval(timer);
-  }, [isSimulating]);
 
   const toggleSimulation = () => {
     setIsSimulating((prev) => {

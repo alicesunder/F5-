@@ -8,21 +8,17 @@ import {
   IncidentAttachment,
   IncidentTimelineEvent,
 } from '../types';
-import {
-  initialIncidents,
-  initialMapPoints,
-  initialHydrologicalStations,
-  initialRainfallData,
-} from '../data/disasterMockData';
+import { getCollectionStore } from '../../../lib/collections';
 
-const INCIDENTS_STORAGE_KEY = 'sac_disaster_incidents_v1';
-const MAP_POINTS_STORAGE_KEY = 'sac_disaster_map_points_v1';
+const incidentStore = getCollectionStore<DisasterIncident>('disaster.incidents');
+const pointStore = getCollectionStore<MapPoint>('disaster.map_points');
+
 
 class DisasterService {
   private incidents: DisasterIncident[] = [];
   private mapPoints: MapPoint[] = [];
-  private stations: HydrologicalStation[] = initialHydrologicalStations;
-  private rainfalls: RainfallTelemetry[] = initialRainfallData;
+  private stations: HydrologicalStation[] = [];
+  private rainfalls: RainfallTelemetry[] = [];
   private listeners: Array<() => void> = [];
 
   constructor() {
@@ -30,42 +26,21 @@ class DisasterService {
   }
 
   private loadFromStorage() {
-    if (typeof window === 'undefined') {
-      this.incidents = [...initialIncidents];
-      this.mapPoints = [...initialMapPoints];
-      return;
-    }
-
-    try {
-      const savedIncidents = localStorage.getItem(INCIDENTS_STORAGE_KEY);
-      if (savedIncidents) {
-        this.incidents = JSON.parse(savedIncidents);
-      } else {
-        this.incidents = [...initialIncidents];
-        this.saveToStorage();
-      }
-
-      const savedPoints = localStorage.getItem(MAP_POINTS_STORAGE_KEY);
-      if (savedPoints) {
-        this.mapPoints = JSON.parse(savedPoints);
-      } else {
-        this.mapPoints = [...initialMapPoints];
-      }
-    } catch {
-      this.incidents = [...initialIncidents];
-      this.mapPoints = [...initialMapPoints];
-    }
+    const sync = () => {
+      this.incidents = structuredClone(incidentStore.items);
+      this.mapPoints = structuredClone(pointStore.items);
+      this.notify();
+    };
+    incidentStore.subscribe(sync);
+    pointStore.subscribe(sync);
+    incidentStore.ensureLoaded();
+    pointStore.ensureLoaded();
+    sync();
   }
 
   private saveToStorage() {
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem(INCIDENTS_STORAGE_KEY, JSON.stringify(this.incidents));
-        localStorage.setItem(MAP_POINTS_STORAGE_KEY, JSON.stringify(this.mapPoints));
-      } catch (e) {
-        console.error('Failed to save disaster data to localStorage', e);
-      }
-    }
+    void incidentStore.set(structuredClone(this.incidents));
+    void pointStore.set(structuredClone(this.mapPoints));
     this.notify();
   }
 
@@ -311,12 +286,6 @@ class DisasterService {
 
   public getRainfallData(): RainfallTelemetry[] {
     return [...this.rainfalls];
-  }
-
-  public resetToDefault() {
-    this.incidents = [...initialIncidents];
-    this.mapPoints = [...initialMapPoints];
-    this.saveToStorage();
   }
 }
 

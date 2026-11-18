@@ -1,8 +1,9 @@
 import { NewsItem, MediaItem, RelationsStats, NewsStatus } from '../types';
-import { initialNewsList, initialMediaList } from '../data/relationsMockData';
+import { getCollectionStore } from '../../../lib/collections';
 
-const NEWS_STORAGE_KEY = 'sac_relations_news_v1';
-const MEDIA_STORAGE_KEY = 'sac_relations_media_v1';
+const newsStore = getCollectionStore<NewsItem>('relations.news');
+const mediaStore = getCollectionStore<MediaItem>('relations.media');
+
 
 type Listener = () => void;
 
@@ -16,43 +17,21 @@ class RelationsService {
   }
 
   private loadFromStorage(): void {
-    if (typeof window === 'undefined') {
-      this.news = [...initialNewsList];
-      this.media = [...initialMediaList];
-      return;
-    }
-
-    try {
-      const storedNews = localStorage.getItem(NEWS_STORAGE_KEY);
-      if (storedNews) {
-        this.news = JSON.parse(storedNews);
-      } else {
-        this.news = [...initialNewsList];
-        this.saveToStorage();
-      }
-
-      const storedMedia = localStorage.getItem(MEDIA_STORAGE_KEY);
-      if (storedMedia) {
-        this.media = JSON.parse(storedMedia);
-      } else {
-        this.media = [...initialMediaList];
-        this.saveToStorage();
-      }
-    } catch (e) {
-      console.error('Failed to load relations data from storage', e);
-      this.news = [...initialNewsList];
-      this.media = [...initialMediaList];
-    }
+    const sync = () => {
+      this.news = structuredClone(newsStore.items);
+      this.media = structuredClone(mediaStore.items);
+      this.listeners.forEach(l => l());
+    };
+    newsStore.subscribe(sync);
+    mediaStore.subscribe(sync);
+    newsStore.ensureLoaded();
+    mediaStore.ensureLoaded();
+    sync();
   }
 
   private saveToStorage(): void {
-    if (typeof window === 'undefined') return;
-    try {
-      localStorage.setItem(NEWS_STORAGE_KEY, JSON.stringify(this.news));
-      localStorage.setItem(MEDIA_STORAGE_KEY, JSON.stringify(this.media));
-    } catch (e) {
-      console.error('Failed to save relations data to storage', e);
-    }
+    void newsStore.set(structuredClone(this.news));
+    void mediaStore.set(structuredClone(this.media));
   }
 
   private notify(): void {
@@ -85,9 +64,9 @@ class RelationsService {
   }
 
   public createNews(item: Omit<NewsItem, 'id' | 'createdAt' | 'updatedAt' | 'views' | 'likes'>): NewsItem {
-    const nextNum = this.news.length + 1;
+    const nextNum = Date.now() % 1000000;
     const year = 2569;
-    const padded = String(nextNum).padStart(3, '0');
+    const padded = String(nextNum).padStart(6, '0');
     const newId = `NEWS-${year}-${padded}`;
 
     const nowIso = new Date().toISOString();
@@ -163,8 +142,8 @@ class RelationsService {
   }
 
   public addMedia(item: Omit<MediaItem, 'id' | 'downloadCount' | 'uploadedAt'>): MediaItem {
-    const nextNum = this.media.length + 1;
-    const padded = String(nextNum).padStart(3, '0');
+    const nextNum = Date.now() % 1000000;
+    const padded = String(nextNum).padStart(6, '0');
     const newId = `MED-${padded}`;
 
     const newMedia: MediaItem = {

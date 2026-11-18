@@ -1,3 +1,4 @@
+import { aiFetch } from '../lib/aiFetch';
 export interface FO5AIRequest {
   department: string;
   prompt: string;
@@ -25,11 +26,7 @@ function localFallback({ department, prompt }: FO5AIRequest): string {
 
 export async function askFO5AI(request: FO5AIRequest): Promise<FO5AIResponse> {
   try {
-    const response = await fetch('/api/ai', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(request),
-    });
+    const response = await aiFetch(request);
 
     if (response.ok) {
       const data = (await response.json()) as { text?: string; provider?: 'gemini' | 'local' };

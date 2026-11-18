@@ -33,11 +33,11 @@ export const PRAddMissionModal: React.FC = () => {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<MissionCategory>('จิตอาสาพระราชทาน');
   const [priority, setPriority] = useState<MissionPriority>('high');
-  const [date, setDate] = useState('2026-09-08');
+  const [date, setDate] = useState('');
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('12:00');
-  const [locationName, setLocationName] = useState('กองบัญชาการตำรวจตระเวนชายแดน');
-  const [province, setProvince] = useState('กรุงเทพมหานคร');
+  const [locationName, setLocationName] = useState('');
+  const [province, setProvince] = useState('');
   const [personnelId, setPersonnelId] = useState(personnel[0]?.id || 'pers-1');
   const [teamCount, setTeamCount] = useState(2);
   const [deliverablesRequired, setDeliverablesRequired] = useState(50);

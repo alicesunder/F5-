@@ -241,7 +241,7 @@ export const DisasterReports: React.FC<DisasterReportsProps> = ({
         <div className="pt-8 border-t border-slate-200 grid grid-cols-2 gap-8 text-center text-xs">
           <div className="space-y-1">
             <div className="h-10" />
-            <p className="font-semibold text-slate-900">(พ.ต.ท. ประสิทธิ์ ใจมั่น)</p>
+            <p className="font-semibold text-slate-900">(...................................)</p>
             <p className="text-slate-500">หัวหน้าฝ่ายปฏิบัติการส่วนหน้า</p>
           </div>
           <div className="space-y-1">

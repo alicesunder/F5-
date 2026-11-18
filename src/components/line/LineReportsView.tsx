@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { Search, MessageSquareText, Image as ImageIcon, CheckCircle2, ChevronLeft, AlertTriangle, RefreshCw } from 'lucide-react';
+import { LineGroupsPanel } from './LineGroupsPanel';
 import { lineReportService, LineReportsLoadState } from '../../services/lineReportService';
 import {
   LINE_DEPT_META,
@@ -121,6 +122,8 @@ export const LineReportsView: React.FC<Props> = ({ dept }) => {
           />
         </div>
       </header>
+
+      {!dept && <LineGroupsPanel />}
 
       {state === 'loading' && all.length === 0 && (
         <div role="status" className="rounded-xl border border-slate-200 dark:border-white/10 px-3 py-2 text-xs text-slate-500">

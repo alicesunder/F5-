@@ -26,8 +26,8 @@ export const MediaUploadModal: React.FC<MediaUploadModalProps> = ({
   const [name, setName] = useState('');
   const [type, setType] = useState<MediaType>('image');
   const [category, setCategory] = useState<MediaCategory>('ประชาสัมพันธ์');
-  const [uploadedBy, setUploadedBy] = useState('ฝ่ายประชาสัมพันธ์และสื่อสารดิจิทัล');
-  const [url, setUrl] = useState('https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80');
+  const [uploadedBy, setUploadedBy] = useState('');
+  const [url, setUrl] = useState('');
 
   if (!isOpen) return null;
 

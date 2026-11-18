@@ -18,17 +18,8 @@ import {
   MeetingResolution,
   Mission,
 } from '../types';
-import { initialBudgets } from '../data/budgetData';
-import { initialTravelRecords } from '../data/travelData';
-import { initialIncomingDocs } from '../data/incomingDocsData';
-import { initialOutgoingDocs } from '../data/outgoingDocsData';
-import { initialArchivalDocs } from '../data/archivalDocsData';
-import { initialUnits, initialPersonnel } from '../data/unitsAndPersonnel';
-import { initialNotifications, initialActivityLogs } from '../data/notificationsAndLogs';
-import { initialInspections } from '../data/inspectionsData';
-import { initialMeetings } from '../data/meetingsData';
-import { initialMissions } from '../data/missionsData';
 import { profileForEmail } from '../data/usersData';
+import { useCollection, onCollectionError } from '../lib/collections';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import type { Session } from '@supabase/supabase-js';
 
@@ -64,6 +55,7 @@ interface AdminContextType {
   isAuthenticated: boolean;
   /** false ระหว่างตรวจ session ที่เก็บไว้กับ Supabase ครั้งแรก (กันหน้าแรกกะพริบ) */
   authReady: boolean;
+  isStaff: boolean | null;
   userSession: UserSession | null;
   isLoginModalOpen: boolean;
   setIsLoginModalOpen: (open: boolean) => void;
@@ -154,29 +146,31 @@ interface AdminContextType {
 
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
-  resetAllData: () => void;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [budgets, setBudgets] = useState<BudgetItem[]>(initialBudgets);
-  const [travelRecords, setTravelRecords] = useState<TravelRecord[]>(initialTravelRecords);
-  const [incomingDocs, setIncomingDocs] = useState<IncomingDocument[]>(initialIncomingDocs);
-  const [outgoingDocs, setOutgoingDocs] = useState<OutgoingDocument[]>(initialOutgoingDocs);
-  const [archivalDocs, setArchivalDocs] = useState<ArchivalDocument[]>(initialArchivalDocs);
-  const [units, setUnits] = useState<Unit[]>(initialUnits);
-  const [personnel, setPersonnel] = useState<Personnel[]>(initialPersonnel);
-  const [activityLogs, setActivityLogs] = useState<ActivityLog[]>(initialActivityLogs);
-  const [notifications, setNotifications] = useState<SystemNotification[]>(initialNotifications);
-  const [inspections, setInspections] = useState<DocumentInspection[]>(initialInspections);
-  const [meetings, setMeetings] = useState<Meeting[]>(initialMeetings);
-  const [missions, setMissions] = useState<Mission[]>(initialMissions);
+  const [budgets, setBudgets] = useCollection<BudgetItem>('admin.budgets', 'budget_id');
+  const [travelRecords, setTravelRecords] = useCollection<TravelRecord>('admin.travel', 'travel_id');
+  const [incomingDocs, setIncomingDocs] = useCollection<IncomingDocument>('admin.incoming_docs', 'incoming_id');
+  const [outgoingDocs, setOutgoingDocs] = useCollection<OutgoingDocument>('admin.outgoing_docs', 'outgoing_id');
+  const [archivalDocs, setArchivalDocs] = useCollection<ArchivalDocument>('admin.archival_docs', d => d.document_id || d.doc_id || d.document_number);
+  const [units, setUnits] = useCollection<Unit>('admin.units', 'unit_id');
+  const [personnel, setPersonnel] = useCollection<Personnel>('admin.personnel', 'person_id');
+  const [activityLogs, setActivityLogs] = useCollection<ActivityLog>('admin.activity_logs');
+  const [notifications, setNotifications] = useCollection<SystemNotification>('admin.notifications');
+  const [inspections, setInspections] = useCollection<DocumentInspection>('admin.inspections');
+  const [meetings, setMeetings] = useCollection<Meeting>('admin.meetings');
+  const [missions, setMissions] = useCollection<Mission>('admin.missions');
   // Session comes from Supabase Auth (persisted by supabase-js). Old sac_* keys from the mock login are removed.
   const [userSession, setUserSession] = useState<UserSession | null>(null);
   const [currentRole, setRoleState] = useState<Role>('SUPER_ADMIN');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [authReady, setAuthReady] = useState<boolean>(!isSupabaseConfigured);
+  /** null = ยังไม่รู้, false = ล็อกอินแล้วแต่ไม่อยู่ในรายชื่อบุคลากร (อ่าน/บันทึกข้อมูลไม่ได้) */
+  const [isStaff, setIsStaff] = useState<boolean | null>(null);
+  const [staffPhone, setStaffPhone] = useState('');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
   const getInitialModule = (): AppModule => {
@@ -232,32 +226,19 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, []);
 
   const currentUser = useMemo(() => {
-    if (userSession?.user) {
-      return {
-        person_id: userSession.user.id || 'USR-CHAIROT-01',
-        name: userSession.user.name || 'ชัยโรจน์ สหัสภูริพัฒน์',
-        rank: userSession.user.rank || 'ส.ต.อ.',
-        position: userSession.user.position || 'ผบ.หมู่-รอง สว. กก.ตชด.31 ปฏิบัติหน้าที่งานประชาสัมพันธ์ ฝอ.๕ บช.ตชด.',
-        department: userSession.user.department || 'ฝ่ายอำนวยการ ๕ บช.ตชด. (งานประชาสัมพันธ์)',
-        phone: '02-282-8111',
-        email: userSession.user.email || 'chairot.s@royalthaipolice.go.th',
-        status: 'ปฏิบัติหน้าที่ปกติ',
-        status_text: 'ปฏิบัติหน้าที่ปกติ',
-      } as Personnel;
-    }
-
+    const u = userSession?.user;
     return {
-      person_id: 'USR-CHAIROT-01',
-      name: 'ชัยโรจน์ สหัสภูริพัฒน์',
-      rank: 'ส.ต.อ.',
-      position: 'ผบ.หมู่-รอง สว. กก.ตชด.31 ปฏิบัติหน้าที่งานประชาสัมพันธ์ ฝอ.๕ บช.ตชด.',
-      department: 'ฝ่ายอำนวยการ ๕ บช.ตชด. (งานประชาสัมพันธ์)',
-      phone: '02-282-8111',
-      email: 'chairot.s@royalthaipolice.go.th',
+      person_id: u?.id || '',
+      name: u?.name || '',
+      rank: u?.rank || '',
+      position: u?.position || '',
+      department: u?.department || '',
+      phone: staffPhone,
+      email: u?.email || '',
       status: 'ปฏิบัติหน้าที่ปกติ',
       status_text: 'ปฏิบัติหน้าที่ปกติ',
     } as Personnel;
-  }, [userSession]);
+  }, [userSession, staffPhone]);
 
   const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'success') => {
     const id = Date.now().toString();
@@ -266,6 +247,11 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setToasts(prev => prev.filter(t => t.id !== id));
     }, 4000);
   }, []);
+
+  React.useEffect(
+    () => onCollectionError((_c, message) => showToast(`บันทึกข้อมูลไม่สำเร็จ: ${message}`, 'error')),
+    [showToast]
+  );
 
   const removeToast = useCallback((id: string) => {
     setToasts(prev => prev.filter(t => t.id !== id));
@@ -307,13 +293,14 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       details,
       type,
     };
-    setActivityLogs(prev => [newLog, ...prev.slice(0, 40)]);
+    setActivityLogs(prev => [newLog, ...prev.slice(0, 199)]);
   }, [currentUser]);
 
   const applySession = useCallback((session: Session | null) => {
     if (!session?.user?.email) {
       setUserSession(null);
       setIsAuthenticated(false);
+      setIsStaff(null);
       return;
     }
     const profile = profileForEmail(session.user.email);
@@ -335,6 +322,38 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     });
     setRoleState(profile.role);
     setIsAuthenticated(true);
+
+    // โปรไฟล์และสิทธิ์จริงอยู่ในตาราง staff (เรียกหลัง callback ของ auth จบ)
+    const uid = session.user.id;
+    setTimeout(() => {
+      void supabase
+        .from('staff')
+        .select('name, rank, position, department, phone, role, active')
+        .eq('user_id', uid)
+        .maybeSingle()
+        .then(({ data }) => {
+          const active = !!data?.active;
+          const role = (active ? data!.role : 'VIEWER') as DepartmentRole;
+          setIsStaff(active);
+          setStaffPhone(data?.phone || '');
+          setRoleState(role);
+          setUserSession(prev =>
+            prev && prev.user.id === uid
+              ? {
+                  ...prev,
+                  user: {
+                    ...prev.user,
+                    name: data?.name || prev.user.name,
+                    rank: data?.rank ?? prev.user.rank,
+                    position: data?.position ?? prev.user.position,
+                    department: data?.department ?? prev.user.department,
+                    role,
+                  },
+                }
+              : prev
+          );
+        });
+    }, 0);
   }, []);
 
   React.useEffect(() => {
@@ -822,22 +841,6 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     showToast('ทำเครื่องหมายว่าอ่านทั้งหมดแล้ว');
   }, [showToast]);
 
-  const resetAllData = useCallback(() => {
-    setBudgets(initialBudgets);
-    setTravelRecords(initialTravelRecords);
-    setIncomingDocs(initialIncomingDocs);
-    setOutgoingDocs(initialOutgoingDocs);
-    setArchivalDocs(initialArchivalDocs);
-    setUnits(initialUnits);
-    setPersonnel(initialPersonnel);
-    setNotifications(initialNotifications);
-    setActivityLogs(initialActivityLogs);
-    setInspections(initialInspections);
-    setMeetings(initialMeetings);
-    setMissions(initialMissions);
-    showToast('รีเซ็ตข้อมูลตัวอย่างกลับเป็นค่าเริ่มต้นแล้ว', 'info');
-  }, [showToast]);
-
   const clearLogs = useCallback(() => {
     setActivityLogs([]);
     showToast('ล้างประวัติการใช้งานทั้งหมดเรียบร้อยแล้ว', 'info');
@@ -864,6 +867,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         currentUser,
         isAuthenticated,
         authReady,
+        isStaff,
         userSession,
         isLoginModalOpen,
         setIsLoginModalOpen,
@@ -915,7 +919,6 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         checkMissionConflicts,
         markNotificationRead,
         markAllNotificationsRead,
-        resetAllData,
       }}
     >
       {children}

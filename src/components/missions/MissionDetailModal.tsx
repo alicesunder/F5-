@@ -213,7 +213,7 @@ export const MissionDetailModal: React.FC<MissionDetailModalProps> = ({
                 <span>กำลังพลผู้ปฏิบัติภารกิจ ({assignedPersonnel.length} นาย)</span>
               </h4>
               <div className="text-[11px] text-slate-400">
-                ผู้ควบคุมภารกิจ: <strong className="text-indigo-700">{commander?.name || 'พ.อ. วรพงษ์'}</strong>
+                ผู้ควบคุมภารกิจ: <strong className="text-indigo-700">{commander?.name || 'ยังไม่ได้ระบุ'}</strong>
               </div>
             </div>
 

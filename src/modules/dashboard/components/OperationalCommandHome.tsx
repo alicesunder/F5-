@@ -90,6 +90,40 @@ const DEPT_VISUAL_THEMES: Record<
   },
 };
 
+const NO_MISSION: UnifiedMission = {
+  id: '',
+  missionCode: '-',
+  title: 'ยังไม่มีภารกิจที่กำลังปฏิบัติการ',
+  primaryDepartment: 'admin',
+  supportingDepartments: [],
+  date: '',
+  time: '-',
+  location: '-',
+  province: '-',
+  responsibleOfficer: '',
+  targetUnit: '-',
+  participantsCount: 0,
+  attire: '-',
+  status: 'สร้าง',
+  description: 'เมื่อมีการสร้างภารกิจในระบบ ภารกิจที่กำลังดำเนินการจะแสดงที่นี่',
+  deadlineDate: '',
+  hasReport: false,
+  imagesCount: 0,
+  documentsCount: 0,
+};
+
+const isoDay = (d: Date) => {
+  const z = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`;
+};
+const TODAY_ISO = isoDay(new Date());
+const DAY_NAMES = ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'];
+const WEEK_STRIP = Array.from({ length: 7 }, (_, i) => {
+  const d = new Date();
+  d.setDate(d.getDate() - 3 + i);
+  return { date: isoDay(d), dayNum: String(d.getDate()), dayName: DAY_NAMES[d.getDay()], isToday: i === 3 };
+});
+
 export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
   missions,
   reports,
@@ -103,7 +137,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
   const [quickPeekDept, setQuickPeekDept] = useState<DepartmentKey | null>(null);
   const [timelineDeptFilter, setTimelineDeptFilter] = useState<DepartmentKey | 'all'>('all');
   const [missionViewMode, setMissionViewMode] = useState<'timeline' | 'bento'>('bento');
-  const [selectedCalendarDate, setSelectedCalendarDate] = useState<string>('2026-09-13');
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState<string>(TODAY_ISO);
   const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<WorkspaceTabKey>('missions');
   const [selectedActiveMissionId, setSelectedActiveMissionId] = useState<string | null>(null);
 
@@ -129,7 +163,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
       const found = missions.find(m => m.id === selectedActiveMissionId);
       if (found) return found;
     }
-    return runningMissions[0] || missions[0];
+    return runningMissions[0] || missions[0] || NO_MISSION;
   }, [missions, runningMissions, selectedActiveMissionId]);
 
   const nowDeptMeta = FO5_DEPARTMENTS_META[activeMission.primaryDepartment];
@@ -137,35 +171,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
 
   // Resilient news items
   const newsItems = useMemo(
-    () => [
-      {
-        id: 'news-1',
-        title: 'ผบช.ตชด. ตรวจเยี่ยมและมอบนโยบายการปฏิบัติราชการไตรมาส 4 ประจำปี 2569',
-        date: '12 ก.ย. 2569',
-        category: 'นโยบายและข้อสั่งการ',
-        departmentKey: 'admin' as DepartmentKey,
-        summary:
-          'เน้นย้ำความพร้อมรับมือสถานการณ์อุทกภัยชายแดน และการบูรณาการ 4 สายงาน ฝอ.5 อย่างเต็มพิกัด',
-      },
-      {
-        id: 'news-2',
-        title: 'จิตอาสา 904 บช.ตชด. ร่วมพัฒนาและปรับปรุงภูมิทัศน์ รร.ตชด.เฉลิมพระเกียรติ',
-        date: '13 ก.ย. 2569',
-        category: 'งานจิตอาสา',
-        departmentKey: 'volunteer' as DepartmentKey,
-        summary:
-          'มอบสิ่งของพระราชทานและตรวจสุขภาพนักเรียนในถิ่นทุรกันดาร ต.ท่ากระดาน อ.สนามชัยเขต',
-      },
-      {
-        id: 'news-3',
-        title: 'ตชด. สั่งการระดมเรือท้องแบนและชุดปฏิบัติการทางน้ำช่วยเหลือประชาชนพื้นที่อุบลราชธานี',
-        date: '13 ก.ย. 2569',
-        category: 'งานพัฒนาช่วยเหลือประชาชน',
-        departmentKey: 'disaster' as DepartmentKey,
-        summary:
-          'เฝ้าระวังระดับน้ำแม่น้ำมูลตลอด 24 ชั่วโมง ลำเลียงเสบียงพระราชทานแจกจ่ายประชาชนผู้ประสบภัย',
-      },
-    ],
+    () => [] as Array<{ id: string; title: string; date: string; category: string; departmentKey: DepartmentKey; summary: string }>,
     []
   );
 
@@ -178,44 +184,12 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
         title: d.subject,
         type: d.document_type || 'PDF',
         date: d.received_date,
-        size: d.attachment_size || '2.1 MB',
+        size: d.attachment_size || '',
         publisher: d.sender,
         urgency: d.urgency,
       }));
     }
-    return [
-      {
-        id: 'DOC-01',
-        code: 'นร 0505/ว 142',
-        title:
-          'แนวทางการเร่งรัดการเบิกจ่ายงบประมาณรายจ่ายประจำปีงบประมาณ พ.ศ. 2569 ในช่วงไตรมาสสุดท้าย',
-        type: 'PDF',
-        date: '2026-09-05',
-        size: '2.4 MB',
-        publisher: 'สำนักเลขาธิการคณะรัฐมนตรี',
-        urgency: 'ด่วนที่สุด',
-      },
-      {
-        id: 'DOC-02',
-        code: 'กห 0201/2890',
-        title: 'ขอเชิญเข้าร่วมการประชุมเตรียมความพร้อมการจัดทำแผนความมั่นคงแห่งชาติ พ.ศ. 2570',
-        type: 'PDF',
-        date: '2026-09-05',
-        size: '1.8 MB',
-        publisher: 'สำนักงานปลัดกระทรวงกลาโหม',
-        urgency: 'ด่วน',
-      },
-      {
-        id: 'DOC-03',
-        code: 'กค 0405.3/ว 88',
-        title: 'หลักเกณฑ์และวิธีปฏิบัติในการกันเงินไว้เบิกเหลื่อมปีสำหรับปีงบประมาณ พ.ศ. 2569',
-        type: 'PDF',
-        date: '2026-09-04',
-        size: '4.1 MB',
-        publisher: 'กรมบัญชีกลาง',
-        urgency: 'ด่วนมาก',
-      },
-    ];
+    return [];
   }, [incomingDocs]);
 
   // Urgent Action Items
@@ -277,22 +251,11 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
       });
     }
 
-    list.push({
-      id: 'att-4',
-      title: 'โครงการเฝ้าระวังน้ำท่วมฉับพลัน (ยศ.2-03)',
-      departmentKey: 'disaster',
-      statusText: 'เร่งรัดรายงาน',
-      statusColor: '#E89B22',
-      description: 'ความพร้อมเครื่องมือสื่อสารฉุกเฉิน 75.0% (รอรายงาน กก.ตชด.33)',
-      unit: 'กก.ตชด.33 / ภาค 3',
-      actionLabel: 'ติดตามหน่วย',
-      onClick: () => navigateModule('bpp-tracker'),
-    });
 
     return list.slice(0, 4);
   }, [reports, tasks, onSelectReport, navigateModule]);
 
-  const todayMissionsCount = missions.filter(m => m.date === '2026-09-13').length;
+  const todayMissionsCount = missions.filter(m => m.date === TODAY_ISO).length;
   const totalParticipants = missions.reduce((a, m) => a + m.participantsCount, 0);
 
   return (
@@ -493,7 +456,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
                       </span>
                     </div>
                     <p className="text-[11px] text-white/80 truncate">
-                      หัวหน้าสายงาน: {radarDeptMeta.leadOfficer}
+                      หัวหน้าสายงาน: {radarDeptMeta.leadOfficer || 'ยังไม่ได้ระบุ'}
                     </p>
                     <button
                       type="button"
@@ -744,7 +707,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
                     <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-0.5">
                       <span>ผู้รับผิดชอบหลัก:</span>
                       <span className="font-bold text-slate-800 dark:text-slate-200">
-                        {dept.leadOfficer.split(' ')[0]} {dept.leadOfficer.split(' ')[1]}
+                        {dept.leadOfficer || 'ยังไม่ได้ระบุ'}
                       </span>
                     </div>
 
@@ -1012,7 +975,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
 
               <button
                 type="button"
-                onClick={() => onSelectMission(activeMission)}
+                onClick={() => activeMission.id && onSelectMission(activeMission)}
                 className="px-4 py-2 rounded-2xl text-xs font-extrabold text-white transition cursor-pointer flex items-center gap-1.5 shadow-md hover:opacity-95 whitespace-nowrap"
                 style={{ backgroundColor: nowDeptMeta.color }}
               >
@@ -1397,15 +1360,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
 
                   {/* 7-Day Interactive Strip */}
                   <div className="grid grid-cols-7 gap-1.5">
-                    {[
-                      { date: '2026-09-10', dayNum: '10', dayName: 'พฤ.' },
-                      { date: '2026-09-11', dayNum: '11', dayName: 'ศ.' },
-                      { date: '2026-09-12', dayNum: '12', dayName: 'ส.' },
-                      { date: '2026-09-13', dayNum: '13', dayName: 'อา.', isToday: true },
-                      { date: '2026-09-14', dayNum: '14', dayName: 'จ.' },
-                      { date: '2026-09-15', dayNum: '15', dayName: 'อ.' },
-                      { date: '2026-09-16', dayNum: '16', dayName: 'พ.' },
-                    ].map(d => {
+                    {WEEK_STRIP.map(d => {
                       const dayMissions = missions.filter(m => m.date === d.date);
                       const isSelected = selectedCalendarDate === d.date;
                       return (
@@ -1485,7 +1440,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
                       นายตำรวจเวรอำนวยการวันนี้
                     </div>
                     <div className="text-xs font-extrabold text-slate-900 dark:text-white">
-                      พ.ต.ท.กิตติพงศ์ วงศ์สุวรรณ · ส.ต.อ.ชัยโรจน์ฯ
+                      ดูในเมนูตารางเวร
                     </div>
                   </div>
                   <button

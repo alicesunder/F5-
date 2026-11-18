@@ -33,7 +33,7 @@ export const BppDutySwapModal: React.FC<BppDutySwapModalProps> = ({
   const [newActualOfficer, setNewActualOfficer] = useState<string>(
     DUTY_OFFICERS_LIST[0]?.name ?? ''
   );
-  const [reason, setReason] = useState<string>('สับเปลี่ยนผลัดเวรตามข้อตกลงและได้รับอนุมัติจาก สว.ฝอ.๕');
+  const [reason, setReason] = useState<string>('');
 
   if (!isOpen) return null;
 

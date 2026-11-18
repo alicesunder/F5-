@@ -1,6 +1,8 @@
 import { BppUnit, INITIAL_BPP_UNITS, ReportDepartment, SubmissionStatus } from '../data/bppUnitsData';
+import { getCollectionStore } from '../lib/collections';
 
-const STORAGE_KEY = 'bpp_subdivisions_reports_v1';
+const store = getCollectionStore<BppUnit>('bpp.units');
+
 
 class BppReportService {
   private units: BppUnit[] = [];
@@ -10,29 +12,25 @@ class BppReportService {
     this.loadFromStorage();
   }
 
+  // หน่วยทั้งหมดมาจากโครงสร้าง ส่วนที่บันทึกแล้ว (ผู้ประสานงาน/รายงาน) ทับจากฐานข้อมูล
   private loadFromStorage() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          this.units = parsed;
-          return;
-        }
-      }
-    } catch {
-      // fallback
-    }
-    this.units = [...INITIAL_BPP_UNITS];
-    this.saveToStorage();
+    const sync = () => {
+      const saved = new Map(store.items.map(u => [u.id, u]));
+      this.units = INITIAL_BPP_UNITS.map(u => structuredClone(saved.get(u.id) ?? u));
+      this.notify();
+    };
+    store.subscribe(sync);
+    store.ensureLoaded();
+    sync();
   }
 
   private saveToStorage() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.units));
-    } catch {
-      // ignore
+    const base = new Map(INITIAL_BPP_UNITS.map(u => [u.id, JSON.stringify(u)]));
+    const keep = new Map(store.items.map(u => [u.id, u]));
+    for (const u of this.units) {
+      if (keep.has(u.id) || base.get(u.id) !== JSON.stringify(u)) keep.set(u.id, structuredClone(u));
     }
+    void store.set([...keep.values()]);
     this.notify();
   }
 

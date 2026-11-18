@@ -727,7 +727,7 @@ export const UnitsPage: React.FC = () => {
                   <label className="block font-medium text-[#111315] mb-1">ชื่อ - นามสกุล</label>
                   <input
                     type="text"
-                    placeholder="เช่น วรพงษ์ ทรัพย์อนันต์"
+                    placeholder="ชื่อ-นามสกุล"
                     value={formName}
                     onChange={e => setFormName(e.target.value)}
                     className="w-full px-3 py-2 rounded-xl border border-[rgba(17,19,21,0.1)] bg-white focus:outline-hidden"

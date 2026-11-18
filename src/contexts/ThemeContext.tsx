@@ -112,35 +112,7 @@ const DEFAULT_SETTINGS: SystemSettingsState = {
   },
 };
 
-const INITIAL_AUDIT_LOGS: SettingsAuditItem[] = [
-  {
-    id: 'AUDIT-001',
-    timestamp: '2569-09-13 18:35:10',
-    actor: 'พล.อ. ชาญชัย สุวรรณเวช',
-    actorRole: 'ผู้ดูแลระบบสูงสุด (Super Admin)',
-    action: 'เปลี่ยน Theme การแสดงผล',
-    category: 'Appearance',
-    detail: 'ปรับเปลี่ยนการตั้งค่าธีมจาก System → Dark Mode',
-  },
-  {
-    id: 'AUDIT-002',
-    timestamp: '2569-09-13 14:15:22',
-    actor: 'พล.ต. สมชาย เกียรติเกรียงไกร',
-    actorRole: 'ผู้บริหารระดับสูง',
-    action: 'บันทึกช่องทางแจ้งเตือน Deadline',
-    category: 'Notification',
-    detail: 'เปิดรับการแจ้งเตือนงานค้างผ่าน Push & In-app',
-  },
-  {
-    id: 'AUDIT-003',
-    timestamp: '2569-09-12 09:20:00',
-    actor: 'พ.อ. วรพงษ์ ทรัพย์อนันต์',
-    actorRole: 'ฝ่ายอำนวยการ',
-    action: 'ตรวจสอบการเชื่อมต่อ Google Workspace',
-    category: 'Integrations',
-    detail: 'ยืนยันโทเค็นการเชื่อมต่อ Drive & Picker พร้อมใช้งาน',
-  },
-];
+const INITIAL_AUDIT_LOGS: SettingsAuditItem[] = [];
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 

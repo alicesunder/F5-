@@ -26,8 +26,8 @@ export const NewMeetingModal: React.FC<NewMeetingModalProps> = ({
   const [title, setTitle] = useState(`การประชุมฝ่ายอำนวยการ ประจำเดือน ${MONTH_NAMES[new Date().getMonth()]} ๒๕๖๙`);
   const [meetingDate, setMeetingDate] = useState(new Date().toISOString().slice(0, 10));
   const [meetingTime, setMeetingTime] = useState('09:30');
-  const [location, setLocation] = useState('ห้องประชุมเสนาธิการ ๑');
-  const [chairperson, setChairperson] = useState('พล.ต. สมชาย ศรีสวัสดิ์');
+  const [location, setLocation] = useState('');
+  const [chairperson, setChairperson] = useState('');
   const [secretary, setSecretary] = useState(currentUser.name);
   const [totalAttendees, setTotalAttendees] = useState(18);
 

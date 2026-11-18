@@ -1,3 +1,4 @@
+import type { PersonalExpenseItem, PersonalAllowanceItem } from '../../../types';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -16,9 +17,9 @@ import {
 import {
   CHAIROT_POLICE_RECORD,
   INITIAL_PERSONAL_ALLOWANCES,
-  getStoredExpenses,
   GPF_TOTAL_ACCUMULATED,
 } from '../../../data/personalData';
+import { useMyCollection } from '../../../lib/collections';
 
 interface FinancialOverviewProps {
   hideFinancials: boolean;
@@ -33,13 +34,9 @@ export const FinancialOverview: React.FC<FinancialOverviewProps> = ({
   onNavigateSection,
   onOpenPayslipModal,
 }) => {
-  const [totalExpenses, setTotalExpenses] = useState(1094);
-
-  useEffect(() => {
-    const expenses = getStoredExpenses();
-    const sum = expenses.reduce((acc, curr) => acc + curr.amount, 0);
-    setTotalExpenses(sum);
-  }, []);
+  const [expenseItems] = useMyCollection<PersonalExpenseItem>('expenses');
+  const [allowanceItems] = useMyCollection<PersonalAllowanceItem>('allowances');
+  const totalExpenses = expenseItems.reduce((acc, curr) => acc + curr.amount, 0);
 
   // Exact figures from authentic POLIS police payroll
   const baseSalary = CHAIROT_POLICE_RECORD.currentSalaryAmount; // 13,310
@@ -51,11 +48,11 @@ export const FinancialOverview: React.FC<FinancialOverviewProps> = ({
   const netSalary = grossMonthlyIncome - totalDeductions; // 15,110.70
 
   // Allowances from authentic data
-  const totalPaidAllowance = INITIAL_PERSONAL_ALLOWANCES
+  const totalPaidAllowance = allowanceItems
     .filter(a => a.status === 'จ่ายแล้ว')
     .reduce((sum, a) => sum + a.totalAmount, 0); // 720
 
-  const totalPendingAllowance = INITIAL_PERSONAL_ALLOWANCES
+  const totalPendingAllowance = allowanceItems
     .filter(a => a.status !== 'จ่ายแล้ว')
     .reduce((sum, a) => sum + a.totalAmount, 0); // 2,040
 

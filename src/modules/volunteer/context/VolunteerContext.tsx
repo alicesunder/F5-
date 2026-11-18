@@ -25,6 +25,8 @@ import {
   INITIAL_VOLUNTEER_NOTIFICATIONS,
   INITIAL_ATTENTION_ITEMS,
 } from '../data/volunteerData';
+import { useCollection } from '../../../lib/collections';
+import { useAdmin } from '../../../contexts/AdminContext';
 
 export type VolunteerTab =
   | 'overview'
@@ -122,6 +124,7 @@ interface VolunteerContextType {
 const VolunteerContext = createContext<VolunteerContextType | undefined>(undefined);
 
 export const VolunteerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { currentUser: actor } = useAdmin();
   const [activeTab, setActiveTab] = useState<VolunteerTab>('overview');
   const [activeViewMode, setActiveViewMode] = useState<'list' | 'calendar' | 'timeline'>('list');
 
@@ -132,16 +135,16 @@ export const VolunteerProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [filterUnit, setFilterUnit] = useState('ALL');
 
   // Data states
-  const [missions, setMissions] = useState<VolunteerMissionItem[]>(INITIAL_VOLUNTEER_MISSIONS);
-  const [reports, setReports] = useState<VolunteerReportItem[]>(INITIAL_VOLUNTEER_REPORTS);
-  const [personnel] = useState<VolunteerPersonnelItem[]>(INITIAL_VOLUNTEER_PERSONNEL);
+  const [missions, setMissions] = useCollection<VolunteerMissionItem>('volunteer.missions');
+  const [reports, setReports] = useCollection<VolunteerReportItem>('volunteer.reports');
+  const [personnel] = useCollection<VolunteerPersonnelItem>('volunteer.personnel');
   const [categories, setCategories] = useState<VolunteerCategory[]>(INITIAL_VOLUNTEER_CATEGORIES);
   const [units] = useState<VolunteerUnitNode[]>(INITIAL_BPP_UNIT_TREE);
-  const [media] = useState<VolunteerMediaItem[]>(INITIAL_VOLUNTEER_MEDIA);
-  const [documents] = useState<VolunteerDocumentItem[]>(INITIAL_VOLUNTEER_DOCUMENTS);
-  const [auditLogs, setAuditLogs] = useState<VolunteerAuditLogItem[]>(INITIAL_VOLUNTEER_AUDIT_LOGS);
-  const [notifications, setNotifications] = useState<VolunteerNotificationItem[]>(INITIAL_VOLUNTEER_NOTIFICATIONS);
-  const [attentionItems, setAttentionItems] = useState<VolunteerAttentionItem[]>(INITIAL_ATTENTION_ITEMS);
+  const [media] = useCollection<VolunteerMediaItem>('volunteer.media');
+  const [documents] = useCollection<VolunteerDocumentItem>('volunteer.documents');
+  const [auditLogs, setAuditLogs] = useCollection<VolunteerAuditLogItem>('volunteer.audit_logs');
+  const [notifications, setNotifications] = useCollection<VolunteerNotificationItem>('volunteer.notifications');
+  const [attentionItems, setAttentionItems] = useCollection<VolunteerAttentionItem>('volunteer.attention');
 
   // Selected items & drawers
   const [selectedMission, setSelectedMission] = useState<VolunteerMissionItem | null>(null);
@@ -236,9 +239,9 @@ export const VolunteerProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         assignedPersonnelCount: missionData.assignedPersonnelCount || 20,
         status: (missionData.status as VolunteerMissionStatus) || 'PLANNING',
         uniform: missionData.uniform || 'เครื่องแบบจิตอาสาพระราชทาน (เสื้อเหลือง หมวก ผ้าพันคอพระราชทาน)',
-        coordinatorName: missionData.coordinatorName || 'พ.ต.ต. ธนาวุฒิ สร้อยสนธิ์',
-        coordinatorRank: missionData.coordinatorRank || 'พ.ต.ต.',
-        coordinatorPhone: missionData.coordinatorPhone || '081-445-8921',
+        coordinatorName: missionData.coordinatorName || actor.name,
+        coordinatorRank: missionData.coordinatorRank || actor.rank,
+        coordinatorPhone: missionData.coordinatorPhone || '',
         description: missionData.description || 'ดำเนินงานตามแผนกิจกรรมจิตอาสา บช.ตชด.',
         objectives: missionData.objectives || ['เพื่อประโยชน์ส่วนรวมและสังคม'],
         workflowStep: 1,
@@ -251,8 +254,8 @@ export const VolunteerProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       const newLog: VolunteerAuditLogItem = {
         id: `log-${Date.now()}`,
         timestamp: `${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })} น.`,
-        actorName: 'พ.ต.ต. ธนาวุฒิ สร้อยสนธิ์',
-        actorRank: 'พ.ต.ต.',
+        actorName: actor.name,
+        actorRank: actor.rank,
         actorRole: 'เจ้าหน้าที่จิตอาสา',
         action: 'สร้างภารกิจใหม่และบันทึกลงระบบ',
         toStatus: 'วางแผน (PLANNING)',
@@ -300,8 +303,8 @@ export const VolunteerProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       {
         id: `log-${Date.now()}`,
         timestamp: `${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })} น.`,
-        actorName: 'พ.ต.อ. กฤษฎา ภัทรดำรงค์',
-        actorRank: 'พ.ต.อ.',
+        actorName: actor.name,
+        actorRank: actor.rank,
         actorRole: 'ฝอ.5',
         action: `ปรับขั้นตอนการปฏิบัติงานเป็นขั้นที่ ${step}/7`,
         targetType: 'MISSION',
@@ -325,10 +328,10 @@ export const VolunteerProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         missionTitle: reportData.missionTitle || '',
         unitId: reportData.unitId || 'unit-bok-ok',
         unitName: reportData.unitName || 'บก.อก.บช.ตชด.',
-        reporterName: reportData.reporterName || 'พ.ต.ต. ธนาวุฒิ สร้อยสนธิ์',
-        reporterRank: reportData.reporterRank || 'พ.ต.ต.',
-        reporterPosition: reportData.reporterPosition || 'เจ้าหน้าที่ฝ่ายจิตอาสา ฝอ.5',
-        reporterPhone: reportData.reporterPhone || '081-445-8921',
+        reporterName: reportData.reporterName || actor.name,
+        reporterRank: reportData.reporterRank || actor.rank,
+        reporterPosition: reportData.reporterPosition || actor.position,
+        reporterPhone: reportData.reporterPhone || '',
         submittedAt: `${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })} น.`,
         rawSubmittedAt: now.toISOString(),
         outcomeSummary: reportData.outcomeSummary || 'ปฏิบัติภารกิจเสร็จสิ้นตามวัตถุประสงค์',
@@ -399,8 +402,8 @@ export const VolunteerProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const reviewReport = useCallback(
     (reportId: string, status: 'APPROVED' | 'REVISION_REQUESTED', note: string) => {
       const now = new Date();
-      const reviewerName = 'พ.ต.อ. กฤษฎา ภัทรดำรงค์';
-      const reviewerRank = 'พ.ต.อ.';
+      const reviewerName = actor.name;
+      const reviewerRank = actor.rank;
 
       setReports(prev =>
         prev.map(r => {

@@ -37,20 +37,17 @@ export const NewMissionModal: React.FC<NewMissionModalProps> = ({
   const { addMission, units, personnel, checkMissionConflicts } = useAdmin();
 
   const [missionName, setMissionName] = useState('');
-  const [unitId, setUnitId] = useState(units[0]?.unit_id || 'U01');
-  const [province, setProvince] = useState('ลพบุรี');
-  const [location, setLocation] = useState('ค่ายสมเด็จพระนารายณ์มหาราช');
+  const [unitId, setUnitId] = useState(units[0]?.unit_id || '');
+  const [province, setProvince] = useState('');
+  const [location, setLocation] = useState('');
   const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
   const [endDate, setEndDate] = useState(
     new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
   );
-  const [commanderId, setCommanderId] = useState(personnel[0]?.person_id || 'P01');
-  const [selectedPersonnelIds, setSelectedPersonnelIds] = useState<string[]>([
-    personnel[0]?.person_id || 'P01',
-    personnel[1]?.person_id || 'P02',
-  ]);
-  const [budget, setBudget] = useState(15000);
-  const [transportation, setTransportation] = useState('รถยนต์ส่วนกลาง หมายเลข ทบ-5541');
+  const [commanderId, setCommanderId] = useState(personnel[0]?.person_id || '');
+  const [selectedPersonnelIds, setSelectedPersonnelIds] = useState<string[]>([]);
+  const [budget, setBudget] = useState(0);
+  const [transportation, setTransportation] = useState('');
   const [objective, setObjective] = useState('');
   const [personnelSearch, setPersonnelSearch] = useState('');
 

@@ -10,6 +10,7 @@ import {
   Shield,
   FileText,
 } from 'lucide-react';
+import { useMyCollection } from '../../../lib/collections';
 
 interface WorkloadTask {
   id: string;
@@ -21,56 +22,9 @@ interface WorkloadTask {
   priority: 'สูง' | 'ปานกลาง' | 'ปกติ';
 }
 
-const INITIAL_TASKS: WorkloadTask[] = [
-  {
-    id: 'TSK-101',
-    title: 'ผลิตสื่ออินโฟกราฟิกสรุปภารกิจช่วยเหลือประชาชนช่วงอุทกภัย กก.ตชด.31',
-    category: 'มวลชนสัมพันธ์',
-    status: 'กำลังทำ',
-    deadline: 'วันนี้ 14:00 น.',
-    assigner: 'พ.ต.ท.หญิง นภัสวรรณ รักษ์ธรรม',
-    priority: 'สูง',
-  },
-  {
-    id: 'TSK-102',
-    title: 'ตรวจเช็คความถูกต้องร่างหนังสือข่าวแจกสื่อมวลชน ประจำสัปดาห์',
-    category: 'งานสารบรรณ',
-    status: 'ใกล้ครบกำหนด',
-    deadline: 'พรุ่งนี้ 10:00 น.',
-    assigner: 'ฝ่ายอำนวยการ ๕',
-    priority: 'สูง',
-  },
-  {
-    id: 'TSK-103',
-    title: 'คัดเลือกและตัดต่อวิดีโอคลิปการตรวจเยี่ยม รร.ตชด. ของผู้บังคับบัญชา',
-    category: 'งานภาพนิ่ง/วิดีโอ',
-    status: 'กำลังทำ',
-    deadline: '16 ก.ย. 2569',
-    assigner: 'หน.งานประชาสัมพันธ์',
-    priority: 'ปานกลาง',
-  },
-  {
-    id: 'TSK-104',
-    title: 'จัดเตรียมแฟ้มเอกสารเบิกจ่ายเบี้ยเลี้ยงรอบเดือนสิงหาคม',
-    category: 'งานสารบรรณ',
-    status: 'เสร็จแล้ว',
-    deadline: '10 ก.ย. 2569',
-    assigner: 'งานการเงิน ฝอ.๕',
-    priority: 'ปกติ',
-  },
-  {
-    id: 'TSK-105',
-    title: 'ประสานงานเครือข่ายวิทยุสื่อสารรายงานข่าวด่วนฉุกเฉิน',
-    category: 'ประสานงาน',
-    status: 'เสร็จแล้ว',
-    deadline: '8 ก.ย. 2569',
-    assigner: 'ศูนย์วิทยุ บช.ตชด.',
-    priority: 'ปกติ',
-  },
-];
 
 export const PersonalWorkloadSection: React.FC = () => {
-  const [tasks, setTasks] = useState<WorkloadTask[]>(INITIAL_TASKS);
+  const [tasks, setTasks] = useMyCollection<WorkloadTask>('workload');
   const [filterStatus, setFilterStatus] = useState<string>('all');
 
   const totalCount = tasks.length;

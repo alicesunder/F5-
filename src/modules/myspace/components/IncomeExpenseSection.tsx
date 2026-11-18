@@ -20,11 +20,10 @@ import {
   HelpCircle,
 } from 'lucide-react';
 import {
-  getStoredExpenses,
-  saveStoredExpenses,
   CHAIROT_POLICE_RECORD,
 } from '../../../data/personalData';
 import { PersonalExpenseItem } from '../../../types';
+import { useMyCollection } from '../../../lib/collections';
 
 interface IncomeExpenseSectionProps {
   hideFinancials: boolean;
@@ -51,7 +50,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export const IncomeExpenseSection: React.FC<IncomeExpenseSectionProps> = ({ hideFinancials }) => {
-  const [expenses, setExpenses] = useState<PersonalExpenseItem[]>([]);
+  const [expenses, setExpenses] = useMyCollection<PersonalExpenseItem>('expenses');
   const [showAddModal, setShowAddModal] = useState(false);
 
   // Form State
@@ -60,10 +59,6 @@ export const IncomeExpenseSection: React.FC<IncomeExpenseSectionProps> = ({ hide
   const [category, setCategory] = useState<PersonalExpenseItem['category']>('อาหาร');
   const [date, setDate] = useState(() => new Date().toISOString().split('T')[0]);
   const [notes, setNotes] = useState('');
-
-  useEffect(() => {
-    setExpenses(getStoredExpenses());
-  }, []);
 
   const handleAddExpense = (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,7 +79,6 @@ export const IncomeExpenseSection: React.FC<IncomeExpenseSectionProps> = ({ hide
 
     const updated = [newExpense, ...expenses];
     setExpenses(updated);
-    saveStoredExpenses(updated);
 
     // Reset Form
     setTitle('');
@@ -96,7 +90,6 @@ export const IncomeExpenseSection: React.FC<IncomeExpenseSectionProps> = ({ hide
   const handleDeleteExpense = (id: string) => {
     const updated = expenses.filter(e => e.id !== id);
     setExpenses(updated);
-    saveStoredExpenses(updated);
   };
 
   // Financial calculations

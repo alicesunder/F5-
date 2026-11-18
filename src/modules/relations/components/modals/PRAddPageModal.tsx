@@ -7,7 +7,7 @@ export const PRAddPageModal: React.FC = () => {
 
   const [name, setName] = useState('');
   const [handle, setHandle] = useState('');
-  const [category, setCategory] = useState('ความมั่นคงชายแดน');
+  const [category, setCategory] = useState('');
   const [followers, setFollowers] = useState(150000);
 
   if (!isAddPageOpen) return null;

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { INITIAL_PERSONAL_ALLOWANCES } from '../../../data/personalData';
 import { PersonalAllowanceItem } from '../../../types';
+import { useMyCollection } from '../../../lib/collections';
 
 interface AllowanceSectionProps {
   hideFinancials: boolean;
@@ -30,7 +31,7 @@ const STAGES = [
 ];
 
 export const AllowanceSection: React.FC<AllowanceSectionProps> = ({ hideFinancials }) => {
-  const [allowances, setAllowances] = useState<PersonalAllowanceItem[]>(INITIAL_PERSONAL_ALLOWANCES);
+  const [allowances, setAllowances] = useMyCollection<PersonalAllowanceItem>('allowances');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
 
   const formatMoney = (amount: number) => {

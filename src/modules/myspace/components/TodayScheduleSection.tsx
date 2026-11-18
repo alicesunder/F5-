@@ -10,10 +10,10 @@ import {
   Send,
   Plus,
 } from 'lucide-react';
-import { TODAY_SCHEDULE_ITEMS } from '../../../data/personalData';
+import { useMyCollection } from '../../../lib/collections';
 
 export const TodayScheduleSection: React.FC = () => {
-  const [items, setItems] = useState(TODAY_SCHEDULE_ITEMS);
+  const [items, setItems] = useMyCollection<{ id: string; completed?: boolean; [k: string]: any }>('schedule');
 
   const toggleComplete = (id: string) => {
     setItems(prev =>
@@ -24,7 +24,7 @@ export const TodayScheduleSection: React.FC = () => {
   };
 
   const completedCount = items.filter(i => i.completed).length;
-  const progressPercent = Math.round((completedCount / items.length) * 100);
+  const progressPercent = (items.length ? Math.round((completedCount / items.length) * 100) : 0);
 
   return (
     <div className="rounded-3xl p-5 sm:p-7 bg-white/90 dark:bg-[#151A22]/90 border border-slate-200/80 dark:border-white/10 shadow-sm backdrop-blur-md space-y-5">

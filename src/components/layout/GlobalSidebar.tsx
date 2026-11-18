@@ -281,7 +281,7 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
                             : 'text-sky-700 dark:text-sky-300 font-medium'
                         }`}
                       >
-                        ส.ต.อ.ชัยโรจน์ · ข้อมูลส่วนตัว
+                        ข้อมูลส่วนตัว · เงินเดือน · งาน
                       </div>
                     </div>
                   </div>

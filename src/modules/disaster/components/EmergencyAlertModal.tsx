@@ -23,8 +23,8 @@ export const EmergencyAlertModal: React.FC<EmergencyAlertModalProps> = ({
   const primaryColor = '#8191BA';
 
   const [level, setLevel] = useState<'เตือนภัยสีแดง' | 'เตือนภัยสีส้ม' | 'เฝ้าระวังสีเหลือง'>('เตือนภัยสีแดง');
-  const [targetProvinces, setTargetProvinces] = useState('เชียงราย, น่าน, สุโขทัย');
-  const [headline, setHeadline] = useState('แจ้งเตือนภัยน้ำป่าไหลหลากและน้ำล้นตลิ่งฉับพลัน');
+  const [targetProvinces, setTargetProvinces] = useState('');
+  const [headline, setHeadline] = useState('');
   const [message, setMessage] = useState(
     'ขอให้ประชาชนริมแม่น้ำสาย อ.แม่สาย ยกของขึ้นที่สูงทันที และเตรียมพร้อมอพยพตามแผนเผชิญเหตุ ติดต่อสายด่วน 1784 ตลอด 24 ชม.'
   );

@@ -92,7 +92,7 @@ export const DashboardPage: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-3">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-[#111315] leading-tight">
-                สวัสดี, {currentUser?.name || 'พ.อ. วรพงษ์ ทรัพย์อนันต์'}
+                สวัสดี, {currentUser?.name || ''}
               </h2>
             </div>
             <div className="text-sm sm:text-base font-semibold text-[#234A78] mt-1">

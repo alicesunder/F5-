@@ -46,15 +46,15 @@ export const NewsFormModal: React.FC<NewsFormModalProps> = ({
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState('');
   const [content, setContent] = useState('');
-  const [date, setDate] = useState('10 ก.ย. 2569');
-  const [author, setAuthor] = useState('ร.ท. สุรชัย พลสื่อ (ฝ่ายประชาสัมพันธ์)');
+  const [date, setDate] = useState('');
+  const [author, setAuthor] = useState('');
   const [category, setCategory] = useState<NewsCategory>('ข่าวสารทั่วไป');
   const [coverImage, setCoverImage] = useState(defaultCovers[0]);
   const [gallery, setGallery] = useState<string[]>([]);
   const [attachments, setAttachments] = useState<NewsAttachment[]>([]);
   const [status, setStatus] = useState<NewsStatus>('Draft');
   const [isFeatured, setIsFeatured] = useState(false);
-  const [tagsInput, setTagsInput] = useState('ข่าวเด่น, งานอำนวยการ');
+  const [tagsInput, setTagsInput] = useState('');
 
   useEffect(() => {
     if (initialData) {

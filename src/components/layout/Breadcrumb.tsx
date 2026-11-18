@@ -18,7 +18,7 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ customItems }) => {
     'my-space': {
       name: 'ฉัน (ข้อมูลส่วนตัว)',
       color: '#2583D8',
-      defaultSub: 'ส.ต.อ.ชัยโรจน์ สหัสภูริพัฒน์',
+      defaultSub: 'ข้อมูลส่วนตัว',
     },
     home: { name: 'หน้าหลัก', color: '#5B2A86' },
     login: { name: 'เข้าสู่ระบบ', color: '#64748B' },

@@ -21,6 +21,7 @@ import {
   X,
 } from 'lucide-react';
 import { askFO5AI } from '../../services/aiService';
+import { useCollection } from '../../lib/collections';
 
 export type SmartDepartment = 'admin' | 'relations' | 'disaster' | 'volunteer';
 
@@ -40,7 +41,6 @@ type SmartOpsWorkspaceProps = {
   accent: string;
 };
 
-const STORAGE_PREFIX = 'fo5_smart_tasks_';
 
 const departmentLabels: Record<SmartDepartment, string> = {
   admin: 'งานอำนวยการ',
@@ -49,50 +49,6 @@ const departmentLabels: Record<SmartDepartment, string> = {
   volunteer: 'งานจิตอาสาพระราชทาน',
 };
 
-const seedTasks: Record<SmartDepartment, SmartTask[]> = {
-  admin: [
-    { id: 'ADM-001', title: 'ตรวจหนังสือรับที่ครบกำหนดวันนี้', owner: 'ฝ่ายสารบรรณ', due: 'วันนี้', status: 'pending', priority: 'สูง' },
-    { id: 'ADM-002', title: 'สรุปข้อสั่งการจากการประชุมล่าสุด', owner: 'งานธุรการ', due: 'พรุ่งนี้', status: 'doing', priority: 'สูง' },
-    { id: 'ADM-003', title: 'ตรวจเอกสารงบประมาณประจำเดือน', owner: 'งานงบประมาณ', due: '18 ก.ย. 2569', status: 'pending', priority: 'ปานกลาง' },
-    { id: 'ADM-004', title: 'จัดเก็บเอกสารโครงการเข้าคลังกลาง', owner: 'งานสารสนเทศ', due: '20 ก.ย. 2569', status: 'done', priority: 'ต่ำ' },
-  ],
-  relations: [
-    { id: 'PR-001', title: 'ตรวจข่าวจากแหล่งสาธารณะที่เกี่ยวข้องกับ ตชด.', owner: 'ทีม Monitoring', due: 'วันนี้', status: 'doing', priority: 'สูง' },
-    { id: 'PR-002', title: 'ร่างข่าวกิจกรรมจากข้อมูลภาคสนาม', owner: 'ทีมบรรณาธิการ', due: 'วันนี้', status: 'pending', priority: 'สูง' },
-    { id: 'PR-003', title: 'คัดเลือกภาพสำหรับโพสต์ประจำสัปดาห์', owner: 'ทีมภาพ', due: 'พรุ่งนี้', status: 'pending', priority: 'ปานกลาง' },
-    { id: 'PR-004', title: 'สรุป Performance ของข่าวเผยแพร่', owner: 'ทีม Analytics', due: '19 ก.ย. 2569', status: 'done', priority: 'ต่ำ' },
-  ],
-  disaster: [
-    { id: 'DIS-001', title: 'ติดตามเหตุการณ์ที่ยังเปิดอยู่', owner: 'ศูนย์เฝ้าระวัง', due: 'วันนี้', status: 'doing', priority: 'สูง' },
-    { id: 'DIS-002', title: 'ตรวจสัญญาณฝนและระดับน้ำล่าสุด', owner: 'ทีมข้อมูล', due: 'วันนี้', status: 'pending', priority: 'สูง' },
-    { id: 'DIS-003', title: 'เตรียมร่างข้อความแจ้งเตือนประชาชน', owner: 'ทีมสื่อสารเหตุฉุกเฉิน', due: 'วันนี้', status: 'pending', priority: 'สูง' },
-    { id: 'DIS-004', title: 'สรุป After Action Report เหตุการณ์ล่าสุด', owner: 'ฝ่ายแผน', due: '22 ก.ย. 2569', status: 'pending', priority: 'ปานกลาง' },
-  ],
-  volunteer: [
-    { id: 'VOL-001', title: 'ตรวจรายชื่อกำลังพลจิตอาสาสำหรับภารกิจวันนี้', owner: 'งานกำลังพล', due: 'วันนี้', status: 'doing', priority: 'สูง' },
-    { id: 'VOL-002', title: 'จัดทีมลงพื้นที่และตรวจอุปกรณ์', owner: 'งานปฏิบัติการ', due: 'วันนี้', status: 'pending', priority: 'สูง' },
-    { id: 'VOL-003', title: 'รวบรวมภาพก่อน-หลังภารกิจ', owner: 'งานประเมินผล', due: 'พรุ่งนี้', status: 'pending', priority: 'ปานกลาง' },
-    { id: 'VOL-004', title: 'สรุปผลกระทบและจำนวนผู้ได้รับประโยชน์', owner: 'งานรายงาน', due: '20 ก.ย. 2569', status: 'done', priority: 'ปานกลาง' },
-  ],
-};
-
-function readTasks(department: SmartDepartment): SmartTask[] {
-  try {
-    const raw = localStorage.getItem(`${STORAGE_PREFIX}${department}`);
-    if (raw) return JSON.parse(raw);
-  } catch {
-    // fall back to seeded data
-  }
-  return seedTasks[department];
-}
-
-function saveTasks(department: SmartDepartment, tasks: SmartTask[]) {
-  try {
-    localStorage.setItem(`${STORAGE_PREFIX}${department}`, JSON.stringify(tasks));
-  } catch {
-    // Storage is optional; UI remains usable.
-  }
-}
 
 const statusMap: Record<SmartTask['status'], { label: string; className: string }> = {
   pending: { label: 'รอดำเนินการ', className: 'bg-amber-50 text-amber-700 border-amber-200' },
@@ -123,7 +79,7 @@ function departmentQuickPrompts(department: SmartDepartment) {
 
 export const SmartOpsWorkspace: React.FC<SmartOpsWorkspaceProps> = ({ department, title, subtitle, accent }) => {
   const [activeView, setActiveView] = useState<'assistant' | 'tasks' | 'automation' | 'brief'>('assistant');
-  const [tasks, setTasks] = useState<SmartTask[]>(() => readTasks(department));
+  const [tasks, setTasks] = useCollection<SmartTask>(`smart.${department}`);
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
   const [provider, setProvider] = useState<'gemini' | 'local' | null>(null);
@@ -159,7 +115,6 @@ export const SmartOpsWorkspace: React.FC<SmartOpsWorkspaceProps> = ({ department
   const updateTaskStatus = (id: string, next: SmartTask['status']) => {
     const nextTasks = tasks.map(t => (t.id === id ? { ...t, status: next } : t));
     setTasks(nextTasks);
-    saveTasks(department, nextTasks);
   };
 
   const createTask = () => {
@@ -170,7 +125,6 @@ export const SmartOpsWorkspace: React.FC<SmartOpsWorkspaceProps> = ({ department
       ...tasks,
     ];
     setTasks(nextTasks);
-    saveTasks(department, nextTasks);
     setNewTask({ title: '', owner: '', due: 'วันนี้', priority: 'ปานกลาง' });
     setNewTaskOpen(false);
   };
@@ -186,7 +140,6 @@ export const SmartOpsWorkspace: React.FC<SmartOpsWorkspaceProps> = ({ department
     };
     const nextTasks = [automationTask, ...tasks];
     setTasks(nextTasks);
-    saveTasks(department, nextTasks);
     setActiveView('tasks');
   };
 

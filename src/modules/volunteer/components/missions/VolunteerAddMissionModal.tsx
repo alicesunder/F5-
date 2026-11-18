@@ -14,24 +14,22 @@ export const VolunteerAddMissionModal: React.FC = () => {
   } = useVolunteer();
 
   const [title, setTitle] = useState('');
-  const [date, setDate] = useState('28 ก.ค. 2569');
+  const [date, setDate] = useState('');
   const [startTime, setStartTime] = useState('08:30');
   const [endTime, setEndTime] = useState('16:30');
   const [category, setCategory] = useState(categories[0]?.name || 'จิตอาสาพระราชทาน');
   const [unitId, setUnitId] = useState('unit-bok-ok');
   const [location, setLocation] = useState('');
-  const [district, setDistrict] = useState('พญาไท');
-  const [province, setProvince] = useState('กรุงเทพมหานคร');
+  const [district, setDistrict] = useState('');
+  const [province, setProvince] = useState('');
   const [assignedCount, setAssignedCount] = useState(30);
-  const [uniform, setUniform] = useState('เครื่องแบบจิตอาสาพระราชทาน (เสื้อเหลือง หมวก ผ้าพันคอพระราชทาน)');
-  const [coordinatorName, setCoordinatorName] = useState('ธนาวุฒิ สร้อยสนธิ์');
-  const [coordinatorRank, setCoordinatorRank] = useState('พ.ต.ต.');
-  const [coordinatorPhone, setCoordinatorPhone] = useState('081-445-8921');
+  const [uniform, setUniform] = useState('');
+  const [coordinatorName, setCoordinatorName] = useState('');
+  const [coordinatorRank, setCoordinatorRank] = useState('');
+  const [coordinatorPhone, setCoordinatorPhone] = useState('');
   const [description, setDescription] = useState('');
   const [objectiveInput, setObjectiveInput] = useState('');
-  const [objectives, setObjectives] = useState<string[]>([
-    'เพื่อประโยชน์สุขของประชาชนและความมั่นคงของสังคม',
-  ]);
+  const [objectives, setObjectives] = useState<string[]>(['']);
 
   if (!isAddMissionModalOpen) return null;
 

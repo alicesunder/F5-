@@ -175,7 +175,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({ isOpen = t
 
               <div className="flex flex-wrap items-center justify-center gap-2 mt-5 text-xs font-mono">
                 <span className="text-slate-400 dark:text-slate-500">คำค้นยอดนิยม:</span>
-                {['เร่งรัดงบประมาณ', 'เชียงใหม่', 'คำสั่ง 102', 'พ.อ. วรพงษ์', 'สารบรรณ', 'ITA'].map(s => (
+                {['เร่งรัดงบประมาณ', 'เชียงใหม่', 'คำสั่ง 102', 'สารบรรณ', 'ITA'].map(s => (
                   <button
                     key={s}
                     type="button"

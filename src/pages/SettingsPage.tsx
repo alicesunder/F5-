@@ -4,7 +4,6 @@ import { Role } from '../types';
 import {
   Settings,
   Shield,
-  RotateCcw,
   Server,
   UserCheck,
   CheckCircle2,
@@ -13,12 +12,10 @@ import {
   ShieldAlert,
   Terminal,
 } from 'lucide-react';
-import { ConfirmModal } from '../components/common/ConfirmModal';
 
 export const SettingsPage: React.FC = () => {
-  const { currentRole, setRole, resetAllData, showToast } = useAdmin();
+  const { currentRole, setRole, showToast } = useAdmin();
 
-  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
   const handleRoleChange = (role: Role) => {
     setRole(role);
@@ -209,48 +206,11 @@ export const SettingsPage: React.FC = () => {
             <span>นโยบายความมั่นคงปลอดภัยสารสนเทศภาครัฐ (Security & Compliance):</span>
           </div>
           <p className="text-[rgba(17,19,21,0.7)] text-xs leading-relaxed">
-            ระบบศูนย์บริหารและประมวลผลข้อมูลฝ่ายอำนวยการ (SAC) ถูกออกแบบให้ทำงานได้สมบูรณ์โดยไม่ต้องพึ่งพาเซิร์ฟเวอร์ภายนอก (Air-gapped ready) เพื่อรองรับการนำไปติดตั้งในเครือข่ายความมั่นคงสูง ข้อมูลทั้งหมดถูกจัดเก็บและประมวลผลอย่างเป็นอิสระ ปราศจากการส่งออกข้อมูลส่วนบุคคลหรือข้อมูลลับราชการ
+            ข้อมูลของระบบจัดเก็บในฐานข้อมูล Supabase (ภูมิภาคสิงคโปร์) เข้าถึงได้เฉพาะบัญชีที่ผู้ดูแลระบบเพิ่มเป็นบุคลากรเท่านั้น การเชื่อมต่อเข้ารหัส (HTTPS) และทุกการแก้ไขบันทึกผู้แก้ไขไว้
           </p>
         </div>
       </section>
 
-      {/* 04 — FACTORY RESET / MAINTENANCE */}
-      <section className="glass rounded-[28px] p-6 sm:p-8 space-y-4 border border-[#A84E4E]/20">
-        <div className="flex items-center gap-2">
-          <RotateCcw className="w-5 h-5 text-[#A84E4E] stroke-[1.5]" />
-          <h3 className="text-base font-medium text-[#111315]">
-            คืนค่าข้อมูลเริ่มต้นระบบ (Factory Reset to Sample State)
-          </h3>
-        </div>
-
-        <p className="text-xs text-[rgba(17,19,21,0.65)] leading-relaxed">
-          หากต้องการคืนค่าข้อมูลตัวอย่างตั้งต้นทั้งหมดของระบบ (งบประมาณ, การไปราชการ, หนังสือรับ-ส่ง, บุคลากร, คลังเอกสาร และประวัติกิจกรรม) สามารถกดปุ่มด้านล่างเพื่อเริ่มการจำลองใหม่
-        </p>
-
-        <div className="pt-2">
-          <button
-            type="button"
-            onClick={() => setIsResetModalOpen(true)}
-            className="px-4 py-2.5 rounded-xl bg-[#A84E4E] hover:bg-[#8e3f3f] text-white text-xs font-medium transition shadow-2xs flex items-center gap-2 cursor-pointer"
-          >
-            <RotateCcw className="w-4 h-4 stroke-[1.5]" />
-            <span>คืนค่าข้อมูลระบบทั้งหมดสู่ค่าเริ่มต้น</span>
-          </button>
-        </div>
-      </section>
-
-      {/* Confirmation Modal */}
-      <ConfirmModal
-        isOpen={isResetModalOpen}
-        title="ยืนยันการคืนค่าข้อมูลเริ่มต้น"
-        message="การดำเนินการนี้จะรีเซ็ตข้อมูลทุกโมดูลให้กลับไปสู่ชุดข้อมูลตัวอย่างเริ่มต้น คุณแน่ใจหรือไม่?"
-        onConfirm={() => {
-          resetAllData();
-          setIsResetModalOpen(false);
-          showToast('รีเซ็ตข้อมูลระบบกลับสู่ค่าเริ่มต้นเรียบร้อยแล้ว', 'success');
-        }}
-        onCancel={() => setIsResetModalOpen(false)}
-      />
     </div>
   );
 };

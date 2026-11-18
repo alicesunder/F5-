@@ -38,6 +38,7 @@ import {
   CheckCircle2,
   SlidersHorizontal,
 } from 'lucide-react';
+import { ChangePasswordCard, StaffManager, DataExportCard, IntegrationStatusCard } from '../../components/admin/AccountAdmin';
 
 export type SettingsSectionId =
   | 'general'
@@ -747,89 +748,19 @@ export const SettingsModule: React.FC = () => {
           {/* SECTION: ACCOUNT PROFILE */}
           {activeSection === 'account' && (
             <div className="liquid-glass-card rounded-3xl p-6 sm:p-8 border border-white/70 dark:border-white/10 shadow-sm space-y-6 animate-in fade-in duration-200">
-              <div className="border-b border-black/5 dark:border-white/10 pb-4 flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg sm:text-xl font-bold text-[#2D2A32] dark:text-[#F5F7FA] flex items-center gap-2">
-                    <User className="w-5 h-5 text-[#5B2A86] dark:text-[#B3A0E8]" />
-                    <span>ข้อมูลบัญชีผู้ใช้งาน (User Account & Profile)</span>
-                  </h2>
-                  <p className="text-xs text-[#5A5764] dark:text-[#A9AFBB] mt-1">
-                    ข้อมูลประจำตัวราชการ ยศ ตำแหน่ง และข้อมูลการติดต่อสำหรับปฏิบัติหน้าที่
-                  </p>
-                </div>
-                <div className="w-10 h-10 rounded-2xl bg-[#EDE4F7] dark:bg-[#8B6CCF]/20 text-[#5B2A86] dark:text-[#B3A0E8] font-bold text-sm flex items-center justify-center border border-[#5B2A86]/20">
-                  {currentUser.rank}
-                </div>
+              <div className="border-b border-black/5 dark:border-white/10 pb-4">
+                <h2 className="text-lg sm:text-xl font-bold text-[#2D2A32] dark:text-[#F5F7FA]">ข้อมูลบัญชีผู้ใช้งาน</h2>
+                <p className="text-xs text-[#5A5764] dark:text-[#A9AFBB] mt-1">ข้อมูลประจำตัวราชการและการเปลี่ยนรหัสผ่าน</p>
               </div>
-
-              <form onSubmit={handleSaveProfile} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-200">ยศ - ตำแหน่งราชการ</label>
-                    <input
-                      type="text"
-                      value={profileForm.rank}
-                      onChange={e => setProfileForm({ ...profileForm, rank: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-[#151821] text-xs text-slate-800 dark:text-slate-100"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-200">ชื่อ - สกุล</label>
-                    <input
-                      type="text"
-                      value={profileForm.name}
-                      onChange={e => setProfileForm({ ...profileForm, name: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-[#151821] text-xs text-slate-800 dark:text-slate-100"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-200">ตำแหน่งหน้าที่</label>
-                    <input
-                      type="text"
-                      value={profileForm.position}
-                      onChange={e => setProfileForm({ ...profileForm, position: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-[#151821] text-xs text-slate-800 dark:text-slate-100"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-200">สังกัด / ฝ่ายงาน</label>
-                    <input
-                      type="text"
-                      value={profileForm.department}
-                      onChange={e => setProfileForm({ ...profileForm, department: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-[#151821] text-xs text-slate-800 dark:text-slate-100"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-200">อีเมลทางการ (@gov.th)</label>
-                    <input
-                      type="email"
-                      value={profileForm.email}
-                      onChange={e => setProfileForm({ ...profileForm, email: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-[#151821] text-xs text-slate-800 dark:text-slate-100 font-mono"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-200">เบอร์โทรศัพท์ติดต่อราชการ</label>
-                    <input
-                      type="text"
-                      value={profileForm.phone}
-                      onChange={e => setProfileForm({ ...profileForm, phone: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-[#151821] text-xs text-slate-800 dark:text-slate-100 font-mono"
-                    />
-                  </div>
-                </div>
-
-                <div className="pt-3 flex justify-end">
-                  <button
-                    type="submit"
-                    className="px-5 py-2.5 rounded-xl bg-[#5B2A86] hover:bg-[#7B3FC6] text-white text-xs font-bold transition flex items-center gap-2 shadow-sm cursor-pointer"
-                  >
-                    <Save className="w-4 h-4" />
-                    <span>บันทึกการแก้ไขโปรไฟล์</span>
-                  </button>
-                </div>
-              </form>
+              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div><dt className="text-xs text-slate-500">ยศ - ชื่อ</dt><dd className="font-semibold">{[currentUser.rank, currentUser.name].filter(Boolean).join(' ') || '—'}</dd></div>
+                <div><dt className="text-xs text-slate-500">อีเมล</dt><dd className="font-semibold break-all">{currentUser.email || '—'}</dd></div>
+                <div><dt className="text-xs text-slate-500">ตำแหน่ง</dt><dd>{currentUser.position || '—'}</dd></div>
+                <div><dt className="text-xs text-slate-500">สังกัด</dt><dd>{currentUser.department || '—'}</dd></div>
+                <div><dt className="text-xs text-slate-500">โทรศัพท์</dt><dd>{currentUser.phone || '—'}</dd></div>
+              </dl>
+              <p className="text-[11px] text-slate-500">ข้อมูลประจำตัวแก้ไขโดยผู้ดูแลระบบ (เมนู บทบาท & สิทธิ์เข้าถึง)</p>
+              <ChangePasswordCard />
             </div>
           )}
 
@@ -837,74 +768,10 @@ export const SettingsModule: React.FC = () => {
           {activeSection === 'roles' && (
             <div className="liquid-glass-card rounded-3xl p-6 sm:p-8 border border-white/70 dark:border-white/10 shadow-sm space-y-6 animate-in fade-in duration-200">
               <div className="border-b border-black/5 dark:border-white/10 pb-4">
-                <h2 className="text-lg sm:text-xl font-bold text-[#2D2A32] dark:text-[#F5F7FA] flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-[#5B2A86] dark:text-[#B3A0E8]" />
-                  <span>บทบาทและสิทธิ์การเข้าถึง (Role-Based Access Control)</span>
-                </h2>
-                <p className="text-xs text-[#5A5764] dark:text-[#A9AFBB] mt-1">
-                  ระบบ Single Sign-On (SSO) ช่วยให้เข้าถึงได้ ๔ ฝ่ายงานอย่างบูรณาการ สามารถจำลองสิทธิ์เพื่อทดสอบการทำงานได้
-                </p>
+                <h2 className="text-lg sm:text-xl font-bold text-[#2D2A32] dark:text-[#F5F7FA]">บทบาทและสิทธิ์การเข้าถึง</h2>
+                <p className="text-xs text-[#5A5764] dark:text-[#A9AFBB] mt-1">เพิ่ม/ปิดบัญชีผู้ใช้ และกำหนดสิทธิ์ (เฉพาะผู้ดูแลระบบ)</p>
               </div>
-
-              <div className="space-y-3">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-200 uppercase font-mono">
-                  สิทธิ์การใช้งานปัจจุบัน (Current Active Role)
-                </label>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {[
-                    {
-                      role: 'SUPER_ADMIN',
-                      title: 'ผู้ดูแลระบบสูงสุด (Super Admin)',
-                      desc: 'สิทธิ์เต็มรูปแบบ: ควบคุมโครงสร้างระบบ, สิทธิเข้าถึง, และบันทึกประวัติความปลอดภัยระดับสูง',
-                      color: 'border-purple-400 bg-purple-500/10 text-purple-700 dark:text-purple-300',
-                    },
-                    {
-                      role: 'ADMIN',
-                      title: 'ผู้บริหารระดับสูง (Executive Admin)',
-                      desc: 'เข้าถึงข้อมูลวิเคราะห์ สรุปผู้บังคับบัญชา และตรวจรับรองรายงาน ๑๖ กก.ตชด.',
-                      color: 'border-blue-400 bg-blue-500/10 text-blue-700 dark:text-blue-300',
-                    },
-                    {
-                      role: 'ADMIN_DEPARTMENT',
-                      title: 'หัวหน้าฝ่ายอำนวยการ / ธุรการ',
-                      desc: 'จัดการภารกิจกำลังพล สิบเวร สารบรรณ และการจัดสรรงบประมาณโครงการ',
-                      color: 'border-emerald-400 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300',
-                    },
-                    {
-                      role: 'officer',
-                      title: 'เจ้าหน้าที่ปฏิบัติการ (Officer)',
-                      desc: 'บันทึกรายงาน ภารกิจจิตอาสา และข้อมูลสาธารณภัยประจำวัน',
-                      color: 'border-amber-400 bg-amber-500/10 text-amber-700 dark:text-amber-300',
-                    },
-                  ].map(r => {
-                    const isCurrent = currentRole === r.role;
-                    return (
-                      <div
-                        key={r.role}
-                        onClick={() => handleRoleChange(r.role as Role)}
-                        className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-                          isCurrent
-                            ? 'border-[#5B2A86] dark:border-[#B3A0E8] ring-2 ring-[#5B2A86]/20 bg-[#EDE4F7]/40 dark:bg-[#8B6CCF]/15 shadow-xs'
-                            : 'border-black/10 dark:border-white/10 bg-white/50 dark:bg-white/5 hover:border-slate-400'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-slate-900 dark:text-slate-100">{r.title}</span>
-                          {isCurrent && (
-                            <span className="px-2 py-0.5 rounded-full bg-[#5B2A86] text-white text-[10px] font-bold">
-                              ใช้งานอยู่
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
-                          {r.desc}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+              <StaffManager />
             </div>
           )}
 
@@ -912,62 +779,10 @@ export const SettingsModule: React.FC = () => {
           {activeSection === 'security' && (
             <div className="liquid-glass-card rounded-3xl p-6 sm:p-8 border border-white/70 dark:border-white/10 shadow-sm space-y-6 animate-in fade-in duration-200">
               <div className="border-b border-black/5 dark:border-white/10 pb-4">
-                <h2 className="text-lg sm:text-xl font-bold text-[#2D2A32] dark:text-[#F5F7FA] flex items-center gap-2">
-                  <Key className="w-5 h-5 text-[#5B2A86] dark:text-[#B3A0E8]" />
-                  <span>ความปลอดภัยและการเข้าถึง (Security & Authentication)</span>
-                </h2>
-                <p className="text-xs text-[#5A5764] dark:text-[#A9AFBB] mt-1">
-                  กำหนดนโยบายรหัสผ่าน การยืนยันตัวตนสองขั้นตอน (2FA) และระยะเวลาเซสชันอัตโนมัติ
-                </p>
+                <h2 className="text-lg sm:text-xl font-bold text-[#2D2A32] dark:text-[#F5F7FA]">ความปลอดภัยและการเข้าถึง</h2>
+                <p className="text-xs text-[#5A5764] dark:text-[#A9AFBB] mt-1">การยืนยันตัวตนทำโดย Supabase Auth ข้อมูลทุกตารางจำกัดสิทธิ์ระดับแถว (RLS) เฉพาะบุคลากรที่ได้รับอนุญาต</p>
               </div>
-
-              <div className="space-y-4">
-                {/* 2FA Toggle */}
-                <div className="flex items-center justify-between p-4 rounded-2xl bg-white/60 dark:bg-white/5 border border-black/5 dark:border-white/10">
-                  <div className="space-y-0.5">
-                    <div className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-                      <Lock className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                      <span>การยืนยันตัวตนสองขั้นตอน (Two-Factor Authentication - 2FA)</span>
-                    </div>
-                    <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                      เพิ่มความปลอดภัยด้วยรหัส OTP ผ่าน Authenticator App หรือ SMS
-                    </div>
-                  </div>
-                  <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold font-mono">
-                    เปิดใช้งานแล้ว (ACTIVE)
-                  </span>
-                </div>
-
-                {/* Session Timeout */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-200">
-                      ตัดการเชื่อมต่อเมื่อไม่มีการใช้งาน (Session Auto-Timeout)
-                    </label>
-                    <select
-                      defaultValue="30"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-[#151821] text-xs text-slate-800 dark:text-slate-100"
-                    >
-                      <option value="15">15 นาที</option>
-                      <option value="30">30 นาที (มาตรฐานราชการ)</option>
-                      <option value="60">60 นาที (1 ชั่วโมง)</option>
-                      <option value="120">120 นาที (2 ชั่วโมง)</option>
-                    </select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-200">
-                      การจำลองสถานะเครือข่ายความมั่นคง
-                    </label>
-                    <select
-                      defaultValue="intranet"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-[#151821] text-xs text-slate-800 dark:text-slate-100"
-                    >
-                      <option value="intranet">เครือข่ายอินทราเน็ต บช.ตชด. (Secure Air-Gapped)</option>
-                      <option value="ssl-vpn">Government VPN / TLS 1.3</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
+              <ChangePasswordCard />
             </div>
           )}
 
@@ -975,132 +790,21 @@ export const SettingsModule: React.FC = () => {
           {activeSection === 'data' && (
             <div className="liquid-glass-card rounded-3xl p-6 sm:p-8 border border-white/70 dark:border-white/10 shadow-sm space-y-6 animate-in fade-in duration-200">
               <div className="border-b border-black/5 dark:border-white/10 pb-4">
-                <h2 className="text-lg sm:text-xl font-bold text-[#2D2A32] dark:text-[#F5F7FA] flex items-center gap-2">
-                  <Database className="w-5 h-5 text-[#5B2A86] dark:text-[#B3A0E8]" />
-                  <span>การจัดการข้อมูลและการสำรอง (Data Management & Backup)</span>
-                </h2>
-                <p className="text-xs text-[#5A5764] dark:text-[#A9AFBB] mt-1">
-                  ดาวน์โหลดฐานข้อมูลสำรอง การจัดการแคชในเบราว์เซอร์ และการกู้คืนข้อมูล
-                </p>
+                <h2 className="text-lg sm:text-xl font-bold text-[#2D2A32] dark:text-[#F5F7FA]">การจัดการข้อมูลและการสำรอง</h2>
+                <p className="text-xs text-[#5A5764] dark:text-[#A9AFBB] mt-1">สำรองข้อมูลทั้งระบบเป็นไฟล์</p>
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 rounded-2xl bg-white/60 dark:bg-white/5 border border-black/5 dark:border-white/10 space-y-3">
-                  <div className="flex items-center gap-2 font-bold text-slate-800 dark:text-slate-200 text-xs">
-                    <CloudUpload className="w-4 h-4 text-blue-500" />
-                    <span>สร้าง Snapshot สำรองข้อมูล</span>
-                  </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                    สำรองข้อมูลการส่งรายงาน ๑๖ กก.ตชด., ภารกิจ, และข้อมูลสารบรรณเก็บลงคลังสำรอง
-                  </p>
-                  <button
-                    type="button"
-                    onClick={handleTriggerBackup}
-                    disabled={backupLoading}
-                    className="w-full py-2.5 px-3 rounded-xl bg-[#5B2A86] hover:bg-[#7B3FC6] text-white text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                  >
-                    {backupLoading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
-                    <span>{backupLoading ? 'กำลังสร้าง Snapshot...' : 'ดาวน์โหลด Snapshot สำรอง'}</span>
-                  </button>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-white/60 dark:bg-white/5 border border-black/5 dark:border-white/10 space-y-3">
-                  <div className="flex items-center gap-2 font-bold text-slate-800 dark:text-slate-200 text-xs">
-                    <RotateCcw className="w-4 h-4 text-amber-500" />
-                    <span>รีเซ็ตการตั้งค่าระบบ</span>
-                  </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                    กู้คืนการตั้งค่าระบบทั้งหมดกลับเป็นค่าเริ่มต้นโรงงาน (Default Factory Setting)
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (confirm('ต้องการรีเซ็ตการตั้งค่าระบบเป็นค่าเริ่มต้นใช่หรือไม่?')) {
-                        resetSettingsToDefault();
-                        showToast('รีเซ็ตการตั้งค่าระบบเรียบร้อยแล้ว', 'info');
-                      }
-                    }}
-                    className="w-full py-2.5 px-3 rounded-xl border border-rose-500/30 text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span>รีเซ็ตการตั้งค่าทั้งหมด</span>
-                  </button>
-                </div>
-              </div>
+              <DataExportCard />
             </div>
           )}
 
           {/* SECTION: INTEGRATIONS */}
           {activeSection === 'integrations' && (
             <div className="liquid-glass-card rounded-3xl p-6 sm:p-8 border border-white/70 dark:border-white/10 shadow-sm space-y-6 animate-in fade-in duration-200">
-              <div className="border-b border-black/5 dark:border-white/10 pb-4 flex items-center justify-between">
-                <div>
-                  <h2 className="text-lg sm:text-xl font-bold text-[#2D2A32] dark:text-[#F5F7FA] flex items-center gap-2">
-                    <Share2 className="w-5 h-5 text-[#5B2A86] dark:text-[#B3A0E8]" />
-                    <span>การเชื่อมต่อระบบภายนอก (External Integrations)</span>
-                  </h2>
-                  <p className="text-xs text-[#5A5764] dark:text-[#A9AFBB] mt-1">
-                    เชื่อมโยงบริการ Google Workspace, Firebase Database, Maps และระบบส่งแจ้งเตือน
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleSyncIntegrations}
-                  disabled={syncLoading}
-                  className="px-3.5 py-1.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 text-xs text-slate-700 dark:text-slate-200 hover:bg-black/5 flex items-center gap-2 transition cursor-pointer"
-                >
-                  <RefreshCw className={`w-3.5 h-3.5 ${syncLoading ? 'animate-spin' : ''}`} />
-                  <span>ตรวจสอบสถานะ API</span>
-                </button>
+              <div className="border-b border-black/5 dark:border-white/10 pb-4">
+                <h2 className="text-lg sm:text-xl font-bold text-[#2D2A32] dark:text-[#F5F7FA]">การเชื่อมต่อระบบภายนอก</h2>
+                <p className="text-xs text-[#5A5764] dark:text-[#A9AFBB] mt-1">สถานะจริงของบริการที่เว็บใช้งาน</p>
               </div>
-
-              <div className="space-y-3">
-                {[
-                  {
-                    key: 'googleWorkspace',
-                    title: 'Google Workspace (Drive, Docs, Sheets, Picker)',
-                    desc: 'คลังเอกสารราชการ สารบรรณอิเล็กทรอนิกส์ และเครื่องมือสร้างหนังสืออัตโนมัติ',
-                    status: 'เชื่อมต่อแล้ว (Connected)',
-                    color: 'text-emerald-500',
-                  },
-                  {
-                    key: 'googleMaps',
-                    title: 'Google Maps Operations Center',
-                    desc: 'แผนที่สถานการณ์สาธารณภัย พิกัดตั้ง ๑๖ กก.ตชด. และภารกิจกำลังพล',
-                    status: 'เชื่อมต่อแล้ว (Connected)',
-                    color: 'text-emerald-500',
-                  },
-                  {
-                    key: 'storageBackup',
-                    title: 'Cloud Database / Firestore Storage',
-                    desc: 'ระบบฐานข้อมูลจัดเก็บรายงานและการตรวจเช็คแบบเรียลไทม์',
-                    status: 'เชื่อมต่อแล้ว (Connected)',
-                    color: 'text-emerald-500',
-                  },
-                  {
-                    key: 'lineNotify',
-                    title: 'LINE Official Alert & Notify',
-                    desc: 'ส่งสรุปรายงานประจำวันเข้ากลุ่มไลน์ผู้บังคับบัญชา ๑๖ กก.ตชด.',
-                    status: 'พร้อมใช้งาน (Standby)',
-                    color: 'text-emerald-500',
-                  },
-                ].map(svc => (
-                  <div
-                    key={svc.key}
-                    className="p-4 rounded-2xl bg-white/60 dark:bg-white/5 border border-black/5 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-                  >
-                    <div>
-                      <div className="text-xs font-bold text-slate-800 dark:text-slate-200">{svc.title}</div>
-                      <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{svc.desc}</div>
-                    </div>
-                    <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 px-2.5 py-1 rounded-full">
-                        {svc.status}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <IntegrationStatusCard />
             </div>
           )}
 

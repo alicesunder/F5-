@@ -86,7 +86,7 @@ export const NewInspectionModal: React.FC<NewInspectionModalProps> = ({
 
   const [documentType, setDocumentType] = useState<DocumentInspection['documentType']>('หนังสือภายใน');
   const [fileName, setFileName] = useState('');
-  const [originUnit, setOriginUnit] = useState('แผนกธุรการและกำลังพล');
+  const [originUnit, setOriginUnit] = useState('');
   const [rawText, setRawText] = useState('');
   const [fileObject, setFileObject] = useState<File | null>(null);
 

@@ -16,20 +16,15 @@ export const VolunteerSubmitReportModal: React.FC = () => {
   const [outcomeSummary, setOutcomeSummary] = useState('');
   const [actualPersonnel, setActualPersonnel] = useState(selectedMission?.assignedPersonnelCount || 25);
   const [beneficiaries, setBeneficiaries] = useState(150);
-  const [executionTime, setExecutionTime] = useState('08:30 - 16:30 น. (8 ชั่วโมง)');
-  const [reporterName, setReporterName] = useState('ธนาวุฒิ สร้อยสนธิ์');
-  const [reporterRank, setReporterRank] = useState('พ.ต.ต.');
-  const [reporterPosition, setReporterPosition] = useState('เจ้าหน้าที่ฝ่ายจิตอาสา ฝอ.5');
-  const [reporterPhone, setReporterPhone] = useState('081-445-8921');
+  const [executionTime, setExecutionTime] = useState('');
+  const [reporterName, setReporterName] = useState('');
+  const [reporterRank, setReporterRank] = useState('');
+  const [reporterPosition, setReporterPosition] = useState('');
+  const [reporterPhone, setReporterPhone] = useState('');
   const [achievementInput, setAchievementInput] = useState('');
-  const [achievements, setAchievements] = useState<string[]>([
-    'การปฏิบัติหน้าที่บรรลุวัตถุประสงค์ตามที่กำหนดไว้ 100%',
-    'ได้รับความร่วมมือเป็นอย่างดียิ่งจากประชาชนในพื้นที่',
-  ]);
+  const [achievements, setAchievements] = useState<string[]>(['']);
   const [problemsInput, setProblemsInput] = useState('');
-  const [problems, setProblems] = useState<string[]>([
-    'การปฏิบัติงานเป็นไปด้วยความเรียบร้อย ไม่มีอุปสรรคหรืออุบัติเหตุ',
-  ]);
+  const [problems, setProblems] = useState<string[]>(['']);
 
   useEffect(() => {
     if (selectedMission) {

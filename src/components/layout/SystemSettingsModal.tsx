@@ -4,7 +4,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { PRESET_USERS } from '../../data/usersData';
 import { ROLE_LABELS } from '../../data/departmentsData';
 import { Role } from '../../types';
-import { X, Settings, ShieldCheck, Database, HardDrive, BellRing, RefreshCw, Sun, Moon, ExternalLink } from 'lucide-react';
+import { X, Settings, ShieldCheck, Database, HardDrive, BellRing, Sun, Moon, ExternalLink } from 'lucide-react';
 
 interface SystemSettingsModalProps {
   isOpen: boolean;
@@ -12,7 +12,7 @@ interface SystemSettingsModalProps {
 }
 
 export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({ isOpen, onClose }) => {
-  const { currentRole, setRole, showToast, resetAllData, navigateModule } = useAdmin();
+  const { currentRole, setRole, showToast, navigateModule } = useAdmin();
   const { theme, setTheme } = useTheme();
 
   if (!isOpen) return null;
@@ -160,19 +160,7 @@ export const SystemSettingsModal: React.FC<SystemSettingsModalProps> = ({ isOpen
         </div>
 
         <div className="p-4 bg-black/5 dark:bg-white/5 border-t border-black/5 dark:border-white/10 flex items-center justify-between">
-          <button
-            type="button"
-            onClick={() => {
-              if (window.confirm('คุณต้องการรีเซ็ตข้อมูลทั้งหมดกลับสู่ค่าเริ่มต้นใช่หรือไม่?')) {
-                resetAllData();
-                showToast('รีเซ็ตข้อมูลทั้งหมดสู่ค่าเริ่มต้นแล้ว', 'info');
-              }
-            }}
-            className="text-xs text-rose-600 dark:text-rose-400 hover:underline flex items-center gap-1 cursor-pointer"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span>รีเซ็ตข้อมูลจำลอง</span>
-          </button>
+          <span className="text-[11px] text-slate-500">ข้อมูลบันทึกในฐานข้อมูลกลางอัตโนมัติ</span>
 
           <button
             type="button"

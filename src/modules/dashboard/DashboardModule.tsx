@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { pageVariants, modalVariants } from '../../utils/motion';
 import {
-  INITIAL_UNIFIED_MISSIONS,
-  INITIAL_UNIFIED_REPORTS,
-  INITIAL_CENTRAL_TASKS,
   UnifiedMission,
   UnifiedReport,
   CentralTaskItem,
@@ -17,6 +14,7 @@ import {
   Check,
   RotateCcw,
 } from 'lucide-react';
+import { useCollection } from '../../lib/collections';
 
 interface DashboardModuleProps {
   viewMode?: 'overview' | 'task-center';
@@ -27,9 +25,9 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({
   viewMode = 'overview',
   initialTaskSubTab = 'tasks',
 }) => {
-  const [missions, setMissions] = useState<UnifiedMission[]>(INITIAL_UNIFIED_MISSIONS);
-  const [reports, setReports] = useState<UnifiedReport[]>(INITIAL_UNIFIED_REPORTS);
-  const [tasks] = useState<CentralTaskItem[]>(INITIAL_CENTRAL_TASKS);
+  const [missions, setMissions] = useCollection<UnifiedMission>('dashboard.missions');
+  const [reports, setReports] = useCollection<UnifiedReport>('dashboard.reports');
+  const [tasks] = useCollection<CentralTaskItem>('dashboard.tasks');
 
   // Modal inspection states
   const [inspectedMission, setInspectedMission] = useState<UnifiedMission | null>(null);

@@ -17,10 +17,11 @@ import { BppDutyPersonnelSummaryView } from './components/BppDutyPersonnelSummar
 import { BppDutyPrintOfficialView } from './components/BppDutyPrintOfficialView';
 import { BppDutySwapModal } from './components/BppDutySwapModal';
 import { BppDutyLogModal } from './components/BppDutyLogModal';
+import { useCollection } from '../../lib/collections';
 
 export const BppDutyRosterSection: React.FC = () => {
   // State
-  const [duties, setDuties] = useState<DutyRosterItem[]>(INITIAL_DUTY_ROSTER);
+  const [duties, setDuties] = useCollection<DutyRosterItem>('schedule.duties');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOfficer, setSelectedOfficer] = useState('all');
   const [dayTypeFilter, setDayTypeFilter] = useState<'all' | 'weekday' | 'weekend'>('all');

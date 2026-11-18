@@ -21,7 +21,7 @@ import { checkModuleAccess } from './data/departmentsData';
 import { GlobalLayout } from './layouts/GlobalLayout';
 
 const AppContent: React.FC = () => {
-  const { activeModule, currentRole, isAuthenticated, authReady } = useAdmin();
+  const { activeModule, currentRole, isAuthenticated, authReady, isStaff } = useAdmin();
 
   if (!authReady) {
     return (
@@ -107,6 +107,11 @@ const AppContent: React.FC = () => {
 
   return (
     <GlobalLayout>
+      {isStaff === false && (
+        <div role="alert" className="mx-4 mt-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          บัญชีนี้ยังไม่ได้รับอนุญาตให้ใช้ข้อมูลของระบบ (หรือถูกปิดการใช้งาน) ข้อมูลจะไม่แสดงและบันทึกไม่ได้ กรุณาติดต่อผู้ดูแลระบบ
+        </div>
+      )}
       {renderModule()}
     </GlobalLayout>
   );

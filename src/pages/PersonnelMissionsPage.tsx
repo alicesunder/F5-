@@ -384,7 +384,7 @@ export const PersonnelMissionsPage: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <Users className="w-3.5 h-3.5 text-[rgba(17,19,21,0.4)] shrink-0 stroke-[1.5]" />
                       <span className="truncate">
-                        หน.ชุด: {commander?.name || 'พ.อ. วรพงษ์'} (+{memberCount} นาย)
+                        หน.ชุด: {commander?.name || 'ยังไม่ได้ระบุ'} (+{memberCount} นาย)
                       </span>
                     </div>
                   </div>

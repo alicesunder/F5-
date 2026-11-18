@@ -78,7 +78,7 @@ export const PersonalDepartmentStatus: React.FC<PersonalDepartmentStatusProps> =
             <span>ผู้บังคับบัญชาชั้นต้น</span>
           </div>
           <div className="text-xs font-bold text-slate-800 dark:text-slate-200">
-            พ.ต.ท.หญิง นภัสวรรณ รักษ์ธรรม
+            ยังไม่ได้ระบุ
           </div>
           <div className="text-[11px] text-slate-500 dark:text-slate-400">
             หัวหน้างานประชาสัมพันธ์ ฝอ.๕

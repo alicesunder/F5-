@@ -1,4 +1,5 @@
 import { SlideDeck, SlideGenerationConfig, SlideItem, UploadedImage } from '../types/slides';
+import { aiFetch } from '../lib/aiFetch';
 
 interface GenerateSlidesParams extends SlideGenerationConfig {
   images: UploadedImage[];
@@ -196,10 +197,7 @@ export async function generatePresentationSlides(params: GenerateSlidesParams): 
   const { topic, details, slideCount, tone, theme, department, presenter, images } = params;
 
   try {
-    const response = await fetch('/api/ai', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    const response = await aiFetch({
         department: department || 'ฝ่ายอำนวยการ ๕ บช.ตชด.',
         prompt: `สร้างโครงสร้างสไลด์นำเสนองาน (Slide Deck) ภาษาไทย สำหรับการนำเสนอระดับทางการ
 หัวข้อหลัก: ${topic}
@@ -244,8 +242,7 @@ ${details}
           slideCount,
           imageCount: images.length,
         },
-      }),
-    });
+      });
 
     if (response.ok) {
       const data = await response.json();
