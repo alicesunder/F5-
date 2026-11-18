@@ -15,6 +15,7 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 import { PRViewId } from './PRMonitoringSidebar';
+import { LineReportsView } from '../../../components/line/LineReportsView';
 import { NewsItem, MediaItem, RelationsStats } from '../types';
 import { SmartOpsWorkspace } from '../../../components/smart/SmartOpsWorkspace';
 import { usePRIntel } from '../context/PRIntelContext';
@@ -65,6 +66,8 @@ export const PRWorkspaceView: React.FC<Props> = ({
     <div className="space-y-6">
       {/* 1. Main View Routing */}
       {view === 'dashboard' && <PRDashboardView />}
+
+      {view === 'line-reports' && <LineReportsView dept="relations" />}
 
       {(view === 'latest' || view === 'facebook') && <PRLatestPostsView />}
 

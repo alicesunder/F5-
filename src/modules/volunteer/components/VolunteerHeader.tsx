@@ -14,6 +14,7 @@ import {
   Shield,
   Layers,
   ArrowLeft,
+  MessageSquareText,
 } from 'lucide-react';
 import { useVolunteer, VolunteerTab } from '../context/VolunteerContext';
 import { useAdmin } from '../../../contexts/AdminContext';
@@ -45,6 +46,7 @@ export const VolunteerHeader: React.FC = () => {
 
   const tabs: { id: VolunteerTab; label: string; icon: React.ElementType }[] = [
     { id: 'overview', label: 'ภาพรวมระบบ', icon: Layers },
+    { id: 'line-reports', label: 'รายงานจาก LINE', icon: MessageSquareText },
     { id: 'missions', label: 'ศูนย์ภารกิจ', icon: Calendar },
     { id: 'reports', label: 'รายงานผล (จอ.01)', icon: FileCheck },
     { id: 'personnel', label: 'เครือข่ายหน่วย & กำลังพล', icon: HeartHandshake },

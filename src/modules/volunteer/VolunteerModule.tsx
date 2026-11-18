@@ -5,6 +5,7 @@ import { VolunteerHeader } from './components/VolunteerHeader';
 import { VolunteerAttentionBanner } from './components/VolunteerAttentionBanner';
 import { VolunteerHeroStats } from './components/VolunteerHeroStats';
 import { VolunteerSignatureFlow } from './components/VolunteerSignatureFlow';
+import { LineReportsView } from '../../components/line/LineReportsView';
 import { VolunteerMissionsSection } from './components/missions/VolunteerMissionsSection';
 import { VolunteerMissionDetailDrawer } from './components/missions/VolunteerMissionDetailDrawer';
 import { VolunteerAddMissionModal } from './components/missions/VolunteerAddMissionModal';
@@ -74,6 +75,19 @@ const VolunteerModuleContent: React.FC = () => {
               className="liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6"
             >
               <VolunteerReportsSection />
+            </motion.div>
+          )}
+
+          {activeTab === 'line-reports' && (
+            <motion.div
+              key="line-reports"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6"
+            >
+              <LineReportsView dept="volunteer" />
             </motion.div>
           )}
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SmartOpsWorkspace } from '../../components/smart/SmartOpsWorkspace';
+import { LineReportsView } from '../../components/line/LineReportsView';
 import { useAdmin } from '../../contexts/AdminContext';
 import {
   DisasterActiveTab,
@@ -379,6 +380,12 @@ export const DisasterModule: React.FC = () => {
               subtitle="ช่วยคัดกรองเหตุการณ์ จัดลำดับความเร่งด่วน ร่างข้อความแจ้งเตือน และทำรายงานหลังเหตุการณ์"
               accent={primaryColor}
             />
+          </div>
+        )}
+
+        {activeTab === 'line-reports' && (
+          <div className="liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6">
+            <LineReportsView dept="disaster" />
           </div>
         )}
 

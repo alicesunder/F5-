@@ -36,7 +36,7 @@ export const RoleSelectorModal: React.FC<RoleSelectorModalProps> = ({
   onClose,
   targetDepartmentName,
 }) => {
-  const { currentRole, setRole, login, showToast } = useAdmin();
+  const { currentRole, setRole, showToast } = useAdmin();
   const [selectedRole, setSelectedRole] = useState<Role>(currentRole);
 
   if (!isOpen) return null;
@@ -111,7 +111,6 @@ export const RoleSelectorModal: React.FC<RoleSelectorModalProps> = ({
     setRole(selectedRole);
     const chosen = roleOptions.find(r => r.role === selectedRole);
     if (chosen) {
-      login('chairot', undefined, selectedRole, true);
       showToast(`สลับโหมดการทำงาน: ${chosen.title}`, 'success');
     }
     onClose();

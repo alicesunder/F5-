@@ -53,6 +53,7 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ customItems }) => {
     workspace: { name: 'Google Workspace', color: '#4285F4', defaultSub: 'เชื่อมต่อเอกสารและตารางงาน' },
     maps: { name: 'แผนที่ปฏิบัติการ', color: '#0F9D58', defaultSub: 'พิกัดหน่วยและจุดเกิดเหตุ' },
     'bpp-tracker': { name: 'ติดตามรายงาน 16 กก.ตชด.', color: '#E11D48', defaultSub: 'สถานะการส่งรายงานประจำงวดของหน่วยในสังกัด' },
+    'line-reports': { name: 'รายงานจาก LINE', color: '#06C755', defaultSub: 'ข้อความรายงานจากกลุ่ม LINE ที่บอทจัดแผนกให้อัตโนมัติ' },
     'task-center': { name: 'ศูนย์งานกลาง (งานด่วน)', color: '#5B2A86', defaultSub: 'ติดตามงานค้างและกำหนดส่งเร่งด่วน' },
     strategic: { name: 'สถิติ / ตัวชี้วัด KPI', color: '#5B2A86', defaultSub: 'ความก้าวหน้าตามแผนยุทธศาสตร์ 4 สายงาน' },
     'communication-groups': { name: 'กลุ่มการสื่อสาร', color: '#2583D8', defaultSub: 'ช่องทางประสานงาน 16 กก.ตชด.' },

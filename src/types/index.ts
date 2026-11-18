@@ -36,6 +36,7 @@ export type AppModule =
   | 'maps'
   | 'bpp-tracker'
   | 'task-center'
+  | 'line-reports'
   | 'strategic'
   | 'communication-groups'
   | 'executive-view'

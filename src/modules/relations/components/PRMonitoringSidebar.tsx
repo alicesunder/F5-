@@ -22,11 +22,13 @@ import {
   FileSearch2,
   BarChart3,
   Workflow,
+  MessageSquareText,
 } from 'lucide-react';
 import { usePRIntel } from '../context/PRIntelContext';
 
 export type PRViewId =
   | 'dashboard'
+  | 'line-reports'
   | 'latest'
   | 'facebook'
   | 'pages'
@@ -126,6 +128,7 @@ export const PRMonitoringSidebar: React.FC<PRMonitoringSidebarProps> = ({ active
 
   const commandCenter: Item[] = [
     { id: 'dashboard', label: 'ศูนย์บัญชาการ PR', icon: LayoutDashboard, badge: 'LIVE', tone: 'purple' },
+    { id: 'line-reports', label: 'รายงานจาก LINE', icon: MessageSquareText, tone: 'blue' },
   ];
 
   const monitoring: Item[] = [

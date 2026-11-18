@@ -14,6 +14,7 @@ import { OperationsMapModule } from './modules/maps/OperationsMapModule';
 import { BppMissionSchedulePage } from './modules/schedule/BppMissionSchedulePage';
 import { OfficialDocumentsHub } from './modules/documents/OfficialDocumentsHub';
 import { MySpaceModule } from './modules/myspace/MySpaceModule';
+import { LineReportsModule } from './modules/line/LineReportsModule';
 import { AccessDeniedPage } from './components/common/AccessDeniedPage';
 import { ToastContainer } from './components/common/Toast';
 import { checkModuleAccess } from './data/departmentsData';
@@ -74,6 +75,9 @@ const AppContent: React.FC = () => {
             initialTaskSubTab={activeModule === 'bpp-tracker' ? 'bpp-units' : 'tasks'}
           />
         );
+
+      case 'line-reports':
+        return <LineReportsModule />;
 
       case 'settings':
         return <SettingsModule />;

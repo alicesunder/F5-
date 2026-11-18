@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useAdmin } from '../contexts/AdminContext';
 import { GlobalSearchModal } from '../components/common/GlobalSearchModal';
 import { HeaderThemeSwitcher } from '../components/layout/HeaderThemeSwitcher';
-import { PRESET_USERS } from '../data/usersData';
-import { DepartmentRole } from '../types';
+import { isLoginConfigured } from '../data/usersData';
 import {
   Lock,
   Search,
@@ -28,10 +27,9 @@ export const LandingPage: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // Login form state (inline on landing page)
-  const [email, setEmail] = useState('chairot.s@royalthaipolice.go.th');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<DepartmentRole>('SUPER_ADMIN');
   const [errorMsg, setErrorMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -50,14 +48,20 @@ export const LandingPage: React.FC = () => {
       setErrorMsg('กรุณากรอกรหัสผ่าน');
       return;
     }
+    if (!isLoginConfigured()) {
+      setErrorMsg('ระบบเข้าสู่ระบบยังไม่ได้ตั้งค่า กรุณาติดต่อผู้ดูแลระบบ');
+      return;
+    }
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      const success = login(email.trim(), password, selectedRole, true);
-      if (!success) {
-        setErrorMsg('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
-      }
-    }, 400);
+    login(email.trim(), password, undefined, true)
+      .then(success => {
+        if (!success) {
+          setErrorMsg('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+          setPassword('');
+        }
+      })
+      .catch(() => setErrorMsg('เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่'))
+      .finally(() => setIsLoading(false));
   };
 
   const departmentCards = [
@@ -282,43 +286,6 @@ export const LandingPage: React.FC = () => {
                         >
                           {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                         </button>
-                      </div>
-                    </div>
-
-                    {/* Single Authorized Account Indicator */}
-                    <div>
-                      <div className="flex items-center justify-between mb-1.5">
-                        <label className="block text-[10px] font-bold text-[#5B2A86] dark:text-[#B3A0E8] uppercase tracking-wider">
-                          บัญชีผู้มีสิทธิ์เข้าใช้งานระบบ
-                        </label>
-                        <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                          สิทธิ์เต็มระบบ
-                        </span>
-                      </div>
-                      <div
-                        onClick={() => {
-                          setEmail('chairot.s@royalthaipolice.go.th');
-                          setPassword('password123');
-                          setSelectedRole('SUPER_ADMIN');
-                          setErrorMsg('');
-                        }}
-                        className="w-full p-2.5 rounded-xl border border-purple-200 dark:border-purple-500/30 bg-purple-50/70 dark:bg-purple-950/30 text-left transition cursor-pointer flex items-center gap-2.5 hover:border-[#5B2A86]"
-                      >
-                        <div className="w-8 h-8 rounded-lg bg-[#5B2A86] text-white flex items-center justify-center font-black text-[11px] shrink-0 shadow-xs">
-                          ส.ต.อ.
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="font-bold text-xs text-slate-900 dark:text-slate-100 truncate">
-                            ส.ต.อ.ชัยโรจน์ สหัสภูริพัฒน์
-                          </div>
-                          <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
-                            ผบ.หมู่-รอง สว. กก.ตชด.31 (งานประชาสัมพันธ์ ฝอ.๕)
-                          </div>
-                        </div>
-                        <span className="text-[9px] font-bold font-mono px-2 py-0.5 rounded-md bg-[#5B2A86] text-white shrink-0">
-                          ฝอ.๕
-                        </span>
                       </div>
                     </div>
 

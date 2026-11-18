@@ -16,6 +16,7 @@ import {
   HeartHandshake,
   User,
   Zap,
+  MessageSquareText,
 } from 'lucide-react';
 
 interface GlobalSidebarProps {
@@ -96,6 +97,13 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
       icon: CheckSquare,
       accent: '#E11D48',
       matchIds: ['task-center', 'bpp-tracker'] as AppModule[],
+    },
+    {
+      id: 'line-reports' as AppModule,
+      label: 'รายงานจาก LINE',
+      icon: MessageSquareText,
+      accent: '#06C755',
+      matchIds: ['line-reports'] as AppModule[],
     },
     {
       id: 'calendar' as AppModule,

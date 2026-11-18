@@ -15,10 +15,12 @@ import {
   Sparkles,
   Navigation,
   CloudRain,
+  MessageSquareText,
 } from 'lucide-react';
 
 export type DisasterActiveTab =
   | 'overview'
+  | 'line-reports'
   | 'heavy-rain'
   | 'map'
   | 'flood'
@@ -47,6 +49,7 @@ export const DisasterHeader: React.FC<DisasterHeaderProps> = ({
 
   const tabItems: { id: DisasterActiveTab; label: string; icon: React.ReactNode }[] = [
     { id: 'overview', label: 'ภาพรวมระบบ', icon: <Layers className="w-4 h-4" /> },
+    { id: 'line-reports', label: 'รายงานจาก LINE', icon: <MessageSquareText className="w-4 h-4" /> },
     { id: 'heavy-rain', label: 'แผนที่ฝนตกหนัก & เรดาร์', icon: <CloudRain className="w-4 h-4" /> },
     { id: 'map', label: 'แผนที่สถานการณ์ GIS', icon: <MapPin className="w-4 h-4" /> },
     { id: 'flood', label: 'เฝ้าระวังน้ำท่วม', icon: <Waves className="w-4 h-4" /> },

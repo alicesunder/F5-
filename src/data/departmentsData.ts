@@ -158,6 +158,7 @@ export const checkModuleAccess = (
     maps: 'Google Maps ศูนย์แผนที่ปฏิบัติการ',
     'bpp-tracker': 'ระบบตรวจเช็คการส่งรายงาน 16 กก.ตชด.',
     'task-center': 'ศูนย์งานกลาง (Unified Task Center)',
+    'line-reports': 'รายงานจาก LINE',
     'strategic': 'แผนปฏิบัติราชการและตัวชี้วัด (KPI)',
     'communication-groups': 'กลุ่มการสื่อสารและเครือข่ายหน่วย',
     'executive-view': 'สรุปสำหรับผู้บริหาร (Executive Briefing)',

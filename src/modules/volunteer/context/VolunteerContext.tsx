@@ -28,6 +28,7 @@ import {
 
 export type VolunteerTab =
   | 'overview'
+  | 'line-reports'
   | 'missions'
   | 'reports'
   | 'units'

@@ -28,7 +28,10 @@ import { initialNotifications, initialActivityLogs } from '../data/notifications
 import { initialInspections } from '../data/inspectionsData';
 import { initialMeetings } from '../data/meetingsData';
 import { initialMissions } from '../data/missionsData';
-import { findUserByCredentials, findUserByRole, PRESET_USERS, SystemUser } from '../data/usersData';
+import { findUserByCredentials, findUserById, SystemUser } from '../data/usersData';
+
+// Sessions created before the password check existed used a different prefix and are rejected.
+const SESSION_TOKEN_PREFIX = 'FO5-AUTH-V2-';
 
 interface ToastState {
   id: string;
@@ -63,7 +66,7 @@ interface AdminContextType {
   userSession: UserSession | null;
   isLoginModalOpen: boolean;
   setIsLoginModalOpen: (open: boolean) => void;
-  login: (username: string, password?: string, role?: Role, rememberMe?: boolean) => boolean;
+  login: (username: string, password: string, role?: Role, rememberMe?: boolean) => Promise<boolean>;
   logout: () => void;
   activeMenu: string;
   activeSubMenu?: string;
@@ -172,10 +175,19 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const getStoredSession = (): UserSession | null => {
     if (typeof window === 'undefined') return null;
     try {
-      const local = localStorage.getItem('sac_session');
-      if (local) return JSON.parse(local);
-      const session = sessionStorage.getItem('sac_session');
-      if (session) return JSON.parse(session);
+      const raw = localStorage.getItem('sac_session') || sessionStorage.getItem('sac_session');
+      if (!raw) return null;
+      const parsed = JSON.parse(raw) as UserSession;
+      const valid =
+        typeof parsed?.token === 'string' &&
+        parsed.token.startsWith(SESSION_TOKEN_PREFIX) &&
+        typeof parsed.expiresAt === 'number' &&
+        parsed.expiresAt > Date.now() &&
+        !!findUserById(parsed.user?.id);
+      if (valid) return parsed;
+      localStorage.removeItem('sac_session');
+      localStorage.removeItem('sac_auth');
+      sessionStorage.removeItem('sac_session');
     } catch {
       return null;
     }
@@ -189,13 +201,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (initialStoredSession?.user?.role) return initialStoredSession.user.role;
     return 'SUPER_ADMIN';
   });
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    if (initialStoredSession) return true;
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('sac_auth') === 'true';
-    }
-    return false;
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => !!initialStoredSession);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
   const getInitialModule = (): AppModule => {
@@ -210,6 +216,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (p.startsWith('/disaster')) return 'disaster';
       if (p.startsWith('/volunteer')) return 'volunteer';
       if (p.startsWith('/reports')) return 'reports';
+      if (p.startsWith('/line-reports')) return 'line-reports';
       if (p.startsWith('/calendar')) return 'calendar';
       if (p.startsWith('/documents')) return 'documents';
       if (p.startsWith('/news')) return 'news';
@@ -328,25 +335,16 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setActivityLogs(prev => [newLog, ...prev.slice(0, 40)]);
   }, [currentUser]);
 
-  const login = useCallback((identifier: string, password?: string, overrideRole?: Role, rememberMe: boolean = true) => {
-    let matchedUser: SystemUser | undefined;
-
-    if (overrideRole) {
-      matchedUser = findUserByRole(overrideRole as DepartmentRole);
-    } else {
-      matchedUser = findUserByCredentials(identifier, password);
-    }
-
-    // If still not matched, fallback to preset by identifier or default
+  const login = useCallback(async (identifier: string, password: string, overrideRole?: Role, rememberMe: boolean = true) => {
+    const matchedUser: SystemUser | undefined = await findUserByCredentials(identifier, password);
     if (!matchedUser) {
-      const found = PRESET_USERS.find(u => u.username.toLowerCase() === identifier.trim().toLowerCase());
-      matchedUser = found || PRESET_USERS[0];
+      return false;
     }
 
     const assignedRole: DepartmentRole = (overrideRole as DepartmentRole) || matchedUser.role;
 
     const newSession: UserSession = {
-      token: `GOV-AUTH-${Date.now().toString(36).toUpperCase()}`,
+      token: `${SESSION_TOKEN_PREFIX}${Date.now().toString(36).toUpperCase()}`,
       user: {
         id: matchedUser.id,
         username: matchedUser.username,

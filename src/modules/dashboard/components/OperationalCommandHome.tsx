@@ -348,7 +348,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
                   <Sparkles className="w-4 h-4" />
                   <span>ศูนย์ปฏิบัติการดิจิทัล ฝ่ายอำนวยการ 5 (บก.อก.บช.ตชด.)</span>
                 </div>
-                <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white leading-tight drop-shadow-sm">
+                <h1 className="text-xl sm:text-4xl font-black tracking-tight text-white leading-tight drop-shadow-sm break-words">
                   สวัสดี, {currentUser?.rank} {currentUser?.name}
                 </h1>
                 <p className="text-xs sm:text-sm text-white/85 max-w-2xl leading-relaxed">
@@ -389,8 +389,8 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
                   <Zap className="w-4 h-4 text-amber-300" />
                   <span>ภาพรวมความก้าวหน้า 4 สายงาน</span>
                 </span>
-                <span className="text-[11px] font-mono text-white/75">
-                  LIVE SYNC 100%
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-300/90 text-slate-900">
+                  ข้อมูลตัวอย่าง
                 </span>
               </div>
 
