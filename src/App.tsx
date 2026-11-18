@@ -19,9 +19,11 @@ import { AccessDeniedPage } from './components/common/AccessDeniedPage';
 import { ToastContainer } from './components/common/Toast';
 import { checkModuleAccess } from './data/departmentsData';
 import { GlobalLayout } from './layouts/GlobalLayout';
+import { AnimatePresence } from 'motion/react';
+import { LoginIntro } from './components/common/LoginIntro';
 
 const AppContent: React.FC = () => {
-  const { activeModule, currentRole, isAuthenticated, authReady, isStaff } = useAdmin();
+  const { activeModule, currentRole, isAuthenticated, authReady, isStaff, showIntro, dismissIntro, currentUser } = useAdmin();
 
   if (!authReady) {
     return (
@@ -113,6 +115,9 @@ const AppContent: React.FC = () => {
         </div>
       )}
       {renderModule()}
+      <AnimatePresence>
+        {showIntro && <LoginIntro name={[currentUser.rank, currentUser.name].filter(Boolean).join(' ')} onDone={dismissIntro} />}
+      </AnimatePresence>
     </GlobalLayout>
   );
 };

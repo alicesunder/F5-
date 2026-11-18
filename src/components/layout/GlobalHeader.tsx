@@ -69,7 +69,7 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
           >
             <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-100 via-sky-50 to-amber-50 dark:from-purple-900/40 dark:to-sky-900/40 p-1 flex items-center justify-center border border-purple-200/70 dark:border-white/15 shrink-0 group-hover:scale-105 transition-transform">
               <img
-                src="/assets/fo5-logo.png"
+                src="/assets/fo5-logo.svg"
                 alt="ฝอ.5"
                 className="w-full h-full object-contain"
               />

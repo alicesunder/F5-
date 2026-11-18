@@ -115,7 +115,7 @@ export const LandingPage: React.FC = () => {
           {/* Brand Left */}
           <div className="flex items-center gap-3">
             <img
-              src="/assets/fo5-logo.png"
+              src="/assets/fo5-logo.svg"
               alt="ฝอ 5 Logo"
               className="w-9 h-9 object-contain"
             />
@@ -190,7 +190,7 @@ export const LandingPage: React.FC = () => {
               {/* Logo */}
               <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-white/95 shadow-2xl p-2 flex items-center justify-center transition hover:scale-105 duration-300 ring-1 ring-white/30">
                 <img
-                  src="/assets/fo5-logo.png"
+                  src="/assets/fo5-logo.svg"
                   alt="ฝอ 5 Emblem"
                   className="w-full h-full object-contain"
                 />
@@ -216,9 +216,9 @@ export const LandingPage: React.FC = () => {
                 <div className="bg-white/95 dark:bg-[#151821]/95 backdrop-blur-md rounded-3xl border border-slate-200/80 dark:border-white/10 shadow-xl p-6 sm:p-8">
                   {/* Card header: logo + ฝอ5 */}
                   <div className="flex flex-col items-center mb-6">
-                    <div className="w-14 h-14 rounded-2xl bg-[#5B2A86] p-2 flex items-center justify-center shadow-md mb-3">
+                    <div className="w-16 h-16 rounded-full bg-white ring-1 ring-slate-200 shadow-md mb-3 flex items-center justify-center overflow-hidden">
                       <img
-                        src="/assets/fo5-logo.png"
+                        src="/assets/fo5-logo.svg"
                         alt="ฝอ 5"
                         className="w-full h-full object-contain"
                       />
@@ -375,7 +375,7 @@ export const LandingPage: React.FC = () => {
             {/* Left Brand */}
             <div className="flex items-center gap-3">
               <img
-                src="/assets/fo5-logo.png"
+                src="/assets/fo5-logo.svg"
                 alt="ฝอ 5"
                 className="w-10 h-10 object-contain bg-white rounded-full p-1"
               />

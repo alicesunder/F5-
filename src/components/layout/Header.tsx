@@ -87,7 +87,7 @@ export const Header: React.FC<HeaderProps> = ({ onToggleSidebar }) => {
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-xl bg-white border border-[rgba(91,42,134,0.15)] p-0.5 shadow-2xs flex items-center justify-center overflow-hidden flex-shrink-0">
               <img
-                src="/assets/fo5-logo.png"
+                src="/assets/fo5-logo.svg"
                 alt="ตราสัญลักษณ์ ฝอ.5"
                 className="w-full h-full object-contain"
                 onError={(e) => {

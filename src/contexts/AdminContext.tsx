@@ -55,6 +55,9 @@ interface AdminContextType {
   isAuthenticated: boolean;
   /** false ระหว่างตรวจ session ที่เก็บไว้กับ Supabase ครั้งแรก (กันหน้าแรกกะพริบ) */
   authReady: boolean;
+  /** แสดงอินโทรหลังล็อกอินด้วยตัวเอง (ไม่แสดงตอนรีโหลดหน้า) */
+  showIntro: boolean;
+  dismissIntro: () => void;
   isStaff: boolean | null;
   userSession: UserSession | null;
   isLoginModalOpen: boolean;
@@ -171,6 +174,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   /** null = ยังไม่รู้, false = ล็อกอินแล้วแต่ไม่อยู่ในรายชื่อบุคลากร (อ่าน/บันทึกข้อมูลไม่ได้) */
   const [isStaff, setIsStaff] = useState<boolean | null>(null);
   const [staffPhone, setStaffPhone] = useState('');
+  const [showIntro, setShowIntro] = useState(false);
+  const dismissIntro = useCallback(() => setShowIntro(false), []);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
   const getInitialModule = (): AppModule => {
@@ -387,6 +392,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       return false;
     }
     applySession(data.session);
+    setShowIntro(true);
     const profile = profileForEmail(data.session.user.email || '');
 
     logActivity(
@@ -406,6 +412,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const logout = useCallback(() => {
     void supabase.auth.signOut();
+    setShowIntro(false);
     setIsAuthenticated(false);
     setUserSession(null);
 
@@ -867,6 +874,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         currentUser,
         isAuthenticated,
         authReady,
+        showIntro,
+        dismissIntro,
         isStaff,
         userSession,
         isLoginModalOpen,

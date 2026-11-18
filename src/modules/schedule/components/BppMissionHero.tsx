@@ -30,7 +30,7 @@ export const BppMissionHero: React.FC<BppMissionHeroProps> = ({
           {/* Emblem Roundel */}
           <div className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-white/15 backdrop-blur-md p-2 shadow-lg border border-white/25 flex-shrink-0 flex items-center justify-center">
             <img
-              src="/assets/fo5-logo.png"
+              src="/assets/fo5-logo.svg"
               alt="ตราสัญลักษณ์ ฝอ.5"
               className="w-full h-full object-contain"
               onError={(e) => {
