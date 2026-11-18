@@ -8,7 +8,7 @@ interface Props {
 }
 
 // ลำดับฉาก: 0 บูตระบบ → 1 AI → 2 ไปสู่เทคโนโลยี → 3 โลโก้
-const STEP_MS = [1500, 3000, 1900, 2800] as const;
+const STEP_MS = [700, 1600, 1000, 1300] as const; // รวมประมาณ 4.6 วินาที
 const TOTAL_MS = STEP_MS.reduce((a, b) => a + b, 0);
 const BOOT_LINES = ['INITIALIZING FO5 CORE', 'LOADING AI MODELS', 'SECURE CHANNEL  ●  ONLINE'];
 
@@ -141,7 +141,7 @@ const Rings: React.FC = () => (
     className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[30rem] h-[30rem] sm:w-[44rem] sm:h-[44rem] pointer-events-none"
     initial={{ opacity: 0, scale: 0.4 }}
     animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.9, ease }}
+    transition={{ duration: 0.5, ease }}
     aria-hidden
   >
     <defs>
@@ -199,7 +199,7 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
 
   useEffect(() => {
     if (step !== 0) return;
-    const t = setInterval(() => setBootLine(l => Math.min(l + 1, BOOT_LINES.length - 1)), 420);
+    const t = setInterval(() => setBootLine(l => Math.min(l + 1, BOOT_LINES.length - 1)), 200);
     return () => clearInterval(t);
   }, [step]);
 
@@ -218,7 +218,7 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
       className="fixed inset-0 z-[200] flex items-center justify-center overflow-hidden text-white cursor-pointer select-none"
       style={{ background: 'radial-gradient(110% 80% at 50% 45%, #1A1050 0%, #0B0724 55%, #04030F 100%)' }}
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0, scale: 1.04, transition: { duration: 0.6 } }}
+      exit={{ opacity: 0, scale: 1.04, transition: { duration: 0.35 } }}
       onClick={onDone}
     >
       {!calm && <NeuralField step={step} />}
@@ -256,11 +256,11 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
             <motion.div
               key="boot"
               className="font-mono text-left text-xs sm:text-sm text-cyan-200/90 space-y-2"
-              exit={{ opacity: 0, y: -10, transition: { duration: 0.25 } }}
+              exit={{ opacity: 0, y: -10, transition: { duration: 0.15 } }}
             >
               {name && <div className="text-white/70 mb-3 font-sans text-sm">สวัสดี {name}</div>}
               {BOOT_LINES.slice(0, bootLine + 1).map((l, i) => (
-                <motion.div key={l} initial={{ opacity: 0, x: -14 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.3 }}>
+                <motion.div key={l} initial={{ opacity: 0, x: -14 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15 }}>
                   <span className="text-fuchsia-300">&gt;</span> {l}
                   {i === bootLine && <span className="inline-block w-2 h-3.5 bg-cyan-200 ml-1 align-middle animate-pulse" />}
                 </motion.div>
@@ -281,7 +281,7 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
             <motion.div
               key="ai"
               className="relative flex flex-col items-center justify-center"
-              exit={{ opacity: 0, scale: 1.25, filter: 'blur(14px)', transition: { duration: 0.4 } }}
+              exit={{ opacity: 0, scale: 1.25, filter: 'blur(14px)', transition: { duration: 0.25 } }}
             >
               <Rings />
               <motion.span
@@ -290,12 +290,12 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
                 style={{ background: 'radial-gradient(circle, rgba(179,136,255,.7), transparent 70%)' }}
                 initial={{ scale: 0.2, opacity: 1 }}
                 animate={{ scale: [0.2, 5, 4.6], opacity: [1, 0.35, 0.2] }}
-                transition={{ duration: 1.2, ease: 'easeOut' }}
+                transition={{ duration: 0.7, ease: 'easeOut' }}
               />
               <motion.p
                 initial={{ opacity: 0, y: -14, letterSpacing: '0.6em' }}
                 animate={{ opacity: 1, y: 0, letterSpacing: '0.28em' }}
-                transition={{ delay: 0.2, duration: 0.8, ease }}
+                transition={{ delay: 0.05, duration: 0.45, ease }}
                 className="relative text-sm sm:text-xl font-bold text-white/85 mb-1"
               >
                 ฝอ.5 ใช้
@@ -313,7 +313,7 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
                     style={{ color: g.c }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: [0, 0.9, 0, 0.7, 0], x: g.x }}
-                    transition={{ delay: 0.55, duration: 0.9, times: [0, 0.2, 0.45, 0.7, 1] }}
+                    transition={{ delay: 0.3, duration: 0.5, times: [0, 0.2, 0.45, 0.7, 1] }}
                   >
                     AI
                   </motion.span>
@@ -324,9 +324,9 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
                   initial={{ opacity: 0, scale: 2.2, filter: 'blur(30px)', backgroundPosition: '0% 50%' }}
                   animate={{ opacity: 1, scale: [2.2, 1, 1.04, 1], filter: 'blur(0px)', backgroundPosition: '100% 50%' }}
                   transition={{
-                    default: { duration: 0.8, ease },
-                    scale: { duration: 2.2, times: [0, 0.36, 0.7, 1], ease },
-                    backgroundPosition: { duration: 2.6, ease: 'easeInOut' },
+                    default: { duration: 0.45, ease },
+                    scale: { duration: 1.3, times: [0, 0.36, 0.7, 1], ease },
+                    backgroundPosition: { duration: 1.6, ease: 'easeInOut' },
                   }}
                 >
                   AI
@@ -335,7 +335,7 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
               <motion.p
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9, duration: 0.6 }}
+                transition={{ delay: 0.45, duration: 0.35 }}
                 className="relative mt-2 text-sm sm:text-lg text-cyan-100/90 tracking-wide"
               >
                 ช่วยคิด · ช่วยสรุป · ช่วยตัดสินใจ
@@ -349,7 +349,7 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
                 <motion.p
                   initial={{ y: '110%' }}
                   animate={{ y: 0 }}
-                  transition={{ duration: 0.6, ease }}
+                  transition={{ duration: 0.35, ease }}
                   className="text-2xl sm:text-4xl font-light tracking-[0.35em] text-white/80"
                 >
                   ไปสู่
@@ -366,7 +366,7 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
                     style={clipText}
                     initial={{ opacity: 0, y: 60, rotateX: -80, filter: 'blur(12px)' }}
                     animate={{ opacity: 1, y: 0, rotateX: 0, filter: 'blur(0px)' }}
-                    transition={{ delay: 0.25 + i * 0.07, duration: 0.55, ease }}
+                    transition={{ delay: 0.1 + i * 0.035, duration: 0.35, ease }}
                   >
                     {ch}
                   </motion.span>
@@ -377,9 +377,9 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
                 style={{ backgroundImage: GRAD }}
                 initial={{ width: 0 }}
                 animate={{ width: '16rem' }}
-                transition={{ delay: 0.9, duration: 0.7, ease }}
+                transition={{ delay: 0.45, duration: 0.4, ease }}
               />
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }} className="text-sm sm:text-lg text-white/75">
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }} className="text-sm sm:text-lg text-white/75">
                 ข้อมูล · การสื่อสาร · ร่วมคิด ร่วมทำ
               </motion.p>
             </motion.div>
@@ -391,7 +391,7 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
                 className="relative"
                 initial={{ scale: 0.1, rotate: -270, opacity: 0 }}
                 animate={{ scale: 1, rotate: 0, opacity: 1 }}
-                transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               >
                 {/* คลื่นกระแทก */}
                 {[0, 0.3, 0.6].map(d => (
@@ -402,7 +402,7 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
                     style={{ borderColor: 'rgba(179,136,255,.7)' }}
                     initial={{ scale: 1, opacity: 0.9 }}
                     animate={{ scale: 3, opacity: 0 }}
-                    transition={{ delay: 0.6 + d, duration: 1.6, ease: 'easeOut', repeat: Infinity, repeatDelay: 0.5 }}
+                    transition={{ delay: 0.3 + d / 2, duration: 1, ease: 'easeOut', repeat: Infinity, repeatDelay: 0.2 }}
                   />
                 ))}
                 <div className="absolute -inset-6 rounded-full blur-2xl" style={{ background: GRAD, opacity: 0.55 }} />
@@ -418,7 +418,7 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
                     style={{ background: 'linear-gradient(100deg, transparent, rgba(255,255,255,.75), transparent)' }}
                     initial={{ left: '-40%' }}
                     animate={{ left: '140%' }}
-                    transition={{ delay: 1.0, duration: 0.9, ease: 'easeInOut' }}
+                    transition={{ delay: 0.5, duration: 0.55, ease: 'easeInOut' }}
                   />
                 </span>
               </motion.div>
@@ -430,7 +430,7 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
                       style={clipText}
                       initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
                       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                      transition={{ delay: 0.8 + i * 0.1, duration: 0.5, ease }}
+                      transition={{ delay: 0.35 + i * 0.06, duration: 0.3, ease }}
                     >
                       {ch === ' ' ? ' ' : ch}
                     </motion.span>
@@ -439,7 +439,7 @@ export const LoginIntro: React.FC<Props> = ({ name, onDone }) => {
                 <motion.div
                   initial={{ opacity: 0, letterSpacing: '0.5em' }}
                   animate={{ opacity: 1, letterSpacing: '0.12em' }}
-                  transition={{ delay: 1.3, duration: 0.9 }}
+                  transition={{ delay: 0.6, duration: 0.5 }}
                   className="text-xs sm:text-sm text-white/70"
                 >
                   ร่วมคิด ร่วมทำ เพื่อความก้าวหน้า อย่างยั่งยืน
