@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { MapPoint, MapLayerType, IncidentSeverity, IncidentType, DisasterIncident, HydrologicalStation } from '../types';
 import { PROVINCE_COORDS } from '../data/riverChainData';
+import { ThailandMap } from '../../../components/maps/ThailandMap';
 import {
   MapPin,
   Filter,
@@ -397,34 +398,6 @@ export const InteractiveDisasterMap: React.FC<InteractiveDisasterMapProps> = ({
           </div>
         </div>
 
-        {/* Map Controls (Zoom, Pan Reset) */}
-        <div className="absolute top-4 right-4 z-20 flex flex-col gap-1.5 bg-white rounded-2xl p-1.5 border border-slate-200 shadow-md">
-          <button
-            type="button"
-            onClick={() => setZoomLevel(prev => Math.min(prev + 0.3, 3))}
-            className="p-2 rounded-xl text-slate-700 hover:bg-slate-100 transition"
-            title="ขยายแผนที่"
-          >
-            <ZoomIn className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => setZoomLevel(prev => Math.max(prev - 0.3, 0.7))}
-            className="p-2 rounded-xl text-slate-700 hover:bg-slate-100 transition"
-            title="ย่อแผนที่"
-          >
-            <ZoomOut className="w-4 h-4" />
-          </button>
-          <button
-            type="button"
-            onClick={resetMap}
-            className="p-2 rounded-xl text-slate-700 hover:bg-slate-100 transition"
-            title="รีเซ็ตมุมมอง"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
-        </div>
-
         {/* Status Indicator Legend at bottom right */}
         <div className="absolute bottom-4 right-4 z-20 bg-white/95 backdrop-blur-md rounded-2xl p-3 border border-slate-200 shadow-md text-[11px] font-mono text-slate-600 space-y-1">
           <div className="font-bold text-slate-800 font-sans pb-1 border-b border-slate-100">
@@ -444,274 +417,29 @@ export const InteractiveDisasterMap: React.FC<InteractiveDisasterMapProps> = ({
           </div>
         </div>
 
-        {/* Interactive SVG Canvas */}
-        <div
-          className={`w-full h-full cursor-${isDragging ? 'grabbing' : 'grab'}`}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-        >
-          <svg
-            viewBox="0 0 800 950"
-            className="w-full h-full"
-            style={{
-              transform: `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoomLevel})`,
-              transformOrigin: 'center center',
-              transition: isDragging ? 'none' : 'transform 0.2s ease-out',
-            }}
-          >
-            <defs>
-              {/* Pattern for water bodies */}
-              <pattern id="water-grid" width="30" height="30" patternUnits="userSpaceOnUse">
-                <path d="M 0 15 Q 7.5 7.5, 15 15 T 30 15" fill="none" stroke="#D1E3F4" strokeWidth="1" />
-              </pattern>
-
-              {/* Drop Shadow for pins */}
-              <filter id="pin-shadow" x="-30%" y="-30%" width="160%" height="160%">
-                <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#0f172a" floodOpacity="0.25" />
-              </filter>
-            </defs>
-
-            {/* Gulf of Thailand & Andaman Background Water */}
-            <rect width="800" height="950" fill="#EBF2F8" />
-
-            {/* Thailand Geographical Land Vector Simplified Polygon */}
-            <g id="thailand-geographic-outline">
-              {/* Main Thailand Contour Polygon */}
-              <path
-                d="M 230,40
-                   L 300,30 L 370,45 L 430,70 L 490,95 L 530,140 L 590,190 L 640,240 L 680,310 L 670,390
-                   L 600,430 L 540,420 L 480,410 L 440,430 L 420,490 L 410,540 L 390,560 L 380,520
-                   L 340,510 L 300,500 L 290,440 L 290,380 L 280,320 L 260,280 L 230,220 L 200,160
-                   L 190,100 Z"
-                fill="#F8FAF9"
-                stroke="#CBD5E1"
-                strokeWidth="2.5"
-              />
-
-              {/* Southern Peninsula Outline */}
-              <path
-                d="M 330,510
-                   L 345,550 L 355,610 L 360,670 L 370,720 L 380,780 L 395,830 L 415,860 L 400,890
-                   L 370,895 L 350,860 L 335,800 L 320,730 L 305,650 L 295,590 L 315,530 Z"
-                fill="#F8FAF9"
-                stroke="#CBD5E1"
-                strokeWidth="2.5"
-              />
-
-              {/* Major River Basins (Chao Phraya, Ping, Wang, Yom, Nan, Mun, Chi, Khong) */}
-              {/* Ping, Wang, Yom, Nan Rivers merging into Chao Phraya */}
-              <path
-                d="M 270,120 Q 280,180 290,260 Q 310,340 330,400 Q 335,460 345,500"
-                fill="none"
-                stroke="#93C5FD"
-                strokeWidth="4"
-                strokeLinecap="round"
-              />
-              <path
-                d="M 360,110 Q 355,190 350,260 Q 345,330 330,400"
-                fill="none"
-                stroke="#93C5FD"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-              />
-              <path
-                d="M 430,90 Q 410,180 390,250 Q 360,330 330,400"
-                fill="none"
-                stroke="#93C5FD"
-                strokeWidth="3"
-                strokeLinecap="round"
-              />
-
-              {/* Mun and Chi Rivers (Isan Basin) */}
-              <path
-                d="M 440,340 Q 520,330 580,350 Q 640,360 670,390"
-                fill="none"
-                stroke="#93C5FD"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-              />
-              <path
-                d="M 480,260 Q 540,280 610,330 Q 640,360 670,390"
-                fill="none"
-                stroke="#93C5FD"
-                strokeWidth="3"
-                strokeLinecap="round"
-              />
-
-              {/* Mekong Border River */}
-              <path
-                d="M 340,35 Q 430,60 510,95 Q 580,150 630,220 Q 680,300 675,390"
-                fill="none"
-                stroke="#60A5FA"
-                strokeWidth="5"
-                strokeDasharray="6,3"
-              />
-            </g>
-
-            {/* Risk Polygon Zones Layer (If Enabled) */}
-            {visibleLayers.risk_zones && (
-              <g id="layer-risk-zones">
-                {/* Chiang Rai Floodplain Polygon */}
-                <polygon
-                  points="280,60 340,55 350,90 290,95"
-                  fill="rgba(244, 63, 94, 0.22)"
-                  stroke="#F43F5E"
-                  strokeWidth="1.5"
-                  strokeDasharray="4,2"
-                />
-                {/* Sukhothai Yom River Inundation Area */}
-                <polygon
-                  points="320,220 370,210 380,260 330,270"
-                  fill="rgba(245, 158, 11, 0.25)"
-                  stroke="#F59E0B"
-                  strokeWidth="1.5"
-                  strokeDasharray="4,2"
-                />
-                {/* Ubon Mun Basin Retention Area */}
-                <polygon
-                  points="590,340 660,340 670,400 600,400"
-                  fill="rgba(59, 130, 246, 0.25)"
-                  stroke="#3B82F6"
-                  strokeWidth="1.5"
-                  strokeDasharray="4,2"
-                />
-              </g>
-            )}
-
-            {/* Strategic Routes Layer (If Enabled) */}
-            {visibleLayers.routes && (
-              <g id="layer-routes">
-                {/* Highway 1 & 11 Northern Corridor */}
-                <path
-                  d="M 345,500 L 330,400 L 300,260 L 270,120 L 290,50"
-                  fill="none"
-                  stroke="#6366F1"
-                  strokeWidth="2.5"
-                  strokeDasharray="5,3"
-                />
-                {/* Highway 2 Northeastern Corridor */}
-                <path
-                  d="M 345,500 L 420,380 L 510,280 L 580,210"
-                  fill="none"
-                  stroke="#6366F1"
-                  strokeWidth="2.5"
-                  strokeDasharray="5,3"
-                />
-              </g>
-            )}
-
-            {/* Province Geographic Labels */}
-            <g id="province-labels" className="text-[10px] font-semibold fill-slate-400 select-none">
-              <text x="275" y="70">เชียงราย</text>
-              <text x="220" y="140">เชียงใหม่</text>
-              <text x="375" y="125">น่าน</text>
-              <text x="305" y="240">สุโขทัย</text>
-              <text x="320" y="360">นครสวรรค์</text>
-              <text x="320" y="470">พระนครศรีอยุธยา</text>
-              <text x="340" y="520">กรุงเทพฯ</text>
-              <text x="490" y="270">ขอนแก่น</text>
-              <text x="610" y="380">อุบลราชธานี</text>
-              <text x="330" y="750">สุราษฎร์ธานี</text>
-              <text x="365" y="870">สงขลา</text>
-            </g>
-
-            {/* Interactive Data Markers on Map */}
-            <g id="map-interactive-points">
-              {filteredPoints.map(point => {
-                const { x, y } = projectCoordinates(point.lat, point.lng);
-                const isSelected = activePoint?.id === point.id;
-
-                let markerColor = '#3B82F6';
-                if (point.severity === 'วิกฤต') markerColor = '#E11D48';
-                else if (point.severity === 'เฝ้าระวังสูง') markerColor = '#EA580C';
-                else if (point.severity === 'เฝ้าระวัง') markerColor = '#CA8A04';
-                else if (point.severity === 'ปกติ') markerColor = '#10B981';
-
-                return (
-                  <g
-                    key={point.id}
-                    transform={`translate(${x}, ${y})`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setActivePoint(point);
-                    }}
-                    className="cursor-pointer group"
-                  >
-                    {/* Animated Pulsing Ring for Critical/High Severity */}
-                    {(point.severity === 'วิกฤต' || point.severity === 'เฝ้าระวังสูง') && (
-                      <circle
-                        r="18"
-                        fill="none"
-                        stroke={markerColor}
-                        strokeWidth="2"
-                        opacity="0.6"
-                        className="animate-ping"
-                      />
-                    )}
-
-                    {point.category === 'stations' ? (
-                      <>
-                        {/* Diamond marker distinguishes telemetry stations from incident pins */}
-                        <rect
-                          x={isSelected ? -12 : -9}
-                          y={isSelected ? -12 : -9}
-                          width={isSelected ? 24 : 18}
-                          height={isSelected ? 24 : 18}
-                          transform={`rotate(45 0 0)`}
-                          fill={markerColor}
-                          filter="url(#pin-shadow)"
-                          stroke="#FFFFFF"
-                          strokeWidth="2"
-                          className="transition-all duration-200 group-hover:scale-125"
-                        />
-                        <circle r={isSelected ? '4' : '3'} fill="#FFFFFF" />
-                      </>
-                    ) : (
-                      <>
-                        {/* Marker Outer Base */}
-                        <circle
-                          r={isSelected ? '14' : '10'}
-                          fill={markerColor}
-                          filter="url(#pin-shadow)"
-                          stroke="#FFFFFF"
-                          strokeWidth="2"
-                          className="transition-all duration-200 group-hover:scale-125"
-                        />
-                        {/* Marker Center Dot */}
-                        <circle r={isSelected ? '5' : '3.5'} fill="#FFFFFF" />
-                      </>
-                    )}
-
-                    {/* Pin Label on Hover or when selected */}
-                    <g transform="translate(0, -18)" className={isSelected ? 'block' : 'hidden group-hover:block'}>
-                      <rect
-                        x="-60"
-                        y="-22"
-                        width="120"
-                        height="20"
-                        rx="6"
-                        fill="#0F172A"
-                        opacity="0.9"
-                      />
-                      <text
-                        x="0"
-                        y="-8"
-                        textAnchor="middle"
-                        fill="#FFFFFF"
-                        fontSize="9"
-                        fontWeight="600"
-                        className="pointer-events-none"
-                      >
-                        {point.name.slice(0, 18)}...
-                      </text>
-                    </g>
-                  </g>
-                );
-              })}
-            </g>
-          </svg>
-        </div>
+        {/* แผนที่จริง (OpenStreetMap) */}
+        <ThailandMap
+          markers={filteredPoints.map(point => ({
+            id: point.id,
+            lat: point.lat,
+            lng: point.lng,
+            label: `${point.name} · ${point.province}`,
+            shape: point.category === 'stations' ? 'diamond' : 'circle',
+            pulse: point.severity === 'วิกฤต' || point.severity === 'เฝ้าระวังสูง',
+            selected: activePoint?.id === point.id,
+            color:
+              point.severity === 'วิกฤต'
+                ? '#E11D48'
+                : point.severity === 'เฝ้าระวังสูง'
+                ? '#EA580C'
+                : point.severity === 'เฝ้าระวัง'
+                ? '#CA8A04'
+                : point.severity === 'ปกติ'
+                ? '#10B981'
+                : '#3B82F6',
+          }))}
+          onSelect={id => setActivePoint(filteredPoints.find(p => p.id === id) || null)}
+        />
 
         {/* Selected Point Inspection Popover Overlay */}
         {activePoint && (

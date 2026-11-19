@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { HEAVY_RAIN_ZONES, HeavyRainZone } from '../../../data/heavyRainData';
+import { ThailandMap } from '../../../components/maps/ThailandMap';
 import {
   CloudRain,
   AlertTriangle,
@@ -266,95 +267,25 @@ export const HeavyRainRadarMap: React.FC<HeavyRainRadarMapProps> = ({
             </div>
           </div>
 
-          {/* Interactive Radar Graphic Container */}
-          <div className="relative w-full aspect-4/5 sm:aspect-square bg-[#0B1329] rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center">
-            {/* Grid Lines */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#1E293B15_1px,transparent_1px),linear-gradient(to_bottom,#1E293B15_1px,transparent_1px)] bg-[size:24px_24px]" />
-
-            {/* Radar Concentric Rings */}
-            <div className="absolute w-[80%] h-[80%] rounded-full border border-blue-500/10 pointer-events-none" />
-            <div className="absolute w-[55%] h-[55%] rounded-full border border-blue-500/15 pointer-events-none" />
-            <div className="absolute w-[30%] h-[30%] rounded-full border border-blue-500/20 pointer-events-none" />
-
-            {/* Rotating Radar Sweep Line */}
-            {isRadarAnimationActive && (
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-[85%] h-[85%] rounded-full animate-spin [animation-duration:6s] border-r-2 border-r-blue-400/50 bg-[conic-gradient(from_0deg,transparent_0deg,transparent_270deg,rgba(59,130,246,0.15)_360deg)]" />
+          {/* แผนที่จริง (OpenStreetMap) พร้อมวงพื้นที่ฝนตกหนัก */}
+          <div className="relative w-full h-[420px] sm:h-[520px] rounded-xl overflow-hidden border border-slate-800">
+            <ThailandMap
+              markers={filteredZones.map(zone => ({
+                id: zone.id,
+                lat: zone.lat,
+                lng: zone.lng,
+                radiusKm: zone.severity === 'extreme' ? 40 : zone.severity === 'heavy' ? 28 : 18,
+                color: getSeverityBadge(zone.severity).color,
+                selected: selectedZone?.id === zone.id,
+                label: `${zone.province} · ฝน 24 ชม. ${zone.rainfall24h} มม.`,
+              }))}
+              onSelect={id => setSelectedZone(filteredZones.find(z => z.id === id) || null)}
+            />
+            {filteredZones.length === 0 && (
+              <div className="absolute left-3 right-14 top-3 z-20 rounded-xl bg-white/95 px-3 py-2 text-xs text-slate-600 shadow">
+                ยังไม่มีข้อมูลพื้นที่ฝนตกหนัก (ยังไม่ได้เชื่อมต่อแหล่งข้อมูลฝน)
               </div>
             )}
-
-            {/* Approximate Silhouette Outline of Thailand for Spatial Clarity */}
-            <svg
-              viewBox="0 0 100 100"
-              className="absolute inset-0 w-full h-full pointer-events-none opacity-25"
-            >
-              {/* North / Upper */}
-              <path
-                d="M 25,8 Q 45,5 55,10 Q 65,18 55,30 Q 75,32 80,45 Q 70,55 58,52 Q 45,55 42,60 Q 38,75 42,95 Q 35,92 32,80 Q 28,65 30,50 Q 20,40 18,25 Z"
-                fill="#1E293B"
-                stroke="#334155"
-                strokeWidth="0.75"
-              />
-            </svg>
-
-            {/* Rain Zone Markers */}
-            {filteredZones.map(zone => {
-              const coords = getMapCoordinates(zone.lat, zone.lng);
-              const isSelected = selectedZone?.id === zone.id;
-              const badge = getSeverityBadge(zone.severity);
-
-              return (
-                <div
-                  key={zone.id}
-                  onClick={() => setSelectedZone(zone)}
-                  style={{
-                    left: `${coords.x}%`,
-                    top: `${coords.y}%`,
-                  }}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer z-20 group"
-                >
-                  {/* Outer Radar Ripple Effect */}
-                  <div
-                    className={`absolute inset-0 rounded-full animate-ping opacity-60 pointer-events-none ${
-                      zone.severity === 'extreme'
-                        ? 'bg-rose-500'
-                        : zone.severity === 'heavy'
-                        ? 'bg-amber-500'
-                        : 'bg-sky-400'
-                    }`}
-                    style={{
-                      width: isSelected ? '40px' : '28px',
-                      height: isSelected ? '40px' : '28px',
-                      left: isSelected ? '-8px' : '-4px',
-                      top: isSelected ? '-8px' : '-4px',
-                    }}
-                  />
-
-                  {/* Marker Pin */}
-                  <div
-                    className={`relative flex items-center justify-center rounded-full shadow-lg transition-transform ${
-                      isSelected
-                        ? 'w-8 h-8 scale-125 ring-3 ring-white z-30'
-                        : 'w-6 h-6 hover:scale-110'
-                    }`}
-                    style={{ backgroundColor: badge.color }}
-                  >
-                    <CloudRain className="w-3.5 h-3.5 text-white" />
-                  </div>
-
-                  {/* Floating Province Label */}
-                  <div
-                    className={`absolute left-1/2 -translate-x-1/2 top-full mt-1 px-2 py-0.5 rounded text-[10px] font-bold whitespace-nowrap shadow-md pointer-events-none transition ${
-                      isSelected
-                        ? 'bg-white text-slate-900 opacity-100 scale-105'
-                        : 'bg-black/75 text-white opacity-85 group-hover:opacity-100'
-                    }`}
-                  >
-                    {zone.province} ({zone.rainfall24h} มม.)
-                  </div>
-                </div>
-              );
-            })}
           </div>
 
           {/* Selected Zone Quick Bar */}
