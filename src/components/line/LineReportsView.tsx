@@ -70,6 +70,7 @@ export const LineReportsView: React.FC<Props> = ({ dept }) => {
   const [deptFilter, setDeptFilter] = useState<LineReportDept | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState<LineReportStatus | 'all'>('all');
   const [query, setQuery] = useState('');
+  const [groupFilter, setGroupFilter] = useState<string>('all');
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const scoped = useMemo(() => (dept ? all.filter(r => r.dept === dept) : all), [all, dept]);
@@ -79,10 +80,18 @@ export const LineReportsView: React.FC<Props> = ({ dept }) => {
     return scoped.filter(r => {
       if (!dept && deptFilter !== 'all' && r.dept !== deptFilter) return false;
       if (statusFilter !== 'all' && r.status !== statusFilter) return false;
+      if (groupFilter !== 'all' && (r.groupName || 'ไม่ทราบชื่อกลุ่ม') !== groupFilter) return false;
       if (!q) return true;
       return [r.text, r.senderName, r.unit, r.groupName].some(v => v?.toLowerCase().includes(q));
     });
-  }, [scoped, deptFilter, statusFilter, query, dept]);
+  }, [scoped, deptFilter, statusFilter, groupFilter, query, dept]);
+
+  // กลุ่ม LINE ที่มีรายงานเข้ามา พร้อมจำนวน
+  const groups = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const r of scoped) m.set(r.groupName || 'ไม่ทราบชื่อกลุ่ม', (m.get(r.groupName || 'ไม่ทราบชื่อกลุ่ม') || 0) + 1);
+    return [...m.entries()].sort((a, b) => b[1] - a[1]);
+  }, [scoped]);
 
   const selected = visible.find(r => r.id === selectedId) || null;
   const imageUrls = useSignedUrls(selected?.mediaPaths ?? []);
@@ -157,6 +166,24 @@ export const LineReportsView: React.FC<Props> = ({ dept }) => {
             </button>
           ))}
         </div>
+      )}
+
+      {groups.length > 1 && (
+        <label className="flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300">
+          กลุ่ม LINE
+          <select
+            value={groupFilter}
+            onChange={e => setGroupFilter(e.target.value)}
+            className="min-w-0 max-w-full flex-1 sm:flex-none sm:w-80 px-3 py-2 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#151A22] text-sm"
+          >
+            <option value="all">ทุกกลุ่ม ({scoped.length})</option>
+            {groups.map(([g, n]) => (
+              <option key={g} value={g}>
+                {g} ({n})
+              </option>
+            ))}
+          </select>
+        </label>
       )}
 
       <div className="flex flex-wrap gap-2" role="group" aria-label="กรองตามสถานะ">

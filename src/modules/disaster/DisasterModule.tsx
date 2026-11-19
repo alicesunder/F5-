@@ -195,10 +195,10 @@ export const DisasterModule: React.FC = () => {
                 <div className="space-y-1.5">
                   <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-200 border border-amber-400/30">
                     <ShieldAlert className="w-3.5 h-3.5 text-amber-300" />
-                    <span>16 BPP UNITS TRACKER</span>
+                    <span>ติดตามรายงานหน่วย</span>
                   </span>
                   <h4 className="text-base font-extrabold group-hover:text-amber-300 transition">
-                    ตรวจเช็คการส่งรายงาน กก.ตชด. 11-14, 21-24, 31-34, 41-44
+                    ตรวจเช็คการส่งรายงาน บก. 7 หน่วย และ กก. 26 หน่วย
                   </h4>
                   <p className="text-xs text-slate-300">
                     ตรวจดูหน่วยที่ยังไม่ส่งรายงาน ระบุตัวตนผู้รับผิดชอบ และกดเร่งรัด/โทรสายตรงได้ทันที

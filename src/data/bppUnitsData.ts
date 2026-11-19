@@ -1,4 +1,4 @@
-export type BppRegion = 'บก.ตชด.ภาค 1' | 'บก.ตชด.ภาค 2' | 'บก.ตชด.ภาค 3' | 'บก.ตชด.ภาค 4';
+export type BppRegion = 'บก.ตชด.ภาค 1' | 'บก.ตชด.ภาค 2' | 'บก.ตชด.ภาค 3' | 'บก.ตชด.ภาค 4' | 'บก.กฝ.บช.ตชด.' | 'ระดับ บก.';
 
 export type ReportDepartment = 'admin' | 'relations' | 'disaster' | 'volunteer';
 
@@ -20,7 +20,7 @@ export interface BppUnit {
   id: string; // e.g. 'กก.ตชด.11'
   unitNumber: number; // 11
   region: BppRegion;
-  regionShort: 'ภาค 1' | 'ภาค 2' | 'ภาค 3' | 'ภาค 4';
+  regionShort: 'ภาค 1' | 'ภาค 2' | 'ภาค 3' | 'ภาค 4' | 'บก.กฝ.' | 'บก.';
   campName: string;
   provinceLocation: string; // HQ province
   responsibleProvinces: string[]; // provinces under jurisdiction
@@ -71,6 +71,24 @@ const UNIT_SKELETON: Pick<BppUnit, 'id' | 'unitNumber' | 'region' | 'regionShort
   {"id": "กก.ตชด.42", "unitNumber": 42, "region": "บก.ตชด.ภาค 4", "regionShort": "ภาค 4", "provinceLocation": "นครศรีธรรมราช", "responsibleProvinces": ["นครศรีธรรมราช", "สุราษฎร์ธานี", "กระบี่", "พังงา", "ภูเก็ต"]},
   {"id": "กก.ตชด.43", "unitNumber": 43, "region": "บก.ตชด.ภาค 4", "regionShort": "ภาค 4", "provinceLocation": "สงขลา", "responsibleProvinces": ["สงขลา", "สตูล", "พัทลุง", "ตรัง"]},
   {"id": "กก.ตชด.44", "unitNumber": 44, "region": "บก.ตชด.ภาค 4", "regionShort": "ภาค 4", "provinceLocation": "ยะลา", "responsibleProvinces": ["ยะลา", "ปัตตานี", "นราธิวาส"]},
+  // ตามโครงสร้างกลุ่มการสื่อสาร ฝอ.5: กก. 26 หน่วย (กก.ตชด.11-44, กก.1-9 บก.กฝ., ศฝส.) และ บก. 7 หน่วย
+  {"id": "กก.1 บก.กฝ.", "unitNumber": 101, "region": "บก.กฝ.บช.ตชด.", "regionShort": "บก.กฝ.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "กก.2 บก.กฝ.", "unitNumber": 102, "region": "บก.กฝ.บช.ตชด.", "regionShort": "บก.กฝ.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "กก.3 บก.กฝ.", "unitNumber": 103, "region": "บก.กฝ.บช.ตชด.", "regionShort": "บก.กฝ.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "กก.4 บก.กฝ.", "unitNumber": 104, "region": "บก.กฝ.บช.ตชด.", "regionShort": "บก.กฝ.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "กก.5 บก.กฝ.", "unitNumber": 105, "region": "บก.กฝ.บช.ตชด.", "regionShort": "บก.กฝ.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "กก.6 บก.กฝ.", "unitNumber": 106, "region": "บก.กฝ.บช.ตชด.", "regionShort": "บก.กฝ.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "กก.7 บก.กฝ.", "unitNumber": 107, "region": "บก.กฝ.บช.ตชด.", "regionShort": "บก.กฝ.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "กก.8 บก.กฝ.", "unitNumber": 108, "region": "บก.กฝ.บช.ตชด.", "regionShort": "บก.กฝ.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "กก.9 บก.กฝ.", "unitNumber": 109, "region": "บก.กฝ.บช.ตชด.", "regionShort": "บก.กฝ.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "ศฝส.บก.กฝ.", "unitNumber": 110, "region": "บก.กฝ.บช.ตชด.", "regionShort": "บก.กฝ.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "บก.ตชด.ภาค 1", "unitNumber": 201, "region": "ระดับ บก.", "regionShort": "บก.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "บก.ตชด.ภาค 2", "unitNumber": 202, "region": "ระดับ บก.", "regionShort": "บก.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "บก.ตชด.ภาค 3", "unitNumber": 203, "region": "ระดับ บก.", "regionShort": "บก.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "บก.ตชด.ภาค 4", "unitNumber": 204, "region": "ระดับ บก.", "regionShort": "บก.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "บก.สอ.บช.ตชด.", "unitNumber": 205, "region": "ระดับ บก.", "regionShort": "บก.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "บก.กฝ.บช.ตชด.", "unitNumber": 206, "region": "ระดับ บก.", "regionShort": "บก.", "provinceLocation": "", "responsibleProvinces": []},
+  {"id": "ศอพ.บช.ตชด.", "unitNumber": 207, "region": "ระดับ บก.", "regionShort": "บก.", "provinceLocation": "", "responsibleProvinces": []},
 ];
 
 const REPORT_DEPT_NAMES: Record<ReportDepartment, string> = {"admin": "ฝ่ายอำนวยการ", "relations": "ฝ่ายมวลชนสัมพันธ์", "disaster": "ฝ่ายสาธารณภัย", "volunteer": "ฝ่ายจิตอาสา"};

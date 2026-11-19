@@ -316,7 +316,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
                   สวัสดี, {currentUser?.rank} {currentUser?.name}
                 </h1>
                 <p className="text-xs sm:text-sm text-white/85 max-w-2xl leading-relaxed">
-                  ศูนย์กลางเชื่อมโยงข้อมูล 4 สายงานหลักและ 16 กก.ตชด. คลิกเลือกสายงานด้านล่างเพื่อเข้าสู่ระบบปฏิบัติงาน หรือตรวจสอบงานด่วนประจำวันได้ทันที
+                  ศูนย์กลางเชื่อมโยงข้อมูล 4 สายงานหลักและ หน่วย ตชด. คลิกเลือกสายงานด้านล่างเพื่อเข้าสู่ระบบปฏิบัติงาน หรือตรวจสอบงานด่วนประจำวันได้ทันที
                 </p>
               </div>
 
@@ -341,7 +341,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
                   className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 text-xs font-extrabold transition cursor-pointer flex items-center gap-2 shadow-lg shadow-amber-950/20"
                 >
                   <Flame className="w-4 h-4 text-slate-950" />
-                  <span>ศูนย์งานด่วน & ติดตาม 16 กก.ตชด. ({tasks.length})</span>
+                  <span>ศูนย์งานด่วน & ติดตาม หน่วย ตชด. ({tasks.length})</span>
                 </motion.button>
               </div>
             </div>
@@ -1066,13 +1066,13 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
           </div>
 
           <div className="pt-3 border-t border-slate-100 dark:border-white/10 flex items-center justify-between text-xs text-slate-500">
-            <span>อัปเดตสถานะจาก 16 กก.ตชด.</span>
+            <span>อัปเดตสถานะจาก หน่วย ตชด.</span>
             <button
               type="button"
               onClick={() => navigateModule('bpp-tracker')}
               className="font-extrabold text-[#5B2A86] dark:text-[#B3A0E8] hover:underline cursor-pointer whitespace-nowrap"
             >
-              ติดตามการส่งงาน 16 กก.ตชด. →
+              ติดตามการส่งงาน หน่วย ตชด. →
             </button>
           </div>
         </div>
@@ -1573,7 +1573,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
                   onClick={() => navigateModule('bpp-tracker')}
                   className="px-3.5 py-2 rounded-xl bg-[#5B2A86] text-white text-xs font-bold cursor-pointer flex items-center gap-1.5 self-start sm:self-auto"
                 >
-                  <span>ติดตามการส่งงาน 16 กก.ตชด.</span>
+                  <span>ติดตามการส่งงาน หน่วย ตชด.</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>

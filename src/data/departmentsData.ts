@@ -156,7 +156,7 @@ export const checkModuleAccess = (
     settings: 'ตั้งค่าระบบ',
     workspace: 'ศูนย์เชื่อมต่อ Google Workspace',
     maps: 'Google Maps ศูนย์แผนที่ปฏิบัติการ',
-    'bpp-tracker': 'ระบบตรวจเช็คการส่งรายงาน 16 กก.ตชด.',
+    'bpp-tracker': 'ระบบตรวจเช็คการส่งรายงาน หน่วย ตชด.',
     'task-center': 'ศูนย์งานกลาง (Unified Task Center)',
     'line-reports': 'รายงานจาก LINE',
     'strategic': 'แผนปฏิบัติราชการและตัวชี้วัด (KPI)',

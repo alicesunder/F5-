@@ -93,7 +93,7 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
   const coreOperationalItems = [
     {
       id: 'task-center' as AppModule,
-      label: 'ศูนย์งานด่วน & ติดตาม 16 กก.ตชด.',
+      label: 'ศูนย์งานด่วน & ติดตาม หน่วย ตชด.',
       icon: CheckSquare,
       accent: '#E11D48',
       matchIds: ['task-center', 'bpp-tracker'] as AppModule[],

@@ -76,7 +76,7 @@ export const UnifiedTaskCenterModule: React.FC<UnifiedTaskCenterModuleProps> = (
                 <CheckSquare className="w-5 h-5" />
               </span>
               <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                ศูนย์งานด่วน & ติดตามการส่งงาน 16 กก.ตชด.
+                ศูนย์งานด่วน & ติดตามการส่งงาน หน่วย ตชด.
               </h1>
             </div>
             <p className="text-xs sm:text-sm text-purple-100/85 mt-1">
@@ -108,7 +108,7 @@ export const UnifiedTaskCenterModule: React.FC<UnifiedTaskCenterModuleProps> = (
               }`}
             >
               <Building2 className="w-3.5 h-3.5" />
-              <span>ติดตาม 16 กก.ตชด.</span>
+              <span>ติดตาม หน่วย ตชด.</span>
             </button>
           </div>
         </div>

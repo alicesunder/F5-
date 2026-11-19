@@ -60,7 +60,7 @@ export const DisasterHeader: React.FC<DisasterHeaderProps> = ({
     dept="disaster"
     icon={ShieldAlert}
     title="งานพัฒนาและช่วยเหลือประชาชน"
-    description="บรรเทาสาธารณภัย เฝ้าระวังน้ำท่วม ดินโคลนถล่ม และช่วยเหลือประชาชนในพื้นที่ 16 กก.ตชด."
+    description="บรรเทาสาธารณภัย เฝ้าระวังน้ำท่วม ดินโคลนถล่ม และช่วยเหลือประชาชนในพื้นที่รับผิดชอบของ ตชด."
     tabs={DISASTER_TABS}
     activeTab={activeTab}
     onSelectTab={id => onSelectTab(id as DisasterActiveTab)}

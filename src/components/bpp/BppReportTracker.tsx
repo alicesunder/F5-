@@ -209,7 +209,7 @@ export const BppReportTracker: React.FC<BppReportTrackerProps> = ({
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl text-xs font-bold bg-white/15 text-sky-200 border border-white/20 backdrop-blur-md">
               <Building2 className="w-3.5 h-3.5 text-amber-300" />
-              <span>16 BPP UNITS TRACKER • กก.ตชด. 11-14, 21-24, 31-34, 41-44</span>
+              <span>ติดตามรายงานหน่วย • บก. 7 หน่วย · กก. 26 หน่วย</span>
             </div>
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight">
               ตรวจเช็คการส่งรายงานและผู้รับผิดชอบแต่ละ กก.ตชด.
@@ -245,14 +245,14 @@ export const BppReportTracker: React.FC<BppReportTrackerProps> = ({
           {/* Total Units */}
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/15">
             <span className="text-xs text-sky-200 font-semibold block mb-0.5">
-              จำนวน กก.ตชด. ทั้งหมด
+              จำนวนหน่วยทั้งหมด
             </span>
             <div className="flex items-baseline gap-2">
               <span className="text-2xl font-black font-mono tabular-nums text-white">{stats.total}</span>
               <span className="text-xs text-sky-200">หน่วย (4 ภาค)</span>
             </div>
             <span className="text-[11px] text-sky-200/75 mt-1 block font-mono">
-              11-14, 21-24, 31-34, 41-44
+              บก. 7 · กก.ตชด. 16 · บก.กฝ. 10
             </span>
           </div>
 
@@ -360,13 +360,15 @@ export const BppReportTracker: React.FC<BppReportTrackerProps> = ({
       <div className="liquid-glass-card iridescent-edge rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           {/* Region Tabs */}
-          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold">
+          <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold overflow-x-auto max-w-full no-scrollbar">
             {[
-              { id: 'all', label: 'ทุกภาค (1-4)' },
+              { id: 'all', label: 'ทั้งหมด' },
               { id: 'ภาค 1', label: 'ภาค 1 (11-14)' },
               { id: 'ภาค 2', label: 'ภาค 2 (21-24)' },
               { id: 'ภาค 3', label: 'ภาค 3 (31-34)' },
               { id: 'ภาค 4', label: 'ภาค 4 (41-44)' },
+              { id: 'บก.กฝ.', label: 'บก.กฝ. (กก.1-9, ศฝส.)' },
+              { id: 'บก.', label: 'ระดับ บก. (7)' },
             ].map(r => (
               <button
                 key={r.id}
