@@ -133,7 +133,7 @@ export const PRMonitoringSidebar: React.FC<PRMonitoringSidebarProps> = ({ active
 
   const monitoring: Item[] = [
     { id: 'latest', label: 'ข่าวล่าสุด (Live Feed)', icon: Newspaper, badge: String(posts.length), tone: 'blue' },
-    { id: 'facebook', label: 'Facebook Monitoring', icon: Radio },
+    { id: 'facebook', label: 'เพจ Facebook ของหน่วย', icon: Radio },
     { id: 'pages', label: 'เพจที่ติดตาม', icon: UsersRound, badge: String(pages.length), tone: 'slate' },
     { id: 'keywords', label: 'Keyword Trends', icon: Hash, badge: String(kwList.length), tone: 'slate' },
     { id: 'compare', label: 'เปรียบเทียบเพจ', icon: Scale },

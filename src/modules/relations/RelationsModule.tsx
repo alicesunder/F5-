@@ -41,6 +41,14 @@ const RelationsContent: React.FC = () => {
   const [detailNews, setDetailNews] = useState<NewsItem | null>(null);
   const [isUploadMediaOpen, setIsUploadMediaOpen] = useState(false);
 
+  // กลับมาจากหน้าอนุญาตของ Facebook: เปิดหน้าเพจ Facebook
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has('fb')) {
+      setActiveTab('operations');
+      setActivePRView('facebook');
+    }
+  }, [setActivePRView]);
+
   // Subscribe to service changes
   useEffect(() => {
     const syncData = () => {

@@ -39,6 +39,7 @@ import { PRDocumentDetailModal } from './modals/PRDocumentDetailModal';
 import { PRAddMissionModal } from './modals/PRAddMissionModal';
 import { PRAddKeywordModal } from './modals/PRAddKeywordModal';
 import { PRAddPageModal } from './modals/PRAddPageModal';
+import { FacebookConnectCard } from './intel/FacebookConnectCard';
 
 interface Props {
   view: PRViewId;
@@ -69,7 +70,13 @@ export const PRWorkspaceView: React.FC<Props> = ({
 
       {view === 'line-reports' && <LineReportsView dept="relations" />}
 
-      {(view === 'latest' || view === 'facebook') && <PRLatestPostsView />}
+      {view === 'facebook' && (
+        <div className="space-y-5">
+          <FacebookConnectCard />
+          <PRLatestPostsView />
+        </div>
+      )}
+      {view === 'latest' && <PRLatestPostsView />}
 
       {view === 'pages' && <PRPagesView />}
 
