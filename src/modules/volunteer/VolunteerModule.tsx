@@ -1,8 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { VolunteerProvider, useVolunteer, VolunteerTab } from './context/VolunteerContext';
-import { VolunteerHeader, useVolunteerTabs } from './components/VolunteerHeader';
-import { QuickStartGrid } from '../../components/layout/DepartmentShell';
+import { VolunteerProvider, useVolunteer } from './context/VolunteerContext';
+import { VolunteerHeader } from './components/VolunteerHeader';
 import { VolunteerAttentionBanner } from './components/VolunteerAttentionBanner';
 import { VolunteerHeroStats } from './components/VolunteerHeroStats';
 import { VolunteerSignatureFlow } from './components/VolunteerSignatureFlow';
@@ -16,8 +15,7 @@ import { VolunteerSubmitReportModal } from './components/reports/VolunteerSubmit
 import { VolunteerPersonnelSection } from './components/personnel/VolunteerPersonnelSection';
 
 const VolunteerModuleContent: React.FC = () => {
-  const { activeTab, setActiveTab } = useVolunteer();
-  const tabs = useVolunteerTabs();
+  const { activeTab } = useVolunteer();
 
   return (
     <div className="min-h-screen iridescent-ambient text-[#25202B] dark:text-[#F5F7FA] font-sans antialiased pb-14">
@@ -40,7 +38,6 @@ const VolunteerModuleContent: React.FC = () => {
               transition={{ duration: 0.2 }}
               className="space-y-6"
             >
-              <QuickStartGrid dept="volunteer" tabs={tabs.filter(t => t.id !== 'overview')} onSelect={id => setActiveTab(id as VolunteerTab)} />
               <VolunteerHeroStats />
 
               <div className="liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6">

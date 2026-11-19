@@ -39,7 +39,7 @@ import { DEPARTMENT_COLORS } from '../../types';
 import { SmartOpsWorkspace } from '../../components/smart/SmartOpsWorkspace';
 import { LineReportsView } from '../../components/line/LineReportsView';
 import { DutyRosterEditor } from '../../components/duty/DutyRosterEditor';
-import { DepartmentHeader, DeptAction, DeptTab, QuickStartGrid } from '../../components/layout/DepartmentShell';
+import { DepartmentHeader, DeptAction, DeptTab } from '../../components/layout/DepartmentShell';
 
 export const AdminModule: React.FC = () => {
   const { activeMenu, navigate, navigateModule, incomingDocs = [], outgoingDocs = [], missions = [] } = useAdmin();
@@ -107,12 +107,7 @@ export const AdminModule: React.FC = () => {
           />
         );
       default:
-        return (
-          <div className="space-y-6">
-            <QuickStartGrid dept="admin" tabs={subNavItems.filter(t => t.id !== 'dashboard')} onSelect={navigate} />
-            <Dashboard />
-          </div>
-        );
+        return <Dashboard />;
     }
   };
 
