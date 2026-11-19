@@ -10,7 +10,17 @@ import { createClient } from 'npm:@supabase/supabase-js@2.49.4';
 const GRAPH = 'https://graph.facebook.com/v23.0';
 const SITE = 'https://administrationcenter.vercel.app';
 const SELF = `${Deno.env.get('SUPABASE_URL')}/functions/v1/facebook`;
-const SCOPES = 'pages_show_list,pages_read_engagement,pages_read_user_content';
+const SCOPES = 'pages_show_list,pages_read_engagement,pages_read_user_content,read_insights';
+
+// ตัวเลขสถิติเพจรายวัน (ดึงทีละตัว ตัวไหน Facebook ไม่รองรับก็ข้ามได้ ไม่ทำให้ทั้งหมดล้ม)
+const INSIGHT_METRICS = [
+  'page_views_total', // การเข้าชมหน้าเพจ (ครั้ง)
+  'page_total_media_view_unique', // คนที่เห็นเนื้อหาของเพจ (Reach)
+  'page_media_view', // จำนวนครั้งที่เนื้อหาถูกดู
+  'page_post_engagements', // การโต้ตอบกับโพสต์
+  'page_daily_follows_unique', // ผู้ติดตามใหม่
+  'page_daily_unfollows_unique', // เลิกติดตาม
+];
 
 const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
   auth: { persistSession: false, autoRefreshToken: false },
@@ -65,7 +75,7 @@ async function syncAll() {
       const info = await graph(p.page_id, { fields: 'name,fan_count,followers_count,picture{url},category,verification_status', access_token: p.access_token });
       const feed = await graph(`${p.page_id}/posts`, {
         fields: 'id,message,created_time,permalink_url,full_picture,shares,reactions.summary(total_count).limit(0),comments.summary(total_count).limit(0)',
-        limit: '25',
+        limit: '50',
         access_token: p.access_token,
       });
       const avatar = info.picture?.data?.url || p.picture || '';
@@ -122,8 +132,31 @@ async function syncAll() {
         sentimentBreakdown: { positive: 0, neutral: posts.length, negative: 0 },
       };
       await db.from('app_records').upsert({ collection: 'pr.pages', id: page.id, data: page }, { onConflict: 'collection,id' });
-      await db.from('fb_pages').update({ name: page.name, picture: avatar, last_sync_at: new Date().toISOString(), last_error: null }).eq('page_id', p.page_id);
-      results[p.page_id] = `ok ${posts.length}`;
+      // สถิติเพจรายวัน 30 วัน
+      const since = Math.floor(now / 1000) - 30 * 86400;
+      const until = Math.floor(now / 1000) + 86400;
+      const byDay: Record<string, Record<string, number>> = {};
+      const missing: string[] = [];
+      for (const m of INSIGHT_METRICS) {
+        try {
+          const r = await graph(`${p.page_id}/insights`, { metric: m, period: 'day', since: String(since), until: String(until), access_token: p.access_token });
+          for (const v of r.data?.[0]?.values ?? []) {
+            // end_time คือเที่ยงคืนของวันถัดไป (เวลา Pacific) ใช้วันก่อนหน้าเป็นวันของข้อมูล
+            const day = new Date(Date.parse(v.end_time) - 86400000).toISOString().slice(0, 10);
+            (byDay[day] ||= {})[m] = typeof v.value === 'number' ? v.value : 0;
+          }
+        } catch {
+          missing.push(m);
+        }
+      }
+      const insightRows = Object.entries(byDay).map(([day, metrics]) => ({
+        collection: 'pr.fb_insights',
+        id: `${p.page_id}:${day}`,
+        data: { id: `${p.page_id}:${day}`, pageId: `fb_${p.page_id}`, day, metrics },
+      }));
+      if (insightRows.length) await db.from('app_records').upsert(insightRows, { onConflict: 'collection,id' });
+      await db.from('fb_pages').update({ name: page.name, picture: avatar, last_sync_at: new Date().toISOString(), last_error: missing.length === INSIGHT_METRICS.length ? 'อ่านสถิติเพจไม่ได้: ต้องกดเชื่อมต่อเพจใหม่เพื่ออนุญาตสิทธิ์ read_insights' : null }).eq('page_id', p.page_id);
+      results[p.page_id] = `ok ${posts.length} posts, ${insightRows.length} days`;
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       await db.from('fb_pages').update({ last_error: msg.slice(0, 500) }).eq('page_id', p.page_id);

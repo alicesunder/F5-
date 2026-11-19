@@ -40,6 +40,7 @@ import { PRAddMissionModal } from './modals/PRAddMissionModal';
 import { PRAddKeywordModal } from './modals/PRAddKeywordModal';
 import { PRAddPageModal } from './modals/PRAddPageModal';
 import { FacebookConnectCard } from './intel/FacebookConnectCard';
+import { PRPageMonitorView } from './intel/PRPageMonitorView';
 
 interface Props {
   view: PRViewId;
@@ -77,6 +78,7 @@ export const PRWorkspaceView: React.FC<Props> = ({
         </div>
       )}
       {view === 'latest' && <PRLatestPostsView />}
+      {view === 'page-monitor' && <PRPageMonitorView />}
 
       {view === 'pages' && <PRPagesView />}
 

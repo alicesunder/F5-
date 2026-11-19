@@ -28,6 +28,7 @@ import { usePRIntel } from '../context/PRIntelContext';
 
 export type PRViewId =
   | 'dashboard'
+  | 'page-monitor'
   | 'line-reports'
   | 'latest'
   | 'facebook'
@@ -128,6 +129,7 @@ export const PRMonitoringSidebar: React.FC<PRMonitoringSidebarProps> = ({ active
 
   const commandCenter: Item[] = [
     { id: 'dashboard', label: 'ศูนย์บัญชาการ PR', icon: LayoutDashboard, badge: 'LIVE', tone: 'purple' },
+    { id: 'page-monitor', label: 'มอนิเตอร์เพจ ตชด.', icon: BarChart3, badge: 'ใหม่', tone: 'blue' },
     { id: 'line-reports', label: 'รายงานจาก LINE', icon: MessageSquareText, tone: 'blue' },
   ];
 
