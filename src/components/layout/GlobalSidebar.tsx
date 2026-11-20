@@ -43,6 +43,8 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
   const departmentItems = [
     {
       id: 'admin' as AppModule,
+      from: '#5B2A86',
+      to: '#8B46C8',
       label: 'งานอำนวยการ',
       sub: 'สารบรรณ · งบประมาณ',
       icon: Settings,
@@ -55,6 +57,8 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
     },
     {
       id: 'relations' as AppModule,
+      from: '#1E6BB8',
+      to: '#38BDF8',
       label: 'งานประชาสัมพันธ์',
       sub: 'สื่อสารองค์กร · ข่าวสาร',
       icon: Megaphone,
@@ -67,6 +71,8 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
     },
     {
       id: 'disaster' as AppModule,
+      from: '#D97706',
+      to: '#F59E0B',
       label: 'งานพัฒนาช่วยเหลือประชาชน',
       sub: 'บรรเทาสาธารณภัย · ชุมชน',
       icon: ShieldAlert,
@@ -79,6 +85,8 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
     },
     {
       id: 'volunteer' as AppModule,
+      from: '#10B981',
+      to: '#34D399',
       label: 'งานจิตอาสา',
       sub: 'จิตอาสา 904 · พระราชทาน',
       icon: HeartHandshake,
@@ -157,14 +165,16 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-[260px] bg-white/95 dark:bg-[#11141D]/95 backdrop-blur-xl text-slate-700 dark:text-[#C8CDD5] flex flex-col justify-between select-none border-r border-slate-200/80 dark:border-white/10 shadow-[4px_0_24px_rgba(91,42,134,0.05)] transition-transform duration-200 ease-out lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-[260px] bg-white/95 dark:bg-[#11141D]/95 backdrop-blur-xl text-slate-700 dark:text-[#C8CDD5] flex flex-col justify-between select-none shadow-[4px_0_24px_rgba(91,42,134,0.05)] transition-transform duration-200 ease-out lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Top 4-Color Spectrum Accent Ribbon */}
         <div className="h-1 w-full bg-gradient-to-r from-[#5B2A86] via-[#2583D8] via-[#E89B22] to-[#42A77A] shrink-0" />
 
-        <div className="flex-1 overflow-y-auto no-scrollbar">
+        {/* เส้นขอบขวา (แยกออกมาเพื่อให้แถบฝ่ายที่เปิดอยู่ทับและต่อกับหน้าเนื้อหาได้) */}
+        <div aria-hidden="true" className="absolute inset-y-0 right-0 w-px bg-slate-200/80 dark:bg-white/10 pointer-events-none" />
+        <div className="relative z-[1] flex-1 overflow-y-auto overflow-x-hidden no-scrollbar fo5-sidebar-scroll">
           {/* Brand Header */}
           <div className="px-4 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-white/10">
             <button
@@ -317,50 +327,53 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
                     <motion.button
                       key={item.id}
                       type="button"
-                      whileHover={{ x: 3 }}
+                      whileHover={isActive ? undefined : { x: 3 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleSelectMenu(item.id)}
                       title={item.label}
-                      className={`w-full group relative p-2.5 rounded-2xl text-xs cursor-pointer text-left transition-all border ${
-                        isActive
-                          ? 'text-white shadow-md border-transparent'
-                          : 'bg-white dark:bg-white/[0.03] hover:shadow-xs border-slate-200/75 dark:border-white/10'
+                      aria-current={isActive ? 'page' : undefined}
+                      className={`w-full group relative p-2.5 rounded-2xl text-xs cursor-pointer text-left transition-[background-color,border-color,box-shadow] duration-300 border ${
+                        isActive ? 'text-white border-transparent' : 'bg-white dark:bg-white/[0.03] hover:shadow-xs border-slate-200/75 dark:border-white/10'
                       }`}
-                      style={
-                        isActive
-                          ? { background: item.gradient }
-                          : { backgroundColor: item.softBg, borderColor: item.activeBorder }
-                      }
+                      style={isActive ? undefined : { backgroundColor: item.softBg, borderColor: item.activeBorder }}
                     >
-                      <div className="flex items-center justify-between gap-2">
+                      {/* แถบสีของฝ่ายที่เปิดอยู่: เลื่อนตามเมื่อเปลี่ยนฝ่าย และยื่นไปต่อกับหน้าเนื้อหาด้วยมุมโค้งเว้า */}
+                      {isActive && (
+                        <motion.span
+                          layoutId="fo5-dept-active"
+                          aria-hidden="true"
+                          className="absolute inset-y-0 left-0 -right-[13px] rounded-l-2xl shadow-[0_8px_24px_-8px_rgba(0,0,0,0.35)]"
+                          style={{ background: `linear-gradient(90deg, ${item.from} 0%, ${item.to} 100%)` }}
+                          transition={{ type: 'spring', stiffness: 380, damping: 34, mass: 0.9 }}
+                        >
+                          <span className="absolute inset-0 rounded-l-2xl fo5-sheen" />
+                          <span
+                            className="absolute right-0 -top-3.5 w-3.5 h-3.5"
+                            style={{ background: `radial-gradient(circle at 0 0, transparent 13.5px, ${item.to} 14px)` }}
+                          />
+                          <span
+                            className="absolute right-0 -bottom-3.5 w-3.5 h-3.5"
+                            style={{ background: `radial-gradient(circle at 0 100%, transparent 13.5px, ${item.to} 14px)` }}
+                          />
+                        </motion.span>
+                      )}
+                      <div className="relative z-[1] flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2.5 min-w-0">
                           <div
-                            className="w-7 h-7 rounded-xl flex items-center justify-center shrink-0 shadow-2xs transition-transform group-hover:scale-105"
+                            className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-2xs transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6"
                             style={
                               isActive
                                 ? { backgroundColor: 'rgba(255,255,255,0.22)', color: '#FFFFFF' }
                                 : { background: item.gradient, color: '#FFFFFF' }
                             }
                           >
-                            <Icon className="w-3.5 h-3.5" />
+                            <Icon className="w-4 h-4" />
                           </div>
                           <div className="min-w-0">
-                            <span
-                              className={`block truncate leading-tight ${
-                                isActive
-                                  ? 'font-extrabold text-white'
-                                  : 'font-bold text-slate-800 dark:text-slate-100'
-                              }`}
-                            >
+                            <span className={`block truncate leading-tight ${isActive ? 'font-extrabold text-white' : 'font-bold text-slate-800 dark:text-slate-100'}`}>
                               {item.label}
                             </span>
-                            <span
-                              className={`block text-[10px] truncate mt-0.5 ${
-                                isActive
-                                  ? 'text-white/85'
-                                  : 'text-slate-500 dark:text-slate-400'
-                              }`}
-                            >
+                            <span className={`block text-[10px] truncate mt-0.5 ${isActive ? 'text-white/85' : 'text-slate-500 dark:text-slate-400'}`}>
                               {item.sub}
                             </span>
                           </div>
@@ -374,21 +387,6 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
                         >
                           {item.count} งาน
                         </span>}
-                      </div>
-
-                      {/* Mini Progress Bar inside Department Button */}
-                      <div
-                        className={`mt-2 w-full h-1 rounded-full overflow-hidden ${
-                          isActive ? 'bg-white/25' : 'bg-white/80 dark:bg-white/10'
-                        }`}
-                      >
-                        <div
-                          className="h-full rounded-full transition-all duration-500"
-                          style={{
-                            width: `${item.progress}%`,
-                            backgroundColor: isActive ? '#FFFFFF' : item.color,
-                          }}
-                        />
                       </div>
                     </motion.button>
                   );

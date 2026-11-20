@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { motion } from 'motion/react';
 import { useVisible } from '../../lib/menuVisibility';
 import { createPortal } from 'react-dom';
 import { LayoutGrid, X, ChevronRight } from 'lucide-react';
@@ -77,16 +78,48 @@ export const DepartmentHeader: React.FC<HeaderProps> = ({ dept, icon: Icon, titl
     <>
       <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
         <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-[#151A24] border border-slate-200/80 dark:border-white/10 shadow-sm">
-          <div className="h-1.5 w-full" style={{ background: t.gradient }} />
-          <div className="p-4 sm:p-6 flex flex-col md:flex-row md:items-center gap-4">
+          {/* แถบสีไหลเข้ามาจากด้านซ้าย (ต่อจากเส้นเชื่อมของเมนูข้าง) */}
+          <motion.div
+            key={`strip-${dept}`}
+            className="h-1.5 w-full origin-left fo5-flow"
+            style={{ background: `linear-gradient(90deg, ${t.color}, ${t.text}, ${t.color})`, backgroundSize: '200% 100%' }}
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          />
+          {/* แสงสีประจำฝ่ายด้านซ้ายของการ์ด */}
+          <motion.div
+            key={`glow-${dept}`}
+            aria-hidden="true"
+            className="absolute -left-16 top-1/2 -translate-y-1/2 w-56 h-56 rounded-full blur-3xl pointer-events-none"
+            style={{ background: t.color }}
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 0.16, scale: 1 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          />
+          <div className="relative p-4 sm:p-6 flex flex-col md:flex-row md:items-center gap-4">
             <div className="flex items-center gap-3.5 min-w-0 flex-1">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center text-white shadow-md shrink-0" style={{ background: t.gradient }}>
+              <motion.div
+                key={`icon-${dept}`}
+                className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center text-white shadow-md shrink-0"
+                style={{ background: t.gradient, boxShadow: `0 10px 28px -10px ${t.color}` }}
+                initial={{ scale: 0.4, rotate: -25, opacity: 0 }}
+                animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                transition={{ type: 'spring', stiffness: 320, damping: 18, delay: 0.08 }}
+                whileHover={{ rotate: -8, scale: 1.06 }}
+              >
                 <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
-              </div>
-              <div className="min-w-0">
+              </motion.div>
+              <motion.div
+                key={`title-${dept}`}
+                className="min-w-0"
+                initial={{ opacity: 0, x: -14 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
+              >
                 <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">{title}</h1>
                 <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">{description}</p>
-              </div>
+              </motion.div>
             </div>
             {actions && <div className="flex flex-wrap items-center gap-2 md:justify-end">{actions}</div>}
           </div>
@@ -107,14 +140,23 @@ export const DepartmentHeader: React.FC<HeaderProps> = ({ dept, icon: Icon, titl
                     type="button"
                     aria-current={isActive ? 'page' : undefined}
                     onClick={() => choose(tab.id)}
-                    className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[13px] font-semibold whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 ${
-                      isActive ? 'text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
+                    className={`relative inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[13px] font-semibold whitespace-nowrap transition-colors duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 ${
+                      isActive ? 'text-white' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
                     }`}
-                    style={isActive ? { background: t.gradient, outlineColor: t.color } : { outlineColor: t.color }}
+                    style={{ outlineColor: t.color }}
                   >
-                    <TabIcon className="w-4 h-4 shrink-0" style={isActive ? undefined : { color: t.color }} />
-                    <span>{tab.label}</span>
-                    <Badge value={tab.badge} active={isActive} color={t.color} />
+                    {isActive && (
+                      <motion.span
+                        layoutId={`fo5-tab-${dept}`}
+                        aria-hidden="true"
+                        className="absolute inset-0 rounded-xl shadow-md fo5-sheen"
+                        style={{ background: t.gradient }}
+                        transition={{ type: 'spring', stiffness: 420, damping: 36 }}
+                      />
+                    )}
+                    <TabIcon className="relative z-[1] w-4 h-4 shrink-0 transition-transform duration-300 group-hover:scale-110" style={isActive ? undefined : { color: t.color }} />
+                    <span className="relative z-[1]">{tab.label}</span>
+                    <span className="relative z-[1]"><Badge value={tab.badge} active={isActive} color={t.color} /></span>
                   </button>
                 );
               })}
