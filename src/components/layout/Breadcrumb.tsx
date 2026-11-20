@@ -25,22 +25,22 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ customItems }) => {
     dashboard: { name: 'หน้าหลักภาพรวม', color: '#5B2A86' },
     admin: {
       name: 'งานอำนวยการ',
-      color: '#5B2A86',
+      color: '#6D28D9',
       defaultSub: 'ระบบบริหารงานอำนวยการ สารบรรณ และงบประมาณ',
     },
     relations: {
       name: 'งานประชาสัมพันธ์',
-      color: '#2583D8',
+      color: '#2563EB',
       defaultSub: 'ระบบสื่อสารองค์กรและข่าวประชาสัมพันธ์',
     },
     disaster: {
       name: 'งานพัฒนาช่วยเหลือประชาชน',
-      color: '#E89B22',
+      color: '#EA580C',
       defaultSub: 'เฝ้าระวังและบริหารสถานการณ์สาธารณภัย พัฒนาและช่วยเหลือประชาชน',
     },
     volunteer: {
       name: 'งานจิตอาสา',
-      color: '#42A77A',
+      color: '#059669',
       defaultSub: 'ระบบบริหารกิจกรรมและงานจิตอาสาพระราชทาน',
     },
     reports: { name: 'รายงานสรุปภาพรวม', color: '#5B2A86', defaultSub: 'สถิติและรายงานผล' },
@@ -66,10 +66,10 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ customItems }) => {
   };
 
   const quickDepartments: { id: AppModule; label: string; color: string; gradient: string }[] = [
-    { id: 'admin', label: 'งานอำนวยการ', color: '#5B2A86', gradient: 'linear-gradient(135deg, #5B2A86, #8B46C8)' },
-    { id: 'relations', label: 'งานประชาสัมพันธ์', color: '#2583D8', gradient: 'linear-gradient(135deg, #1E6BB8, #38BDF8)' },
-    { id: 'disaster', label: 'งานพัฒนาช่วยเหลือประชาชน', color: '#E89B22', gradient: 'linear-gradient(135deg, #D97706, #F59E0B)' },
-    { id: 'volunteer', label: 'งานจิตอาสา', color: '#42A77A', gradient: 'linear-gradient(135deg, #059669, #34D399)' },
+    { id: 'admin', label: 'งานอำนวยการ', color: '#6D28D9', gradient: 'linear-gradient(135deg, #6D28D9, #5B21B6)' },
+    { id: 'relations', label: 'งานประชาสัมพันธ์', color: '#2563EB', gradient: 'linear-gradient(135deg, #2563EB, #1D4ED8)' },
+    { id: 'disaster', label: 'งานพัฒนาช่วยเหลือประชาชน', color: '#EA580C', gradient: 'linear-gradient(135deg, #EA580C, #C2410C)' },
+    { id: 'volunteer', label: 'งานจิตอาสา', color: '#059669', gradient: 'linear-gradient(135deg, #059669, #047857)' },
   ];
 
   const currentMeta = departmentMeta[activeModule] || departmentMeta.dashboard;
