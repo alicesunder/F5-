@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useShowAllMenus, setShowAllMenus } from '../../lib/menuVisibility';
 import { useAdmin } from '../../contexts/AdminContext';
 import { useTheme, ThemeMode, DisplayDensity, FontSizeScale } from '../../contexts/ThemeContext';
 import { Role, AppModule } from '../../types';
@@ -62,6 +63,7 @@ interface SectionNav {
 }
 
 export const SettingsModule: React.FC = () => {
+  const showAllMenus = useShowAllMenus();
   const { currentRole, setRole, currentUser, showToast } = useAdmin();
   const {
     theme,
@@ -526,6 +528,19 @@ export const SettingsModule: React.FC = () => {
                     </p>
                   </button>
                 </div>
+              </div>
+
+              {/* เมนูที่ซ่อนไว้ */}
+              <div className="p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input type="checkbox" checked={showAllMenus} onChange={e => setShowAllMenus(e.target.checked)} className="mt-1 w-5 h-5" />
+                  <span>
+                    <span className="block text-sm font-bold text-slate-800 dark:text-slate-100">แสดงเมนูทั้งหมด</span>
+                    <span className="block text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                      ปกติระบบซ่อนเมนูที่ไม่ค่อยได้ใช้เพื่อให้หาง่าย (อำนวยการ: ไปราชการ, หน่วยงาน/กำลังพล, ผู้ช่วย AI, บันทึกระบบ · ประชาสัมพันธ์: หน้าข่าวประชาชน, Keyword, เปรียบเทียบเพจ, AI วิเคราะห์ข่าว, ตรวจเอกสาร OCR · พัฒนาฯ: สถานีน้ำ, ผู้ช่วย AI) ติ๊กเพื่อแสดงคืน ตั้งค่านี้จำเฉพาะเครื่องนี้
+                    </span>
+                  </span>
+                </label>
               </div>
 
               {/* Department Color Preview in Active Theme */}

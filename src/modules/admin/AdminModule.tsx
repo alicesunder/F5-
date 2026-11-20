@@ -1,4 +1,5 @@
 import React from 'react';
+import { HIDDEN_MENUS, useVisible } from '../../lib/menuVisibility';
 import { useAdmin } from '../../contexts/AdminContext';
 import { Dashboard } from '../../pages/Dashboard';
 import { BudgetPage } from '../../pages/BudgetPage';
@@ -49,7 +50,7 @@ export const AdminModule: React.FC = () => {
   const [incomingRegister] = useIncomingRegister();
   const themeColor = DEPARTMENT_COLORS.admin; // #5B2A86
 
-  const subNavItems: DeptTab[] = [
+  const allSubNav: DeptTab[] = [
     { id: 'dashboard', label: 'ภาพรวม', icon: LayoutDashboard, desc: 'สรุปงานของฝ่ายอำนวยการ' },
     { id: 'duty-officers', label: 'ตารางเวร', icon: ShieldCheck, desc: 'กรอกร้อยเวร/สิบเวรประจำเดือน' },
     { id: 'year-plan', label: 'งานรอบปี', icon: CalendarRange, desc: 'แผนการปฏิบัติงานรอบปีและกำหนดส่ง' },
@@ -68,6 +69,7 @@ export const AdminModule: React.FC = () => {
     { id: 'logs', label: 'บันทึกระบบ', icon: FileText, desc: 'ประวัติการใช้งาน' },
     { id: 'settings', label: 'ตั้งค่าฝ่าย', icon: Settings, desc: 'ตั้งค่าการทำงานของฝ่าย' },
   ];
+  const subNavItems = useVisible(allSubNav, HIDDEN_MENUS.admin.filter(h => h !== activeMenu));
 
   const renderSubPage = () => {
     switch (activeMenu) {

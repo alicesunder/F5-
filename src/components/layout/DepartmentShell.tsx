@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useVisible } from '../../lib/menuVisibility';
 import { createPortal } from 'react-dom';
 import { LayoutGrid, X, ChevronRight } from 'lucide-react';
 
@@ -27,6 +28,8 @@ interface HeaderProps {
   title: string;
   description: string;
   tabs: DeptTab[];
+  /** เมนูที่ซ่อนไว้ (เปิดคืนได้ที่ ตั้งค่า → การแสดงผล); เมนูที่กำลังเปิดอยู่จะไม่ถูกซ่อน */
+  hiddenTabs?: readonly string[];
   activeTab: string;
   onSelectTab: (id: string) => void;
   /** ปุ่มงานหลัก (ไม่เกิน 2-3 ปุ่ม) */
@@ -44,8 +47,9 @@ const Badge: React.FC<{ value?: number | string; active?: boolean; color: string
   );
 
 /** หัวหน้าแผนกแบบกะทัดรัด + แถบเมนูที่ติดอยู่ด้านบนเมื่อเลื่อนจอ ใช้เหมือนกันทั้ง 4 แผนก */
-export const DepartmentHeader: React.FC<HeaderProps> = ({ dept, icon: Icon, title, description, tabs, activeTab, onSelectTab, actions }) => {
+export const DepartmentHeader: React.FC<HeaderProps> = ({ dept, icon: Icon, title, description, tabs: allTabs, hiddenTabs = [], activeTab, onSelectTab, actions }) => {
   const t = DEPT_THEME[dept];
+  const tabs = useVisible<DeptTab>(allTabs, hiddenTabs.filter(h => h !== activeTab));
   const [sheet, setSheet] = useState(false);
   const stripRef = useRef<HTMLDivElement>(null);
   const active = tabs.find(x => x.id === activeTab);

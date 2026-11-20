@@ -1,4 +1,5 @@
 import React from 'react';
+import { HIDDEN_MENUS } from '../../../lib/menuVisibility';
 import { RelationsActiveTab } from '../types';
 import { Megaphone, Plus, Upload, Globe, FileText, Image as ImageIcon, Radio, CalendarRange } from 'lucide-react';
 import { DepartmentHeader, DeptAction, DeptTab } from '../../../components/layout/DepartmentShell';
@@ -25,6 +26,7 @@ export const RelationsHeader: React.FC<RelationsHeaderProps> = ({ activeTab, onS
     title="งานประชาสัมพันธ์"
     description="สื่อสารองค์กร ผลิตข่าวและสื่อดิจิทัล ติดตามการรับรู้ และเผยแพร่ภารกิจ ตชด. สู่ประชาชน"
     tabs={RELATIONS_TABS}
+    hiddenTabs={HIDDEN_MENUS.relationsTabs}
     activeTab={activeTab}
     onSelectTab={id => onSelectTab(id as RelationsActiveTab)}
     actions={

@@ -1,4 +1,5 @@
 import React from 'react';
+import { HIDDEN_MENUS } from '../../../lib/menuVisibility';
 import {
   ShieldAlert,
   Radio,
@@ -74,6 +75,7 @@ export const DisasterHeader: React.FC<DisasterHeaderProps> = ({
     title="งานพัฒนาและช่วยเหลือประชาชน"
     description="บรรเทาสาธารณภัย เฝ้าระวังน้ำท่วม ดินโคลนถล่ม และช่วยเหลือประชาชนในพื้นที่รับผิดชอบของ ตชด."
     tabs={DISASTER_TABS}
+    hiddenTabs={HIDDEN_MENUS.disaster}
     activeTab={activeTab}
     onSelectTab={id => onSelectTab(id as DisasterActiveTab)}
     actions={

@@ -1,4 +1,5 @@
 import React from 'react';
+import { HIDDEN_MENUS, useShowAllMenus } from '../../../lib/menuVisibility';
 import {
   LayoutDashboard,
   Newspaper,
@@ -175,6 +176,8 @@ export const PRMonitoringSidebar: React.FC<PRMonitoringSidebarProps> = ({ active
     { id: 'analytics', label: 'PR Analytics', icon: BarChart3 },
   ];
 
+  const showAll = useShowAllMenus();
+  const keep = (it: Item) => showAll || it.id === activeView || !(HIDDEN_MENUS.relationsViews as readonly string[]).includes(it.id);
   const groups: { title: string; items: Item[] }[] = [
     { title: 'ภาพรวม', items: commandCenter },
     { title: 'ติดตามสื่อออนไลน์', items: monitoring },
@@ -182,7 +185,9 @@ export const PRMonitoringSidebar: React.FC<PRMonitoringSidebarProps> = ({ active
     { title: 'ตรวจเอกสาร', items: docsGroup },
     { title: 'รายงานและสถิติ', items: reports },
     { title: 'ผู้ช่วย AI', items: smart },
-  ];
+  ]
+    .map(g => ({ ...g, items: g.items.filter(keep) }))
+    .filter(g => g.items.length > 0);
 
   return (
     <>
