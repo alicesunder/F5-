@@ -33,6 +33,7 @@ export type VolunteerTab =
   | 'overview'
   | 'line-reports'
   | 'year-plan'
+  | 'incoming'
   | 'missions'
   | 'reports'
   | 'units'

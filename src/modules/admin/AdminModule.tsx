@@ -3,7 +3,8 @@ import { useAdmin } from '../../contexts/AdminContext';
 import { Dashboard } from '../../pages/Dashboard';
 import { BudgetPage } from '../../pages/BudgetPage';
 import { TravelPage } from '../../pages/TravelPage';
-import { IncomingDocsPage } from '../../pages/IncomingDocsPage';
+import { IncomingRegisterPage } from '../incoming/IncomingRegisterPage';
+import { useIncomingRegister } from '../incoming/incomingRegister';
 import { OutgoingDocsPage } from '../../pages/OutgoingDocsPage';
 import { UnitsPage } from '../../pages/UnitsPage';
 import { ArchivalDocsPage } from '../../pages/ArchivalDocsPage';
@@ -44,14 +45,15 @@ import { YearPlanView } from '../yearplan/YearPlanView';
 import { DepartmentHeader, DeptAction, DeptTab } from '../../components/layout/DepartmentShell';
 
 export const AdminModule: React.FC = () => {
-  const { activeMenu, navigate, navigateModule, incomingDocs = [], outgoingDocs = [], missions = [] } = useAdmin();
+  const { activeMenu, navigate, navigateModule, outgoingDocs = [], missions = [] } = useAdmin();
+  const [incomingRegister] = useIncomingRegister();
   const themeColor = DEPARTMENT_COLORS.admin; // #5B2A86
 
   const subNavItems: DeptTab[] = [
     { id: 'dashboard', label: 'ภาพรวม', icon: LayoutDashboard, desc: 'สรุปงานของฝ่ายอำนวยการ' },
     { id: 'duty-officers', label: 'ตารางเวร', icon: ShieldCheck, desc: 'กรอกร้อยเวร/สิบเวรประจำเดือน' },
     { id: 'year-plan', label: 'งานรอบปี', icon: CalendarRange, desc: 'แผนการปฏิบัติงานรอบปีและกำหนดส่ง' },
-    { id: 'incoming', label: 'หนังสือรับ', icon: Inbox, badge: incomingDocs.length, desc: 'ลงรับและติดตามหนังสือเข้า' },
+    { id: 'incoming', label: 'หนังสือรับ', icon: Inbox, badge: incomingRegister.length, desc: 'ทะเบียนหนังสือรับ ลงรับ และส่งต่อให้งาน' },
     { id: 'outgoing', label: 'หนังสือส่ง', icon: Send, badge: outgoingDocs.length, desc: 'ออกเลขและส่งหนังสือ' },
     { id: 'archive', label: 'คลังเอกสาร', icon: Archive, desc: 'ค้นหาเอกสารที่จัดเก็บแล้ว' },
     { id: 'dla-drafting', label: 'ร่างหนังสือด้วย AI', icon: Sparkles, desc: 'แบบฟอร์มและร่างหนังสือราชการ' },
@@ -86,7 +88,7 @@ export const AdminModule: React.FC = () => {
       case 'travel':
         return <TravelPage />;
       case 'incoming':
-        return <IncomingDocsPage />;
+        return <IncomingRegisterPage dept="admin" />;
       case 'outgoing':
         return <OutgoingDocsPage />;
       case 'units':

@@ -6,6 +6,7 @@ import { VolunteerAttentionBanner } from './components/VolunteerAttentionBanner'
 import { VolunteerHeroStats } from './components/VolunteerHeroStats';
 import { VolunteerSignatureFlow } from './components/VolunteerSignatureFlow';
 import { LineReportsView } from '../../components/line/LineReportsView';
+import { IncomingRegisterPage } from '../incoming/IncomingRegisterPage';
 import { YearPlanView } from '../yearplan/YearPlanView';
 import { VolunteerMissionsSection } from './components/missions/VolunteerMissionsSection';
 import { VolunteerMissionDetailDrawer } from './components/missions/VolunteerMissionDetailDrawer';
@@ -75,6 +76,12 @@ const VolunteerModuleContent: React.FC = () => {
             >
               <VolunteerReportsSection />
             </motion.div>
+          )}
+
+          {activeTab === 'incoming' && (
+            <div className="liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6">
+              <IncomingRegisterPage dept="volunteer" />
+            </div>
           )}
 
           {activeTab === 'year-plan' && (
