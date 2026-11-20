@@ -31,6 +31,10 @@ export interface PlanItem {
   detail?: string;
   /** หมายเหตุ เช่น "ตามที่ ตร.กำหนด" */
   note?: string;
+  /** true = รายการย่อย (detail) ติ๊กทีละข้อ และงานครบเมื่อติ๊กครบทุกข้อ */
+  checklist?: boolean;
+  /** ช่วงข้อมูลที่ต้องรวบรวมของรอบรายงาน: week = พุธก่อนหน้า–วันครบกำหนด, d15 = 21 เดือนก่อน–20 เดือนนี้, prevmonth = ทั้งเดือนก่อน */
+  window?: 'week' | 'd15' | 'prevmonth';
   order: number;
 }
 
@@ -132,6 +136,18 @@ export function describeSchedule(item: PlanItem) {
   return runs(item.months)
     .map(r => (r.length === 1 ? FY_MONTHS[r[0] - 1] : `${FY_MONTHS[r[0] - 1]}–${FY_MONTHS[r[r.length - 1] - 1]}`))
     .join(', ');
+}
+
+/** ช่วงวันของข้อมูลในรอบรายงาน (YYYY-MM-DD เริ่ม/สิ้นสุด) */
+export function reportWindow(kind: NonNullable<PlanItem['window']>, due: string): [string, string] {
+  const d = parseIso(due);
+  if (kind === 'week') {
+    const s = new Date(d);
+    s.setDate(s.getDate() - 6);
+    return [iso(s), iso(d)];
+  }
+  if (kind === 'd15') return [iso(new Date(d.getFullYear(), d.getMonth() - 1, 21, 12)), iso(new Date(d.getFullYear(), d.getMonth(), 20, 12))];
+  return [iso(new Date(d.getFullYear(), d.getMonth() - 1, 1, 12)), iso(new Date(d.getFullYear(), d.getMonth(), 0, 12))];
 }
 
 export const thaiDate = (s: string) => {

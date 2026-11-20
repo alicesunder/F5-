@@ -34,6 +34,7 @@ export type VolunteerTab =
   | 'line-reports'
   | 'year-plan'
   | 'incoming'
+  | 'registry'
   | 'missions'
   | 'reports'
   | 'units'
@@ -128,7 +129,7 @@ const VolunteerContext = createContext<VolunteerContextType | undefined>(undefin
 
 export const VolunteerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { currentUser: actor } = useAdmin();
-  const [activeTab, setActiveTab] = useState<VolunteerTab>(() => (consumeYearPlanTab('volunteer') ? 'year-plan' : 'overview'));
+  const [activeTab, setActiveTab] = useState<VolunteerTab>(() => (consumeYearPlanTab('volunteer') ? 'year-plan' : 'overview'))
   const [activeViewMode, setActiveViewMode] = useState<'list' | 'calendar' | 'timeline'>('list');
 
   // Search & Filters

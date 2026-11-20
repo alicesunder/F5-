@@ -22,7 +22,9 @@ import {
   parseIso,
   sortItems,
   isTracked,
+  reportWindow,
 } from './yearPlan';
+import { useLineReports } from '../../components/line/LineReportsView';
 
 type Mode = 'month' | 'year';
 
@@ -31,6 +33,21 @@ export function useToggleDone() {
   const { currentUser } = useAdmin();
   const [done, setDone] = usePlanDone();
   const doneMap = useMemo(() => new Map(done.map(d => [d.id, d])), [done]);
+  const me = () => [currentUser.rank, currentUser.name].filter(Boolean).join(' ') || 'ไม่ระบุชื่อ';
+  const entry = (id: string, o: Occurrence): PlanDone => ({ id, item: o.item.id, due: o.due, by: me(), at: new Date().toISOString() });
+  /** ติ๊กรายการย่อยข้อที่ i; ครบทุกข้อ = ติ๊กงานนั้นให้อัตโนมัติ */
+  const toggleSub = (o: Occurrence, i: number) => {
+    const total = (o.item.detail ?? '').split('\n').filter(Boolean).length;
+    const sid = `${o.key}#${i}`;
+    return setDone(prev => {
+      let next = prev.some(d => d.id === sid) ? prev.filter(d => d.id !== sid) : [...prev, entry(sid, o)];
+      const n = Array.from({ length: total }, (_, k) => next.some(d => d.id === `${o.key}#${k}`)).filter(Boolean).length;
+      const parent = next.some(d => d.id === o.key);
+      if (n === total && !parent) next = [...next, entry(o.key, o)];
+      if (n < total && parent) next = next.filter(d => d.id !== o.key);
+      return next;
+    });
+  };
   const toggle = (o: Occurrence) =>
     setDone(prev =>
       prev.some(d => d.id === o.key)
@@ -46,7 +63,7 @@ export function useToggleDone() {
             } satisfies PlanDone,
           ],
     );
-  return { doneMap, toggle };
+  return { doneMap, toggle, toggleSub };
 }
 
 export const DueBadge: React.FC<{ due: string; done?: PlanDone }> = ({ due, done }) => {
@@ -226,12 +243,41 @@ const ItemDialog: React.FC<{
 
 // ---------- แถวงานในมุมมองรายเดือน ----------
 
-const OccRow: React.FC<{ o: Occurrence; done?: PlanDone; color: string; onToggle: () => void; onEdit: () => void }> = ({ o, done, color, onToggle, onEdit }) => {
+const dayStr = (isoTs: string) => {
+  const d = new Date(isoTs);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
+
+const WindowInfo: React.FC<{ o: Occurrence }> = ({ o }) => {
+  const { reports } = useLineReports();
+  if (!o.item.window) return null;
+  const [a, b] = reportWindow(o.item.window, o.due);
+  const n = reports.filter(r => r.dept === o.item.dept && dayStr(r.receivedAt) >= a && dayStr(r.receivedAt) <= b).length;
+  return (
+    <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+      รวบรวมข้อมูลวันที่ {thaiDate(a)} – {thaiDate(b)} · มีรายงานจาก LINE ในช่วงนี้ {n} เรื่อง
+    </div>
+  );
+};
+
+const OccRow: React.FC<{ o: Occurrence; done?: PlanDone; doneMap: Map<string, PlanDone>; color: string; onToggle: () => void; onToggleSub: (i: number) => void; onEdit: () => void }> = ({ o, done, doneMap, color, onToggle, onToggleSub, onEdit }) => {
   const [open, setOpen] = useState(false);
   const lines = (o.item.detail ?? '').split('\n').filter(Boolean);
+  const check = !!o.item.checklist && lines.length > 0;
+  const subDone = check ? lines.filter((_, i) => doneMap.has(`${o.key}#${i}`)).length : 0;
   return (
     <li className={`flex gap-3 rounded-2xl border p-3 ${done ? 'bg-slate-50/70 dark:bg-white/[0.02] border-slate-200/60 dark:border-white/5' : 'bg-white dark:bg-[#161B26] border-slate-200/80 dark:border-white/10'}`}>
-      <CheckButton checked={!!done} color={color} onClick={onToggle} label={done ? 'ยกเลิกว่าทำแล้ว' : 'ทำแล้ว'} />
+      {check ? (
+        <div
+          className="shrink-0 w-8 h-8 rounded-xl border-2 flex items-center justify-center text-[10px] font-black"
+          style={done ? { background: color, borderColor: color, color: '#fff' } : { borderColor: '#CBD5E1', color }}
+          aria-label={`ทำแล้ว ${subDone} จาก ${lines.length} ข้อ`}
+        >
+          {done ? <Check className="w-5 h-5" strokeWidth={3} /> : `${subDone}/${lines.length}`}
+        </div>
+      ) : (
+        <CheckButton checked={!!done} color={color} onClick={onToggle} label={done ? 'ยกเลิกว่าทำแล้ว' : 'ทำแล้ว'} />
+      )}
       <div className="min-w-0 flex-1">
         <div className={`text-sm font-bold leading-snug ${done ? 'text-slate-400 line-through' : 'text-slate-900 dark:text-white'}`}>
           {o.item.no && <span className="text-slate-400 font-semibold mr-1">{o.item.no}.</span>}
@@ -242,7 +288,23 @@ const OccRow: React.FC<{ o: Occurrence; done?: PlanDone; color: string; onToggle
           <span className="text-[11px] text-slate-500 dark:text-slate-400">{describeSchedule(o.item)}</span>
           {o.item.note && <span className="text-[11px] text-slate-500 dark:text-slate-400">· {o.item.note}</span>}
         </div>
-        {lines.length > 0 && (
+        <WindowInfo o={o} />
+        {check && (
+          <ul className="mt-2 space-y-1">
+            {lines.map((l, i) => {
+              const on = doneMap.has(`${o.key}#${i}`);
+              return (
+                <li key={i}>
+                  <label className="flex items-start gap-2 text-xs cursor-pointer">
+                    <input type="checkbox" checked={on} onChange={() => onToggleSub(i)} className="mt-0.5 w-4 h-4" />
+                    <span className={on ? 'text-slate-400 line-through' : 'text-slate-700 dark:text-slate-200'}>{l}</span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        {!check && lines.length > 0 && (
           <>
             <button type="button" onClick={() => setOpen(v => !v)} className="mt-1 inline-flex items-center gap-1 text-[11px] font-semibold cursor-pointer" style={{ color }}>
               <ChevronDown className={`w-3.5 h-3.5 transition ${open ? 'rotate-180' : ''}`} /> รายการย่อย {lines.length} ข้อ
@@ -268,7 +330,7 @@ export const YearPlanView: React.FC<{ dept: PlanDept }> = ({ dept }) => {
   const { showToast } = useAdmin();
   const t = DEPT_THEME[dept];
   const [items, setItems, state] = usePlanItems();
-  const { doneMap, toggle } = useToggleDone();
+  const { doneMap, toggle, toggleSub } = useToggleDone();
   const today = new Date();
   const [fy, setFy] = useState(fyOf(today));
   const [mode, setMode] = useState<Mode>('month');
@@ -393,7 +455,7 @@ export const YearPlanView: React.FC<{ dept: PlanDept }> = ({ dept }) => {
                 <section>
                   <h3 className="mb-2 flex items-center gap-1.5 text-sm font-black text-rose-600"><AlertTriangle className="w-4 h-4" /> ค้างจากเดือนก่อน ({carried.length})</h3>
                   <ul className="space-y-2">
-                    {carried.map(o => <OccRow key={o.key} o={o} done={doneMap.get(o.key)} color={t.color} onToggle={() => toggle(o)} onEdit={() => setEdit({ item: o.item, isNew: false })} />)}
+                    {carried.map(o => <OccRow key={o.key} o={o} done={doneMap.get(o.key)} doneMap={doneMap} color={t.color} onToggle={() => toggle(o)} onToggleSub={i => toggleSub(o, i)} onEdit={() => setEdit({ item: o.item, isNew: false })} />)}
                   </ul>
                 </section>
               )}
@@ -403,7 +465,7 @@ export const YearPlanView: React.FC<{ dept: PlanDept }> = ({ dept }) => {
                   <div className="text-sm text-slate-500 py-6 text-center">ไม่มีงานครบกำหนดเดือนนี้</div>
                 ) : (
                   <ul className="space-y-2">
-                    {inMonth.map(o => <OccRow key={o.key} o={o} done={doneMap.get(o.key)} color={t.color} onToggle={() => toggle(o)} onEdit={() => setEdit({ item: o.item, isNew: false })} />)}
+                    {inMonth.map(o => <OccRow key={o.key} o={o} done={doneMap.get(o.key)} doneMap={doneMap} color={t.color} onToggle={() => toggle(o)} onToggleSub={i => toggleSub(o, i)} onEdit={() => setEdit({ item: o.item, isNew: false })} />)}
                   </ul>
                 )}
               </section>
@@ -449,8 +511,8 @@ export const YearPlanView: React.FC<{ dept: PlanDept }> = ({ dept }) => {
                                   {dueHere.length > 0 ? (
                                     <button
                                       type="button"
-                                      onClick={() => dueHere.length === 1 ? toggle(dueHere[0]) : (setMode('month'), setMonth(m))}
-                                      title={dueHere.length === 1 ? `ครบกำหนด ${thaiDate(dueHere[0].due)} — กดเพื่อติ๊ก` : 'ดูรายสัปดาห์'}
+                                      onClick={() => dueHere.length === 1 && !os[0]?.item.checklist ? toggle(dueHere[0]) : (setMode('month'), setMonth(m))}
+                                      title={dueHere.length === 1 && !os[0]?.item.checklist ? `ครบกำหนด ${thaiDate(dueHere[0].due)} — กดเพื่อติ๊ก` : 'ดูรายการในเดือนนี้'}
                                       className="w-full h-7 rounded-md flex items-center justify-center font-bold cursor-pointer"
                                       style={allDone ? { background: '#10B981', color: '#fff' } : before ? { background: '#E2E8F0', color: '#94A3B8' } : late ? { background: '#FFE4E6', color: '#E11D48', outline: '2px solid #FB7185' } : { background: t.color, color: '#fff', opacity: 0.85 }}
                                     >

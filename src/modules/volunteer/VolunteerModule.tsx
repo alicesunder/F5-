@@ -7,6 +7,7 @@ import { VolunteerHeroStats } from './components/VolunteerHeroStats';
 import { VolunteerSignatureFlow } from './components/VolunteerSignatureFlow';
 import { LineReportsView } from '../../components/line/LineReportsView';
 import { IncomingRegisterPage } from '../incoming/IncomingRegisterPage';
+import { VolunteerRegistry } from './components/registry/VolunteerRegistry';
 import { YearPlanView } from '../yearplan/YearPlanView';
 import { VolunteerMissionsSection } from './components/missions/VolunteerMissionsSection';
 import { VolunteerMissionDetailDrawer } from './components/missions/VolunteerMissionDetailDrawer';
@@ -78,16 +79,43 @@ const VolunteerModuleContent: React.FC = () => {
             </motion.div>
           )}
 
+          {activeTab === 'registry' && (
+            <motion.div
+              key="registry"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6"
+            >
+              <VolunteerRegistry />
+            </motion.div>
+          )}
+
           {activeTab === 'incoming' && (
-            <div className="liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6">
+            <motion.div
+              key="incoming"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6"
+            >
               <IncomingRegisterPage dept="volunteer" />
-            </div>
+            </motion.div>
           )}
 
           {activeTab === 'year-plan' && (
-            <div className="liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6">
+            <motion.div
+              key="year-plan"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6"
+            >
               <YearPlanView dept="volunteer" />
-            </div>
+            </motion.div>
           )}
 
           {activeTab === 'line-reports' && (

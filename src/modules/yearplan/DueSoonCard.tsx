@@ -60,7 +60,11 @@ export const DueSoonCard: React.FC = () => {
             const t = DEPT_THEME[o.item.dept];
             return (
               <li key={o.key} className="flex items-start gap-3 rounded-2xl border border-slate-200/70 dark:border-white/10 bg-white dark:bg-[#161B26] p-2.5">
-                <CheckButton checked={false} color={t.color} onClick={() => toggle(o)} label="ทำแล้ว" />
+                {o.item.checklist ? (
+                  <button type="button" onClick={() => open(o.item.dept)} className="shrink-0 rounded-xl border-2 px-2 h-8 text-[11px] font-black cursor-pointer" style={{ borderColor: t.color, color: t.color }}>เปิดรายการ</button>
+                ) : (
+                  <CheckButton checked={false} color={t.color} onClick={() => toggle(o)} label="ทำแล้ว" />
+                )}
                 <div className="min-w-0 flex-1">
                   <div className="text-sm font-bold text-slate-900 dark:text-white leading-snug">{o.item.title}</div>
                   <div className="mt-1 flex flex-wrap items-center gap-1.5">
