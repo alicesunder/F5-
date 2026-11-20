@@ -159,6 +159,7 @@ export const checkModuleAccess = (
     'bpp-tracker': 'ระบบตรวจเช็คการส่งรายงาน หน่วย ตชด.',
     'task-center': 'ศูนย์งานกลาง (Unified Task Center)',
     'line-reports': 'รายงานจาก LINE',
+    'org-structure': 'โครงสร้าง ฝอ.5',
     'strategic': 'แผนปฏิบัติราชการและตัวชี้วัด (KPI)',
     'communication-groups': 'กลุ่มการสื่อสารและเครือข่ายหน่วย',
     'executive-view': 'สรุปสำหรับผู้บริหาร (Executive Briefing)',

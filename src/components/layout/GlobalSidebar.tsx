@@ -17,6 +17,7 @@ import {
   User,
   Zap,
   MessageSquareText,
+  Network,
 } from 'lucide-react';
 
 interface GlobalSidebarProps {
@@ -91,6 +92,13 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
   ];
 
   const coreOperationalItems = [
+    {
+      id: 'org-structure' as AppModule,
+      label: 'โครงสร้าง ฝอ.5',
+      icon: Network,
+      accent: '#4C1D95',
+      matchIds: ['org-structure'] as AppModule[],
+    },
     {
       id: 'task-center' as AppModule,
       label: 'ศูนย์งานด่วน & ติดตาม หน่วย ตชด.',

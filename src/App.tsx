@@ -15,6 +15,7 @@ import { BppMissionSchedulePage } from './modules/schedule/BppMissionSchedulePag
 import { OfficialDocumentsHub } from './modules/documents/OfficialDocumentsHub';
 import { MySpaceModule } from './modules/myspace/MySpaceModule';
 import { LineReportsModule } from './modules/line/LineReportsModule';
+import { OrgStructureModule } from './modules/org/OrgStructureModule';
 import { AccessDeniedPage } from './components/common/AccessDeniedPage';
 import { ToastContainer } from './components/common/Toast';
 import { checkModuleAccess } from './data/departmentsData';
@@ -88,6 +89,9 @@ const AppContent: React.FC = () => {
 
       case 'line-reports':
         return <LineReportsModule />;
+
+      case 'org-structure':
+        return <OrgStructureModule />;
 
       case 'settings':
         return <SettingsModule />;

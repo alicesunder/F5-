@@ -191,6 +191,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (p.startsWith('/volunteer')) return 'volunteer';
       if (p.startsWith('/reports')) return 'reports';
       if (p.startsWith('/line-reports')) return 'line-reports';
+      if (p.startsWith('/org-structure')) return 'org-structure';
       if (p.startsWith('/calendar')) return 'calendar';
       if (p.startsWith('/documents')) return 'documents';
       if (p.startsWith('/news')) return 'news';
