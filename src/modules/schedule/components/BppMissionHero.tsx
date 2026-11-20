@@ -28,7 +28,7 @@ export const BppMissionHero: React.FC<BppMissionHeroProps> = ({
         {/* Left Side: Logo + Titles */}
         <div className="flex items-center gap-4 sm:gap-5">
           {/* Emblem Roundel */}
-          <div className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-white/15 backdrop-blur-md p-2 shadow-lg border border-white/25 flex-shrink-0 flex items-center justify-center">
+          <div className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-2xl bg-white p-1.5 shadow-lg ring-1 ring-white/40 flex-shrink-0 flex items-center justify-center">
             <img
               src="/assets/fo5-logo.png"
               alt="ตราสัญลักษณ์ ฝอ.5"
@@ -37,9 +37,6 @@ export const BppMissionHero: React.FC<BppMissionHeroProps> = ({
                 (e.target as HTMLElement).style.display = 'none';
               }}
             />
-            <div className="absolute inset-0 rounded-2xl flex items-center justify-center pointer-events-none -z-10">
-              <span className="text-xl font-black text-white">ฝอ.5</span>
-            </div>
           </div>
 
           <div>
