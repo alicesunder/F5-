@@ -20,7 +20,7 @@ import { AccessDeniedPage } from './components/common/AccessDeniedPage';
 import { ToastContainer } from './components/common/Toast';
 import { checkModuleAccess } from './data/departmentsData';
 import { GlobalLayout } from './layouts/GlobalLayout';
-import { AnimatePresence, MotionConfig } from 'motion/react';
+import { AnimatePresence } from 'motion/react';
 import { LoginIntro } from './components/common/LoginIntro';
 
 const AppContent: React.FC = () => {
@@ -128,7 +128,6 @@ const AppContent: React.FC = () => {
 
 export default function App() {
   return (
-    <MotionConfig reducedMotion="user">
     <ThemeProvider>
       <AdminProvider>
         <GoogleWorkspaceProvider>
@@ -136,6 +135,5 @@ export default function App() {
         </GoogleWorkspaceProvider>
       </AdminProvider>
     </ThemeProvider>
-    </MotionConfig>
   );
 }

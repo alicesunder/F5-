@@ -31,28 +31,24 @@ export const prefersReducedMotion = (): boolean => {
 export const pageVariants: Variants = {
   initial: {
     opacity: 0,
-    y: 18,
-    scale: 0.985,
-    filter: 'blur(8px)',
+    y: 10,
+    scale: 0.995,
   },
   animate: {
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
     transition: {
-      duration: MOTION_TOKENS.duration.emphasis,
+      duration: MOTION_TOKENS.duration.normal,
       ease: MOTION_TOKENS.ease,
     },
-    transitionEnd: { filter: 'none' },
   },
   exit: {
     opacity: 0,
-    y: -10,
-    scale: 0.99,
-    filter: 'blur(4px)',
+    y: -8,
+    scale: 0.995,
     transition: {
-      duration: 0.16,
+      duration: 0.18,
       ease: MOTION_TOKENS.ease,
     },
   },

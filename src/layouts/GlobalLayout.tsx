@@ -10,21 +10,12 @@ import { ToastContainer } from '../components/common/Toast';
 import { NotificationPopover } from '../components/common/NotificationPopover';
 import { pageVariants } from '../utils/motion';
 
-const DEPT_GLOW = {
-  admin: '#8B46C8',
-  relations: '#38BDF8',
-  disaster: '#F59E0B',
-  volunteer: '#34D399',
-} as const;
-
 interface GlobalLayoutProps {
   children: React.ReactNode;
 }
 
 export const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
   const { activeModule } = useAdmin();
-  // สีของฝ่ายที่เปิดอยู่: ใช้กับเส้นเชื่อมจากเมนูข้างเข้าหน้าเนื้อหา แถบโหลดด้านบน และแสงพื้นหลัง
-  const deptColor = DEPT_GLOW[activeModule as keyof typeof DEPT_GLOW];
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -41,13 +32,6 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
               'radial-gradient(circle, rgba(91,42,134,0.45) 0%, rgba(139,108,207,0.18) 55%, transparent 75%)',
           }}
         />
-        {/* แสงสีประจำฝ่ายที่ไหลออกมาจากเมนูข้าง เปลี่ยนสีนุ่ม ๆ ตามฝ่ายที่เปิด */}
-        <motion.div
-          className="absolute top-[18%] -left-40 w-[640px] h-[640px] rounded-full blur-[120px]"
-          initial={false}
-          animate={{ opacity: deptColor ? 0.38 : 0, backgroundColor: deptColor ?? '#8B46C8' }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-        />
         <div
           className="absolute top-[15%] -right-24 w-[500px] h-[500px] rounded-full opacity-35 dark:opacity-20 blur-[110px] transition-all duration-700"
           style={{
@@ -63,30 +47,6 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
           }}
         />
       </div>
-
-      {/* แถบโหลดด้านบนเมื่อเปลี่ยนหน้า */}
-      <motion.div
-        key={`bar-${activeModule}`}
-        aria-hidden="true"
-        className="fixed top-0 left-0 right-0 h-[3px] z-[70] origin-left pointer-events-none"
-        style={{ background: deptColor ? `linear-gradient(90deg, transparent, ${deptColor}, #fff, ${deptColor})` : 'linear-gradient(90deg,#5B2A86,#2583D8,#E89B22,#42A77A)' }}
-        initial={{ scaleX: 0, opacity: 1 }}
-        animate={{ scaleX: 1, opacity: 0 }}
-        transition={{ scaleX: { duration: 0.55, ease: [0.22, 1, 0.36, 1] }, opacity: { duration: 0.35, delay: 0.5 } }}
-      />
-
-      {/* เส้นเชื่อม: ต่อจากแถบฝ่ายในเมนูข้างเข้าสู่หน้าเนื้อหา */}
-      <motion.div
-        aria-hidden="true"
-        className="hidden lg:block fixed inset-y-0 left-[260px] w-[3px] z-40 pointer-events-none origin-center"
-        initial={false}
-        animate={{ opacity: deptColor ? 1 : 0, scaleY: deptColor ? 1 : 0.3 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        style={{
-          background: `linear-gradient(180deg, transparent 0%, ${deptColor ?? '#8B46C8'} 28%, ${deptColor ?? '#8B46C8'} 72%, transparent 100%)`,
-          boxShadow: `0 0 22px 3px ${deptColor ?? '#8B46C8'}66`,
-        }}
-      />
 
       {/* Global Unified Sidebar (Left) */}
       <GlobalSidebar
