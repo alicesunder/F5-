@@ -27,10 +27,12 @@ import {
 } from '../data/volunteerData';
 import { useCollection } from '../../../lib/collections';
 import { useAdmin } from '../../../contexts/AdminContext';
+import { consumeYearPlanTab } from '../../yearplan/yearPlan';
 
 export type VolunteerTab =
   | 'overview'
   | 'line-reports'
+  | 'year-plan'
   | 'missions'
   | 'reports'
   | 'units'
@@ -125,7 +127,7 @@ const VolunteerContext = createContext<VolunteerContextType | undefined>(undefin
 
 export const VolunteerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { currentUser: actor } = useAdmin();
-  const [activeTab, setActiveTab] = useState<VolunteerTab>('overview');
+  const [activeTab, setActiveTab] = useState<VolunteerTab>(() => (consumeYearPlanTab('volunteer') ? 'year-plan' : 'overview'));
   const [activeViewMode, setActiveViewMode] = useState<'list' | 'calendar' | 'timeline'>('list');
 
   // Search & Filters

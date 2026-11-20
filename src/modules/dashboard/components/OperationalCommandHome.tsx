@@ -40,6 +40,7 @@ import {
 } from 'lucide-react';
 import { formatThaiDate } from '../../../utils/formatters';
 import { TodayDutyCard } from '../../../components/duty/TodayDutyCard';
+import { DueSoonCard } from '../../yearplan/DueSoonCard';
 
 interface OperationalCommandHomeProps {
   missions: UnifiedMission[];
@@ -567,6 +568,8 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
       </section>
 
       <TodayDutyCard />
+
+      <DueSoonCard />
 
       {/* ========================================================================= */}
       {/* ROW 2: 4 COLORFUL DEPARTMENT PORTAL CARDS WITH QUICK-PEEK & DIRECT LAUNCH */}

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { SmartOpsWorkspace } from '../../components/smart/SmartOpsWorkspace';
 import { LineReportsView } from '../../components/line/LineReportsView';
+import { YearPlanView } from '../yearplan/YearPlanView';
+import { consumeYearPlanTab } from '../yearplan/yearPlan';
 import { useAdmin } from '../../contexts/AdminContext';
 import {
   DisasterActiveTab,
@@ -42,7 +44,7 @@ export const DisasterModule: React.FC = () => {
   const primaryColor = '#E89B22';
 
   // Navigation Tabs state
-  const [activeTab, setActiveTab] = useState<DisasterActiveTab>('overview');
+  const [activeTab, setActiveTab] = useState<DisasterActiveTab>(() => (consumeYearPlanTab('disaster') ? 'year-plan' : 'overview'));
   const [focusStationId, setFocusStationId] = useState<string | null>(null);
 
   const handleSelectStationById = (id: string) => {
@@ -380,6 +382,12 @@ export const DisasterModule: React.FC = () => {
               subtitle="ช่วยคัดกรองเหตุการณ์ จัดลำดับความเร่งด่วน ร่างข้อความแจ้งเตือน และทำรายงานหลังเหตุการณ์"
               accent={primaryColor}
             />
+          </div>
+        )}
+
+        {activeTab === 'year-plan' && (
+          <div className="liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6">
+            <YearPlanView dept="disaster" />
           </div>
         )}
 

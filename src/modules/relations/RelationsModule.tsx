@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { YearPlanView } from '../yearplan/YearPlanView';
+import { consumeYearPlanTab } from '../yearplan/yearPlan';
 import { useAdmin } from '../../contexts/AdminContext';
 import {
   NewsItem,
@@ -25,7 +27,7 @@ const RelationsContent: React.FC = () => {
   const { activePRView, setActivePRView } = usePRIntel();
 
   // Navigation tab in Relations Module - default to operations center!
-  const [activeTab, setActiveTab] = useState<RelationsActiveTab>('operations');
+  const [activeTab, setActiveTab] = useState<RelationsActiveTab>(() => (consumeYearPlanTab('relations') ? 'year-plan' : 'operations'));
 
   // Data from Service
   const [newsList, setNewsList] = useState<NewsItem[]>([]);
@@ -168,6 +170,8 @@ const RelationsContent: React.FC = () => {
             />
 
             <div className="liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6">
+              {activeTab === 'year-plan' && <YearPlanView dept="relations" />}
+
               {/* Tab 1: News Management CMS */}
               {activeTab === 'management' && (
                 <NewsManagement

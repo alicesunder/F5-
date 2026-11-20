@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeartHandshake, Search, Plus, Calendar, FileCheck, Layers, MessageSquareText } from 'lucide-react';
+import { HeartHandshake, Search, Plus, Calendar, FileCheck, Layers, MessageSquareText, CalendarRange } from 'lucide-react';
 import { useVolunteer, VolunteerTab } from '../context/VolunteerContext';
 import { DepartmentHeader, DeptAction, DeptTab } from '../../../components/layout/DepartmentShell';
 
@@ -9,6 +9,7 @@ export const useVolunteerTabs = (): DeptTab[] => {
     { id: 'overview', label: 'ภาพรวม', icon: Layers, desc: 'สรุปงานจิตอาสา' },
     { id: 'missions', label: 'ภารกิจ', icon: Calendar, badge: stats.pendingReportMissions, desc: 'วางแผนและมอบหมายภารกิจจิตอาสา' },
     { id: 'reports', label: 'รายงานผล (จอ.01)', icon: FileCheck, badge: stats.pendingReviewReports, desc: 'ส่งและตรวจรับรองรายงานผล' },
+    { id: 'year-plan', label: 'งานรอบปี & วงรอบรายงาน', icon: CalendarRange, desc: 'กำหนดส่งรายงานและกิจกรรมสำคัญ' },
     { id: 'personnel', label: 'หน่วยและกำลังพล', icon: HeartHandshake, desc: 'เครือข่ายหน่วยและรายชื่อกำลังพล' },
     { id: 'line-reports', label: 'รายงานจาก LINE', icon: MessageSquareText, desc: 'ข้อความจากกลุ่ม LINE ของงาน' },
   ];

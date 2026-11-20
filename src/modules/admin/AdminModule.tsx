@@ -34,11 +34,13 @@ import {
   ArrowLeft,
   CheckCircle2,
   Activity,
+  CalendarRange,
 } from 'lucide-react';
 import { DEPARTMENT_COLORS } from '../../types';
 import { SmartOpsWorkspace } from '../../components/smart/SmartOpsWorkspace';
 import { LineReportsView } from '../../components/line/LineReportsView';
 import { DutyRosterEditor } from '../../components/duty/DutyRosterEditor';
+import { YearPlanView } from '../yearplan/YearPlanView';
 import { DepartmentHeader, DeptAction, DeptTab } from '../../components/layout/DepartmentShell';
 
 export const AdminModule: React.FC = () => {
@@ -48,6 +50,7 @@ export const AdminModule: React.FC = () => {
   const subNavItems: DeptTab[] = [
     { id: 'dashboard', label: 'ภาพรวม', icon: LayoutDashboard, desc: 'สรุปงานของฝ่ายอำนวยการ' },
     { id: 'duty-officers', label: 'ตารางเวร', icon: ShieldCheck, desc: 'กรอกร้อยเวร/สิบเวรประจำเดือน' },
+    { id: 'year-plan', label: 'งานรอบปี', icon: CalendarRange, desc: 'แผนการปฏิบัติงานรอบปีและกำหนดส่ง' },
     { id: 'incoming', label: 'หนังสือรับ', icon: Inbox, badge: incomingDocs.length, desc: 'ลงรับและติดตามหนังสือเข้า' },
     { id: 'outgoing', label: 'หนังสือส่ง', icon: Send, badge: outgoingDocs.length, desc: 'ออกเลขและส่งหนังสือ' },
     { id: 'archive', label: 'คลังเอกสาร', icon: Archive, desc: 'ค้นหาเอกสารที่จัดเก็บแล้ว' },
@@ -68,6 +71,8 @@ export const AdminModule: React.FC = () => {
     switch (activeMenu) {
       case 'duty-officers':
         return <DutyRosterEditor />;
+      case 'year-plan':
+        return <YearPlanView dept="admin" />;
       case 'line-reports':
         return <LineReportsView dept="admin" />;
       case 'ai-inspection':

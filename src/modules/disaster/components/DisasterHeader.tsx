@@ -13,12 +13,14 @@ import {
   Navigation,
   CloudRain,
   MessageSquareText,
+  CalendarRange,
 } from 'lucide-react';
 import { DepartmentHeader, DeptAction, DeptTab } from '../../../components/layout/DepartmentShell';
 
 export type DisasterActiveTab =
   | 'overview'
   | 'line-reports'
+  | 'year-plan'
   | 'heavy-rain'
   | 'map'
   | 'flood'
@@ -36,6 +38,7 @@ export const DISASTER_TABS: DeptTab[] = [
   { id: 'heavy-rain', label: 'ฝนตกหนัก & เรดาร์', icon: CloudRain, desc: 'พื้นที่เสี่ยงฝนตกหนัก' },
   { id: 'flood', label: 'เฝ้าระวังน้ำท่วม', icon: Waves, desc: 'ระดับน้ำและพื้นที่เสี่ยง' },
   { id: 'stations', label: 'สถานีน้ำ', icon: Navigation, desc: 'ข้อมูลสถานีวัดน้ำและลุ่มน้ำ' },
+  { id: 'year-plan', label: 'งานรอบปี', icon: CalendarRange, desc: 'แผนการปฏิบัติงานรอบปีและกำหนดส่ง' },
   { id: 'bpp-tracker', label: 'ติดตามรายงาน กก.ตชด.', icon: ShieldAlert, desc: 'เช็กว่าหน่วยใดส่งรายงานแล้ว' },
   { id: 'reports', label: 'รายงานและส่งออก', icon: FileText, desc: 'สรุปรายงานและดาวน์โหลด' },
   { id: 'smart-ops', label: 'ผู้ช่วย AI', icon: Sparkles, desc: 'ถาม สรุป และจัดการงานค้าง' },
