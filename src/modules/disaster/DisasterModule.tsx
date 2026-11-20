@@ -170,49 +170,43 @@ export const DisasterModule: React.FC = () => {
           <div className="space-y-6">
             {/* Quick Strategic Banners for Heavy Rain Map & BPP Report Tracker */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Card 1: Heavy Rain Radar Map */}
-              <div
+              {/* ทางลัด: เรดาร์ฝน */}
+              <button
+                type="button"
                 onClick={() => setActiveTab('heavy-rain')}
-                className="bg-gradient-to-r from-slate-900 via-blue-950 to-sky-900 p-5 rounded-3xl text-white border border-sky-400/30 shadow-lg cursor-pointer hover:border-sky-400 hover:-translate-y-0.5 transition-all group flex items-center justify-between"
+                className="liquid-glass-card iridescent-edge p-5 rounded-3xl text-left cursor-pointer hover:-translate-y-0.5 transition-all group flex items-center gap-4"
               >
-                <div className="space-y-1.5">
-                  <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-0.5 rounded-lg bg-sky-500/20 text-sky-200 border border-sky-400/30">
-                    <CloudRain className="w-3.5 h-3.5 text-sky-300" />
-                    <span>WEATHER TELEMETRY RADAR</span>
-                  </span>
-                  <h4 className="text-base font-extrabold group-hover:text-sky-300 transition">
-                    แผนที่ฝนตกหนัก & เรดาร์สภาพอากาศสด
-                  </h4>
-                  <p className="text-xs text-slate-300">
-                    ตรวจเช็คพื้นที่ฝนตกหนักรายจังหวัด (น่าน, เชียงราย, ระนอง, ยะลา ฯลฯ) และจุดเสี่ยงภัยดินโคลนถล่ม
-                  </p>
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-md" style={{ background: 'linear-gradient(135deg,#0EA5E9,#2563EB)' }}>
+                  <CloudRain className="w-6 h-6" />
                 </div>
-                <div className="p-3 rounded-2xl bg-sky-500/25 text-sky-200 group-hover:bg-sky-500 group-hover:text-white transition shrink-0 ml-3">
+                <div className="min-w-0 flex-1 space-y-1">
+                  <span className="inline-block text-[10px] font-bold px-2 py-0.5 rounded-md" style={{ background: '#E0F2FE', color: '#0369A1' }}>เรดาร์ฝน</span>
+                  <p className="text-[15px] font-extrabold text-slate-900 dark:text-white leading-snug">แผนที่ฝนตกหนัก & เรดาร์สภาพอากาศสด</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">ตรวจเช็คพื้นที่ฝนตกหนักรายจังหวัด และจุดเสี่ยงภัยดินโคลนถล่ม</p>
+                </div>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition group-hover:translate-x-1" style={{ background: '#E0F2FE', color: '#0369A1' }}>
                   <ArrowRight className="w-5 h-5" />
                 </div>
-              </div>
+              </button>
 
-              {/* Card 2: BPP Report Tracker */}
-              <div
+              {/* ทางลัด: ติดตามรายงานหน่วย */}
+              <button
+                type="button"
                 onClick={() => setActiveTab('bpp-tracker')}
-                className="bg-gradient-to-r from-slate-900 via-amber-950 to-orange-900 p-5 rounded-3xl text-white border border-amber-400/30 shadow-lg cursor-pointer hover:border-amber-400 hover:-translate-y-0.5 transition-all group flex items-center justify-between"
+                className="liquid-glass-card iridescent-edge p-5 rounded-3xl text-left cursor-pointer hover:-translate-y-0.5 transition-all group flex items-center gap-4"
               >
-                <div className="space-y-1.5">
-                  <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-0.5 rounded-lg bg-amber-500/20 text-amber-200 border border-amber-400/30">
-                    <ShieldAlert className="w-3.5 h-3.5 text-amber-300" />
-                    <span>ติดตามรายงานหน่วย</span>
-                  </span>
-                  <h4 className="text-base font-extrabold group-hover:text-amber-300 transition">
-                    ตรวจเช็คการส่งรายงาน บก. 7 หน่วย และ กก. 26 หน่วย
-                  </h4>
-                  <p className="text-xs text-slate-300">
-                    ตรวจดูหน่วยที่ยังไม่ส่งรายงาน ระบุตัวตนผู้รับผิดชอบ และกดเร่งรัด/โทรสายตรงได้ทันที
-                  </p>
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white shrink-0 shadow-md" style={{ background: 'linear-gradient(135deg,#F59E0B,#EA580C)' }}>
+                  <ShieldAlert className="w-6 h-6" />
                 </div>
-                <div className="p-3 rounded-2xl bg-amber-500/25 text-amber-200 group-hover:bg-amber-500 group-hover:text-white transition shrink-0 ml-3">
+                <div className="min-w-0 flex-1 space-y-1">
+                  <span className="inline-block text-[10px] font-bold px-2 py-0.5 rounded-md" style={{ background: '#FFEDD5', color: '#C2410C' }}>ติดตามรายงานหน่วย</span>
+                  <p className="text-[15px] font-extrabold text-slate-900 dark:text-white leading-snug">ตรวจเช็คการส่งรายงาน บก. 7 หน่วย และ กก. 26 หน่วย</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">ดูหน่วยที่ยังไม่ส่งรายงาน ผู้รับผิดชอบ และกดเร่งรัด/โทรได้ทันที</p>
+                </div>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition group-hover:translate-x-1" style={{ background: '#FFEDD5', color: '#C2410C' }}>
                   <ArrowRight className="w-5 h-5" />
                 </div>
-              </div>
+              </button>
             </div>
 
             {/* Quick Interactive Map Preview */}

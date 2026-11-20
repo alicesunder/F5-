@@ -6,6 +6,7 @@ import {
   MapPin,
   Users,
   ArrowUpRight,
+  Clock,
 } from 'lucide-react';
 
 interface DisasterSummaryCardsProps {
@@ -143,32 +144,37 @@ export const DisasterSummaryCards: React.FC<DisasterSummaryCardsProps> = ({
       {/* 5. รายงานล่าสุด */}
       <div
         onClick={() => latestIncident && onSelectIncident?.(latestIncident)}
-        className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 via-amber-950 to-slate-900 text-white shadow-lg border border-amber-400/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 cursor-pointer flex flex-col justify-between"
+        className={`p-5 rounded-2xl liquid-glass-card iridescent-edge hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between relative overflow-hidden ${latestIncident ? 'cursor-pointer' : ''}`}
       >
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
-            <span className="font-bold text-amber-300">5. รายงานล่าสุด</span>
-          </div>
-          <span className="text-[10px] font-mono text-slate-400">
-            {latestIncident?.reportedAt.split(' ')[3] || stats.latestReportTime}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 to-amber-500" />
+        <div className="flex items-center justify-between text-slate-600 dark:text-slate-300 text-xs font-bold">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="relative flex w-2 h-2">
+              {latestIncident && <span className="absolute inset-0 rounded-full bg-rose-500 animate-ping opacity-60" />}
+              <span className={`relative w-2 h-2 rounded-full ${latestIncident ? 'bg-rose-500' : 'bg-slate-300'}`} />
+            </span>
+            5. รายงานล่าสุด
           </span>
+          <div className="w-8 h-8 rounded-xl bg-rose-500/15 text-rose-600 flex items-center justify-center">
+            <Clock className="w-4 h-4" />
+          </div>
         </div>
-
-        <div className="my-2.5">
-          <h4 className="text-xs font-bold text-white line-clamp-2 leading-snug">
-            {latestIncident ? latestIncident.title : stats.latestIncidentTitle}
-          </h4>
-          {latestIncident && (
-            <p className="text-[11px] text-amber-200/80 mt-1">
-              จ.{latestIncident.province} • อ.{latestIncident.district}
-            </p>
+        <div className="my-3">
+          {latestIncident ? (
+            <>
+              <p className="text-sm font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug">{latestIncident.title}</p>
+              <p className="text-[11px] text-slate-500 mt-1">จ.{latestIncident.province} • อ.{latestIncident.district}</p>
+            </>
+          ) : (
+            <>
+              <p className="text-sm font-bold text-slate-400">ยังไม่มีรายงานเหตุใหม่</p>
+              <p className="text-[11px] text-slate-400 mt-1">เหตุที่บันทึกจะแสดงที่นี่</p>
+            </>
           )}
         </div>
-
-        <div className="pt-2 border-t border-white/10 text-[11px] text-amber-300 flex items-center justify-between font-semibold">
-          <span>กดเพื่อดูรายละเอียด</span>
-          <ArrowUpRight className="w-3.5 h-3.5" />
+        <div className="pt-2 border-t border-slate-200/60 dark:border-white/10 text-[11px] text-slate-500 flex items-center justify-between">
+          <span className={latestIncident ? 'text-rose-600 font-bold' : ''}>{latestIncident ? 'กดเพื่อดูรายละเอียด' : 'รอรายงาน'}</span>
+          <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
         </div>
       </div>
     </section>
