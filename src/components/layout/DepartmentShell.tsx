@@ -76,7 +76,7 @@ export const DepartmentHeader: React.FC<HeaderProps> = ({ dept, icon: Icon, titl
   return (
     <>
       <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
-        <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-[#151A24] border border-slate-200/80 dark:border-white/10 shadow-sm">
+        <div className="relative overflow-hidden rounded-[28px] lg-glass">
           <div className="h-1.5 w-full" style={{ background: t.gradient }} />
           <div className="p-4 sm:p-6 flex flex-col md:flex-row md:items-center gap-4">
             <div className="flex items-center gap-3.5 min-w-0 flex-1">
@@ -96,7 +96,7 @@ export const DepartmentHeader: React.FC<HeaderProps> = ({ dept, icon: Icon, titl
       {/* แถบเมนู: ติดด้านบนเมื่อเลื่อน */}
       <nav aria-label={`เมนู${title}`} className="sticky top-16 z-20 mt-3">
         <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 rounded-2xl bg-white/90 dark:bg-[#151A24]/90 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-sm p-1.5">
+          <div className="flex items-center gap-2 rounded-2xl lg-glass-strong border border-white/70 dark:border-white/10 p-1.5">
             <div ref={stripRef} className="flex-1 min-w-0 flex items-center gap-1 overflow-x-auto no-scrollbar lg:flex-wrap">
               {tabs.map(tab => {
                 const TabIcon = tab.icon;

@@ -157,7 +157,7 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-[260px] bg-white/95 dark:bg-[#11141D]/95 backdrop-blur-xl text-slate-700 dark:text-[#C8CDD5] flex flex-col justify-between select-none border-r border-slate-200/80 dark:border-white/10 shadow-[4px_0_24px_rgba(91,42,134,0.05)] transition-transform duration-200 ease-out lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-[260px] lg-glass-strong text-slate-700 dark:text-[#C8CDD5] flex flex-col justify-between select-none border-r border-slate-200/80 dark:border-white/10 shadow-[4px_0_24px_rgba(91,42,134,0.05)] transition-transform duration-200 ease-out lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

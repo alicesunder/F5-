@@ -50,7 +50,7 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
 
   return (
     <>
-      <header className="sticky top-0 z-30 bg-white/85 dark:bg-[#11141D]/85 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/10 h-16 flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 select-none shadow-[0_4px_20px_rgba(91,42,134,0.04)]">
+      <header className="sticky top-0 z-30 lg-glass-strong border-b border-slate-200/80 dark:border-white/10 h-16 flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 select-none shadow-[0_4px_20px_rgba(91,42,134,0.04)]">
         {/* Zone 1: Mobile Menu Trigger & Vibrant Brand Identity */}
         <div className="flex items-center gap-3 min-w-0">
           <button
