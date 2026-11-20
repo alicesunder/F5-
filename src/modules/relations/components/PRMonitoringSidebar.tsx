@@ -23,12 +23,16 @@ import {
   BarChart3,
   Workflow,
   MessageSquareText,
+  Megaphone,
+  HeartHandshake,
 } from 'lucide-react';
 import { usePRIntel } from '../context/PRIntelContext';
 
 export type PRViewId =
   | 'dashboard'
   | 'page-monitor'
+  | 'spokes-daily'
+  | 'conscience'
   | 'line-reports'
   | 'latest'
   | 'facebook'
@@ -129,6 +133,8 @@ export const PRMonitoringSidebar: React.FC<PRMonitoringSidebarProps> = ({ active
 
   const commandCenter: Item[] = [
     { id: 'dashboard', label: 'ศูนย์บัญชาการ PR', icon: LayoutDashboard, badge: 'LIVE', tone: 'purple' },
+    { id: 'spokes-daily', label: 'รายงานโฆษกวันนี้', icon: Megaphone, badge: 'ใหม่', tone: 'blue' },
+    { id: 'conscience', label: 'โครงการสร้างจิตสำนึก', icon: HeartHandshake, tone: 'blue' },
     { id: 'page-monitor', label: 'มอนิเตอร์เพจ ตชด.', icon: BarChart3, badge: 'ใหม่', tone: 'blue' },
     { id: 'line-reports', label: 'รายงานจาก LINE', icon: MessageSquareText, tone: 'blue' },
   ];

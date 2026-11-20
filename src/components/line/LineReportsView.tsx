@@ -27,7 +27,7 @@ const formatWhen = (iso: string) => {
   return sameDay ? `วันนี้ ${time} น.` : `${d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })} ${time} น.`;
 };
 
-const useLineReports = (): { reports: LineReport[]; state: LineReportsLoadState; error: string } => {
+export const useLineReports = (): { reports: LineReport[]; state: LineReportsLoadState; error: string } => {
   const version = useSyncExternalStore(
     cb => lineReportService.subscribe(cb),
     () => lineReportService.getVersion()

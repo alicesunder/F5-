@@ -41,6 +41,8 @@ import { PRAddKeywordModal } from './modals/PRAddKeywordModal';
 import { PRAddPageModal } from './modals/PRAddPageModal';
 import { FacebookConnectCard } from './intel/FacebookConnectCard';
 import { PRPageMonitorView } from './intel/PRPageMonitorView';
+import { SpokesDailyView } from './intel/SpokesDailyView';
+import { ConscienceProjectView } from './intel/ConscienceProjectView';
 
 interface Props {
   view: PRViewId;
@@ -79,6 +81,8 @@ export const PRWorkspaceView: React.FC<Props> = ({
       )}
       {view === 'latest' && <PRLatestPostsView />}
       {view === 'page-monitor' && <PRPageMonitorView />}
+      {view === 'spokes-daily' && <SpokesDailyView />}
+      {view === 'conscience' && <ConscienceProjectView />}
 
       {view === 'pages' && <PRPagesView />}
 
