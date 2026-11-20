@@ -43,53 +43,57 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
   const departmentItems = [
     {
       id: 'admin' as AppModule,
-      from: '#6D28D9',
-      to: '#5B21B6',
+      from: '#5B2A86',
+      to: '#8B46C8',
       label: 'งานอำนวยการ',
       sub: 'สารบรรณ · งบประมาณ',
       icon: Settings,
-      color: '#6D28D9',
-      gradient: 'linear-gradient(135deg, #6D28D9 0%, #5B21B6 100%)',
-      softBg: '#F3EEFF',
+      color: '#5B2A86',
+      gradient: 'linear-gradient(135deg, #5B2A86 0%, #8B46C8 100%)',
+      softBg: 'rgba(91, 42, 134, 0.08)',
+      activeBorder: 'rgba(91, 42, 134, 0.35)',
       count: FO5_DEPARTMENTS_META.admin.activeCount,
       progress: FO5_DEPARTMENTS_META.admin.progressPercent,
     },
     {
       id: 'relations' as AppModule,
-      from: '#2563EB',
-      to: '#1D4ED8',
+      from: '#1E6BB8',
+      to: '#38BDF8',
       label: 'งานประชาสัมพันธ์',
       sub: 'สื่อสารองค์กร · ข่าวสาร',
       icon: Megaphone,
-      color: '#2563EB',
-      gradient: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
-      softBg: '#EAF2FF',
+      color: '#2583D8',
+      gradient: 'linear-gradient(135deg, #1E6BB8 0%, #38BDF8 100%)',
+      softBg: 'rgba(37, 131, 216, 0.08)',
+      activeBorder: 'rgba(37, 131, 216, 0.35)',
       count: FO5_DEPARTMENTS_META.relations.activeCount,
       progress: FO5_DEPARTMENTS_META.relations.progressPercent,
     },
     {
       id: 'disaster' as AppModule,
-      from: '#EA580C',
-      to: '#C2410C',
+      from: '#D97706',
+      to: '#F59E0B',
       label: 'งานพัฒนาช่วยเหลือประชาชน',
       sub: 'บรรเทาสาธารณภัย · ชุมชน',
       icon: ShieldAlert,
-      color: '#EA580C',
-      gradient: 'linear-gradient(135deg, #EA580C 0%, #C2410C 100%)',
-      softBg: '#FFF1E6',
+      color: '#E89B22',
+      gradient: 'linear-gradient(135deg, #D97706 0%, #F59E0B 100%)',
+      softBg: 'rgba(232, 155, 34, 0.10)',
+      activeBorder: 'rgba(232, 155, 34, 0.40)',
       count: FO5_DEPARTMENTS_META.disaster.activeCount,
       progress: FO5_DEPARTMENTS_META.disaster.progressPercent,
     },
     {
       id: 'volunteer' as AppModule,
-      from: '#059669',
-      to: '#047857',
+      from: '#10B981',
+      to: '#34D399',
       label: 'งานจิตอาสา',
       sub: 'จิตอาสา 904 · พระราชทาน',
       icon: HeartHandshake,
-      color: '#059669',
-      gradient: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
-      softBg: '#E8F8F1',
+      color: '#42A77A',
+      gradient: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
+      softBg: 'rgba(66, 167, 122, 0.10)',
+      activeBorder: 'rgba(66, 167, 122, 0.38)',
       count: FO5_DEPARTMENTS_META.volunteer.activeCount,
       progress: FO5_DEPARTMENTS_META.volunteer.progressPercent,
     },
@@ -329,9 +333,9 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
                       title={item.label}
                       aria-current={isActive ? 'page' : undefined}
                       className={`w-full group relative p-2.5 rounded-2xl text-xs cursor-pointer text-left transition-[background-color,border-color,box-shadow] duration-300 border ${
-                        isActive ? 'text-white border-transparent' : 'bg-white dark:bg-white/[0.03] hover:bg-slate-50 dark:hover:bg-white/[0.06] hover:shadow-xs border-slate-200/75 dark:border-white/10'
+                        isActive ? 'text-white border-transparent' : 'bg-white dark:bg-white/[0.03] hover:shadow-xs border-slate-200/75 dark:border-white/10'
                       }`}
-                      style={isActive ? undefined : { boxShadow: `inset 3px 0 0 ${item.color}` }}
+                      style={isActive ? undefined : { backgroundColor: item.softBg, borderColor: item.activeBorder }}
                     >
                       {/* แถบสีของฝ่ายที่เปิดอยู่: เลื่อนตามเมื่อเปลี่ยนฝ่าย และยื่นไปต่อกับหน้าเนื้อหาด้วยมุมโค้งเว้า */}
                       {isActive && (

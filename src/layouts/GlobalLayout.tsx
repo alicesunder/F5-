@@ -11,10 +11,10 @@ import { NotificationPopover } from '../components/common/NotificationPopover';
 import { pageVariants } from '../utils/motion';
 
 const DEPT_GLOW = {
-  admin: '#6D28D9',
-  relations: '#2563EB',
-  disaster: '#EA580C',
-  volunteer: '#059669',
+  admin: '#8B46C8',
+  relations: '#38BDF8',
+  disaster: '#F59E0B',
+  volunteer: '#34D399',
 } as const;
 
 interface GlobalLayoutProps {

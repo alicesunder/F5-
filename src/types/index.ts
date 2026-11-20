@@ -570,10 +570,10 @@ export interface Mission {
 }
 
 export const DEPARTMENT_COLORS = {
-  admin: '#6D28D9',
-  relations: '#2563EB',
-  disaster: '#EA580C',
-  volunteer: '#059669',
+  admin: '#5B2A86',
+  relations: '#2583D8',
+  disaster: '#E89B22',
+  volunteer: '#42A77A',
 } as const;
 
 export interface CentralActivityItem {

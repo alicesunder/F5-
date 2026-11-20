@@ -8,10 +8,10 @@ export type DeptKey = 'admin' | 'relations' | 'disaster' | 'volunteer';
 
 /** สีประจำแผนก: ใช้ซ้ำทุกจุดเพื่อให้จำได้ว่าอยู่แผนกไหน */
 export const DEPT_THEME: Record<DeptKey, { color: string; soft: string; ring: string; gradient: string; text: string }> = {
-  admin: { color: '#6D28D9', soft: '#F3EEFF', ring: 'rgba(109,40,217,.25)', gradient: 'linear-gradient(135deg,#6D28D9,#5B21B6)', text: '#5B21B6' },
-  relations: { color: '#2563EB', soft: '#EAF2FF', ring: 'rgba(37,99,235,.25)', gradient: 'linear-gradient(135deg,#2563EB,#1D4ED8)', text: '#1D4ED8' },
-  disaster: { color: '#EA580C', soft: '#FFF1E6', ring: 'rgba(234,88,12,.25)', gradient: 'linear-gradient(135deg,#EA580C,#C2410C)', text: '#C2410C' },
-  volunteer: { color: '#059669', soft: '#E8F8F1', ring: 'rgba(5,150,105,.25)', gradient: 'linear-gradient(135deg,#059669,#047857)', text: '#047857' },
+  admin: { color: '#6D28D9', soft: '#F3EEFF', ring: 'rgba(109,40,217,.25)', gradient: 'linear-gradient(135deg,#7C3AED,#5B21B6)', text: '#5B21B6' },
+  relations: { color: '#2563EB', soft: '#EAF2FF', ring: 'rgba(37,99,235,.25)', gradient: 'linear-gradient(135deg,#3B82F6,#1D4ED8)', text: '#1D4ED8' },
+  disaster: { color: '#EA580C', soft: '#FFF1E6', ring: 'rgba(234,88,12,.25)', gradient: 'linear-gradient(135deg,#F97316,#C2410C)', text: '#C2410C' },
+  volunteer: { color: '#059669', soft: '#E8F8F1', ring: 'rgba(5,150,105,.25)', gradient: 'linear-gradient(135deg,#10B981,#047857)', text: '#047857' },
 };
 
 export interface DeptTab {
