@@ -15,6 +15,8 @@ import {
   MessageSquareText,
   CalendarRange,
   Inbox,
+  HandHelping,
+  Crown,
 } from 'lucide-react';
 import { DepartmentHeader, DeptAction, DeptTab } from '../../../components/layout/DepartmentShell';
 
@@ -22,6 +24,8 @@ export type DisasterActiveTab =
   | 'overview'
   | 'line-reports'
   | 'year-plan'
+  | 'aid'
+  | 'royal'
   | 'incoming'
   | 'heavy-rain'
   | 'map'
@@ -36,6 +40,8 @@ export const DISASTER_TABS: DeptTab[] = [
   { id: 'overview', label: 'ภาพรวม', icon: Layers, desc: 'สรุปสถานการณ์' },
   { id: 'incidents', label: 'จัดการเหตุการณ์', icon: ClipboardList, desc: 'บันทึกและติดตามเหตุที่เกิดขึ้น' },
   { id: 'line-reports', label: 'รายงานจาก LINE', icon: MessageSquareText, desc: 'ข้อความจากกลุ่ม LINE ของงาน' },
+  { id: 'aid', label: 'ยอดช่วยเหลือ', icon: HandHelping, desc: 'สถานภาพกำลังพล/ยานพาหนะ และผลการช่วยเหลือ สร้างอินโฟกราฟิก' },
+  { id: 'royal', label: 'โครงการพระราชดำริ', icon: Crown, desc: 'อพ.สธ. หญ้าแฝก เศรษฐกิจพอเพียง' },
   { id: 'map', label: 'แผนที่สถานการณ์', icon: MapPin, desc: 'ดูจุดเกิดเหตุบนแผนที่' },
   { id: 'heavy-rain', label: 'ฝนตกหนัก & เรดาร์', icon: CloudRain, desc: 'พื้นที่เสี่ยงฝนตกหนัก' },
   { id: 'flood', label: 'เฝ้าระวังน้ำท่วม', icon: Waves, desc: 'ระดับน้ำและพื้นที่เสี่ยง' },
