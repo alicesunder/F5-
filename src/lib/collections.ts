@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useSyncExternalStore } from 'react';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured } from './supabase';
+import { isDemo, onDemoChange, setDemoMode } from './demoMode';
 
 /**
  * ที่เก็บข้อมูลถาวรของทุกโมดูล (ตาราง public.app_records, เฉพาะบุคลากร)
@@ -71,10 +72,31 @@ class CollectionStore<T extends object> {
     this.emit();
   }
 
+  /** โหมดจำลอง: ตัวอย่างของ collection นี้ (ถ้ามี) — undefined = ไม่มีตัวอย่าง ใช้ข้อมูลจริงอ่านอย่างเดียว */
+  private demoSeed: object[] | undefined;
+  hasDemo = false;
+
   async load() {
     if (!isSupabaseConfigured || !hasSession) return;
     const token = ++this.loadToken;
     this.setState({ status: 'loading', error: null });
+    this.hasDemo = false;
+    if (isDemo()) {
+      try {
+        const mod = await import('../data/demoData');
+        if (token !== this.loadToken) return;
+        const make = mod.DEMO[this.name];
+        if (make) {
+          this.hasDemo = true;
+          this.demoSeed ??= make();
+          this.items = this.demoSeed.map(x => structuredClone(x)) as T[];
+          this.setState({ status: 'ready', error: null });
+          return;
+        }
+      } catch {
+        /* โหลดตัวอย่างไม่ได้: ใช้ข้อมูลจริงอ่านอย่างเดียวต่อ */
+      }
+    }
     const rows: T[] = [];
     for (let from = 0; ; from += PAGE) {
       const { data, error } = await supabase
@@ -96,6 +118,14 @@ class CollectionStore<T extends object> {
     this.setState({ status: 'ready', error: null });
   }
 
+  /** เปลี่ยนโหมดจำลอง: ทิ้งข้อมูลในหน่วยความจำ แล้วโหลดใหม่ถ้ามีคนใช้อยู่ */
+  demoReset() {
+    this.demoSeed = undefined;
+    const used = this.state.status !== 'idle' || this.watched;
+    this.reset();
+    if (used) void this.load();
+  }
+
   ensureLoaded() {
     if (this.state.status === 'idle') void this.load();
   }
@@ -103,6 +133,7 @@ class CollectionStore<T extends object> {
   /** รับการเปลี่ยนแปลงจากเครื่องอื่น */
   applyRemote(kind: 'INSERT' | 'UPDATE' | 'DELETE', id: string, data?: unknown) {
     if (this.state.status === 'idle') return;
+    if (isDemo()) return; // โหมดจำลอง: ไม่รับการเปลี่ยนแปลงจากเครื่องอื่นมาปน
     const idx = this.items.findIndex(x => this.keyOf(x) === id);
     if (kind === 'DELETE') {
       if (idx === -1) return;
@@ -142,6 +173,8 @@ class CollectionStore<T extends object> {
     this.items = next;
     this.emit();
     if (!upserts.length && !deletes.length) return Promise.resolve(true);
+    // โหมดจำลอง: เก็บเฉพาะในหน่วยความจำ ไม่ส่งไปฐานข้อมูลจริงเด็ดขาด
+    if (isDemo()) return Promise.resolve(true);
     if (!isSupabaseConfigured || !hasSession) {
       this.items = prev;
       this.setState({ error: 'ยังไม่ได้เข้าสู่ระบบ บันทึกไม่ได้' });
@@ -240,6 +273,13 @@ function stopRealtime() {
   channel = null;
 }
 
+// เปิด/ปิดโหมดจำลอง: ล้างทุก collection แล้วให้โหลดใหม่ (จำลอง หรือ ข้อมูลจริง)
+onDemoChange(() => {
+  for (const s of stores.values()) {
+    s.demoReset();
+  }
+});
+
 if (isSupabaseConfigured) {
   supabase.auth.onAuthStateChange((event, session) => {
     const had = hasSession;
@@ -250,6 +290,7 @@ if (isSupabaseConfigured) {
       for (const fn of uidListeners) fn();
     }
     if (!session) {
+      setDemoMode(false); // ออกจากระบบ = ปิดโหมดจำลองเสมอ
       stopRealtime();
       for (const s of stores.values()) s.reset();
       return;

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDemoMode, setDemoMode } from '../../lib/demoMode';
 import { useShowAllMenus, setShowAllMenus } from '../../lib/menuVisibility';
 import { useAdmin } from '../../contexts/AdminContext';
 import { useTheme, ThemeMode, DisplayDensity, FontSizeScale } from '../../contexts/ThemeContext';
@@ -64,6 +65,7 @@ interface SectionNav {
 
 export const SettingsModule: React.FC = () => {
   const showAllMenus = useShowAllMenus();
+  const demoOn = useDemoMode();
   const { currentRole, setRole, currentUser, showToast } = useAdmin();
   const {
     theme,
@@ -529,6 +531,22 @@ export const SettingsModule: React.FC = () => {
                   </button>
                 </div>
               </div>
+
+              {/* โหมดข้อมูลจำลอง (แอดมินเท่านั้น) */}
+              {['SUPER_ADMIN', 'ADMIN'].includes(String(currentRole)) && (
+                <div className={`p-4 rounded-2xl border ${demoOn ? 'bg-amber-50 dark:bg-amber-500/10 border-amber-300 dark:border-amber-500/40' : 'bg-black/5 dark:bg-white/5 border-black/5 dark:border-white/10'}`}>
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input type="checkbox" checked={demoOn} onChange={e => setDemoMode(e.target.checked)} className="mt-1 w-5 h-5" />
+                    <span>
+                      <span className="block text-sm font-bold text-slate-800 dark:text-slate-100">โหมดข้อมูลจำลอง (สำหรับสาธิต/ทดลองใช้)</span>
+                      <span className="block text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                        เปิดแล้วหน้าหลัก 4 ฝ่าย ทะเบียนหนังสือรับ ตารางเวร รายงาน LINE และรายงานโฆษก จะแสดงข้อมูลตัวอย่างให้ดูหน้าตาของระบบ ทุกชื่อและเลขที่เป็นของสมมติ
+                        <b> ไม่บันทึกลงฐานข้อมูลจริง</b> ไม่ว่าจะกรอก แก้ หรือลบอะไรก็ตาม เห็นเฉพาะแท็บนี้ของเครื่องนี้ ปิดโหมด ออกจากระบบ หรือปิดแท็บ แล้วข้อมูลจำลองหายทั้งหมด กลับเป็นข้อมูลจริง
+                      </span>
+                    </span>
+                  </label>
+                </div>
+              )}
 
               {/* เมนูที่ซ่อนไว้ */}
               <div className="p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10">

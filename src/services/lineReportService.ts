@@ -1,5 +1,6 @@
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { isDemo, onDemoChange } from '../lib/demoMode';
 import { LineReport, LineReportDept, LineReportStatus } from '../data/lineReportsData';
 
 export type LineReportsLoadState = 'idle' | 'loading' | 'ready' | 'error';
@@ -53,6 +54,9 @@ class LineReportService {
 
   constructor() {
     if (!isSupabaseConfigured) return;
+    onDemoChange(() => {
+      if (this.started) void this.reload();
+    });
     supabase.auth.onAuthStateChange((_event, session) => {
       if (session) void this.start();
       else this.stop();
@@ -74,6 +78,7 @@ class LineReportService {
     this.channel = supabase
       .channel('line_reports_live')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'line_reports' }, payload => {
+        if (isDemo()) return;
         if (payload.eventType === 'DELETE') {
           const id = (payload.old as { id?: string }).id;
           this.reports = this.reports.filter(r => r.id !== id);
@@ -100,6 +105,15 @@ class LineReportService {
   async reload() {
     this.state = 'loading';
     this.emit();
+    if (isDemo()) {
+      // โหมดจำลอง: รายงานตัวอย่างในหน่วยความจำ ไม่อ่าน/เขียนฐานข้อมูลจริง
+      const { demoLineReports } = await import('../data/demoData');
+      this.reports = demoLineReports();
+      this.state = 'ready';
+      this.errorMessage = '';
+      this.emit();
+      return;
+    }
     const { data, error } = await supabase
       .from('line_reports')
       .select(COLUMNS)
@@ -140,6 +154,7 @@ class LineReportService {
     const before = this.reports;
     this.reports = this.reports.map(r => (r.id === id ? { ...r, ...changes } : r));
     this.emit();
+    if (isDemo()) return;
     const { error } = await supabase.from('line_reports').update(db).eq('id', id);
     if (error) {
       this.reports = before; // ย้อนกลับเมื่อบันทึกไม่สำเร็จ
@@ -163,7 +178,7 @@ class LineReportService {
   }
 
   async getMediaUrls(paths: string[]): Promise<string[]> {
-    if (!paths.length) return [];
+    if (!paths.length || isDemo()) return [];
     const { data } = await supabase.storage.from('line-media').createSignedUrls(paths, 3600);
     return (data || []).map(d => d.signedUrl).filter((u): u is string => Boolean(u));
   }

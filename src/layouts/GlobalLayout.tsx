@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDemoMode, setDemoMode } from '../lib/demoMode';
 import { MySpacePortal } from '../components/layout/MySpacePortal';
 import { AnimatePresence, motion } from 'motion/react';
 import { useAdmin } from '../contexts/AdminContext';
@@ -24,6 +25,7 @@ interface GlobalLayoutProps {
 
 export const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
   const { activeModule } = useAdmin();
+  const demoOn = useDemoMode();
   // สีของฝ่ายที่เปิดอยู่: ใช้กับเส้นเชื่อมจากเมนูข้างเข้าหน้าเนื้อหา แถบโหลดด้านบน และแสงพื้นหลัง
   const deptColor = DEPT_GLOW[activeModule as keyof typeof DEPT_GLOW];
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -129,6 +131,14 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
           </main>
         </div>
       </div>
+
+      {demoOn && (
+        <div role="status" className="fixed bottom-3 left-1/2 -translate-x-1/2 z-[110] max-w-[92vw] flex items-center gap-3 rounded-full bg-amber-400 text-amber-950 shadow-lg px-4 py-2 text-xs sm:text-sm font-bold">
+          <span className="w-2 h-2 rounded-full bg-amber-950 animate-pulse" />
+          <span>โหมดข้อมูลจำลอง — ข้อมูลที่เห็นเป็นตัวอย่าง ไม่ถูกบันทึกลงฐานข้อมูลจริง</span>
+          <button type="button" onClick={() => setDemoMode(false)} className="rounded-full bg-amber-950 text-amber-100 px-3 py-1 text-xs font-bold cursor-pointer">ปิดโหมด</button>
+        </div>
+      )}
 
       <MySpacePortal />
 
