@@ -202,7 +202,7 @@ export const A4OfficialLetterPreview: React.FC<A4OfficialLetterPreviewProps> = (
                   <GarudaEmblem size="sm" />
                 </div>
                 <div className="text-center">
-                  <h1 className="text-2xl sm:text-3xl font-bold tracking-wide text-slate-950">
+                  <h1 className="bpp-off text-2xl sm:text-3xl font-bold tracking-wide text-slate-950">
                     บันทึกข้อความ
                   </h1>
                 </div>
@@ -364,7 +364,7 @@ export const A4OfficialLetterPreview: React.FC<A4OfficialLetterPreviewProps> = (
                 <div className="flex justify-center mb-3">
                   <GarudaEmblem size="md" />
                 </div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-slate-950">
+                <h1 className="bpp-off text-2xl sm:text-3xl font-bold text-slate-950">
                   {currentDraft.bookNumber}
                 </h1>
                 <h2 className="text-lg font-semibold text-slate-800">

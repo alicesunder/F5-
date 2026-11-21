@@ -87,7 +87,7 @@ export const SlideRenderer: React.FC<SlideRendererProps> = ({
             </span>
           </div>
 
-          <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight drop-shadow-xs max-w-4xl">
+          <h1 className="bpp-off text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight drop-shadow-xs max-w-4xl">
             {slide.title || deck.deckTitle}
           </h1>
 

@@ -1142,3 +1142,22 @@ html.dark .fo5-stars, [data-theme="dark"] .fo5-stars { opacity: 1; }
 
 /* ระหว่างสลับธีม: หยุดอนิเมชั่นวนทั้งหมดชั่วคราว ให้วงกลมเผยธีมลื่นที่สุด */
 html[data-theme-fx] *, html[data-theme-fx] *::before, html[data-theme-fx] *::after { animation-play-state: paused !important; }
+
+/* ===== ฟอนต์ตำรวจตระเวนชายแดน (Border Patrol Police Bold) สำหรับหัวข้อสำคัญ =====
+   ฟอนต์นี้มีเฉพาะอักษรไทย ตัวเลข และเครื่องหมายพื้นฐาน (ไม่มีอักษรอังกฤษ และไม่มี ฿)
+   ตัวอักษรที่ไม่มีจะใช้ฟอนต์สำรองตามลำดับโดยอัตโนมัติ */
+@font-face {
+  font-family: 'BPP Display';
+  src: url('/assets/fonts/bpp-bold.woff2') format('woff2'), url('/assets/fonts/bpp-bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+:root { --font-bpp: 'BPP Display', 'Plus Jakarta Sans', 'Noto Sans Thai', 'IBM Plex Sans Thai', sans-serif; }
+h1:not(.bpp-off),
+.font-bpp {
+  font-family: var(--font-bpp);
+  font-weight: 700;
+  font-synthesis: none;
+  letter-spacing: 0;
+}
