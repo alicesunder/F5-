@@ -123,30 +123,36 @@ if (typeof window !== 'undefined') {
 }
 
 export const THEME_FX_EVENT = 'fo5:theme-fx';
+/** ความยาวของอนิเมชั่นสลับธีม (ms) ใช้ร่วมกับวงแสง/ดาวใน DarkAmbience */
+export const THEME_FX_MS = 1150;
+export const THEME_FX_EASE = 'cubic-bezier(0.65, 0, 0.35, 1)';
 
 function runThemeTransition(to: 'light' | 'dark', change: () => void) {
   const root = document.documentElement;
   const { x, y } = lastPointer;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const start = (document as Document & { startViewTransition?: (cb: () => void) => { ready: Promise<void> } }).startViewTransition;
-  window.dispatchEvent(new CustomEvent(THEME_FX_EVENT, { detail: { to, x, y } }));
+  const r = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y)) + 120;
+  window.dispatchEvent(new CustomEvent(THEME_FX_EVENT, { detail: { to, x, y, r } }));
   if (reduce || !start) {
     change();
     return;
   }
   root.dataset.themeFx = to;
+  root.style.setProperty('--fx-x', `${x}px`);
+  root.style.setProperty('--fx-y', `${y}px`);
   // ในจังหวะถ่ายภาพ: สลับแค่ class (เร็วมาก) แล้วค่อยอัปเดต React หลังเริ่มเล่นอนิเมชั่น เพื่อไม่ให้สะดุด
   const vt = start.call(document, () => {
     root.classList.toggle('dark', to === 'dark');
     root.classList.toggle('light', to === 'light');
   });
-  const r = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
   vt.ready
     .then(() => {
       window.setTimeout(change, 60);
+      // ธีมใหม่เผยด้วยหน้ากากไล่เฉดขอบนุ่ม (ไม่ใช่ขอบวงกลมแข็ง) ขยายตามวงแสง
       root.animate(
-        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
-        { duration: 900, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', pseudoElement: '::view-transition-new(root)' },
+        { '--fx-r': ['0px', `${r}px`] } as unknown as PropertyIndexedKeyframes,
+        { duration: THEME_FX_MS, easing: THEME_FX_EASE, pseudoElement: '::view-transition-new(root)' },
       );
     })
     .catch(() => undefined);

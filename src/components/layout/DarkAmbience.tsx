@@ -1,77 +1,114 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'motion/react';
-import { THEME_FX_EVENT } from '../../contexts/ThemeContext';
+import { Moon, Sun } from 'lucide-react';
+import { THEME_FX_EASE, THEME_FX_EVENT, THEME_FX_MS } from '../../contexts/ThemeContext';
+
+type Fx = { id: number; x: number; y: number; r: number; to: 'light' | 'dark' };
+const SEC = THEME_FX_MS / 1000;
+const EASE = [0.65, 0, 0.35, 1] as [number, number, number, number];
 
 /**
- * บรรยากาศโหมดมืด: ดาวระยิบระยับทั้งหน้า + ตอนสลับเป็นมืดมีวงแสงจันทร์แผ่ออกจากปุ่มและดาวตกพาดผ่านจอ
+ * ค่ำคืนคลุมจอ: วงแสงนำหน้าขอบความมืดที่ขยายออกจากปุ่ม · จันทร์เสี้ยวเรืองแสงที่ปุ่ม
+ * ดาวแต่ละดวงสว่างวาบเมื่อขอบความมืดไปถึง · แสงขอบจอ (vignette) ค่อย ๆ ปิดลง
+ * (กลับเป็นสว่าง: ตะวันขึ้นด้วยวงแสงสีทอง) · โหมดมืดมีดาวระยิบทั้งคืน
  */
 export const DarkAmbience: React.FC = () => {
   const stars = useMemo(
     () =>
-      Array.from({ length: 48 }, (_, i) => {
+      Array.from({ length: 56 }, (_, i) => {
         const seed = (i * 9301 + 49297) % 233280;
         const r = (n: number) => ((seed * (n + 3)) % 1000) / 1000;
-        return { x: r(1) * 100, y: r(2) * 100, s: 1 + r(3) * 2, d: r(4) * 4, o: 0.5 + r(5) * 0.5 };
+        return { x: r(1) * 100, y: r(2) * 100, s: 1 + r(3) * 2.2, d: r(4) * 4, o: 0.5 + r(5) * 0.5 };
       }),
     [],
   );
-  const [fx, setFx] = useState<{ id: number; x: number; y: number; to: 'light' | 'dark' } | null>(null);
+  const [fx, setFx] = useState<Fx | null>(null);
+  const [revealing, setRevealing] = useState(false);
+  const origin = useRef<Fx | null>(null);
 
   useEffect(() => {
     const on = (e: Event) => {
-      const d = (e as CustomEvent<{ to: 'light' | 'dark'; x: number; y: number }>).detail;
-      const id = Date.now();
-      setFx({ id, ...d });
-      window.setTimeout(() => setFx(cur => (cur?.id === id ? null : cur)), 1800);
+      const d = (e as CustomEvent<Omit<Fx, 'id'>>).detail;
+      const next = { id: Date.now(), ...d };
+      origin.current = next;
+      setFx(next);
+      setRevealing(d.to === 'dark');
+      window.setTimeout(() => setRevealing(false), THEME_FX_MS + 900);
+      window.setTimeout(() => setFx(cur => (cur?.id === next.id ? null : cur)), THEME_FX_MS + 400);
     };
     window.addEventListener(THEME_FX_EVENT, on);
     return () => window.removeEventListener(THEME_FX_EVENT, on);
   }, []);
 
+  // ดาวสว่างวาบเมื่อขอบความมืดมาถึง: หน่วงตามระยะจากปุ่ม
+  const starDelay = (s: { x: number; y: number }) => {
+    const o = origin.current;
+    if (!o || typeof window === 'undefined') return 0;
+    const dist = Math.hypot((s.x / 100) * window.innerWidth - o.x, (s.y / 100) * window.innerHeight - o.y);
+    return (dist / o.r) * SEC;
+  };
+
   return (
     <>
-      <div className="fo5-stars" aria-hidden="true">
+      <div className={`fo5-stars ${revealing ? 'revealing' : ''}`} aria-hidden="true">
         {stars.map((s, i) => (
-          <i key={i} style={{ left: `${s.x}%`, top: `${s.y}%`, width: s.s, height: s.s, animationDelay: `${s.d}s`, opacity: s.o }} />
+          <i key={`${i}-${revealing ? fx?.id : 0}`} style={{ left: `${s.x}%`, top: `${s.y}%`, width: s.s, height: s.s, animationDelay: revealing ? `${starDelay(s)}s` : `${s.d}s`, opacity: s.o }} />
         ))}
       </div>
       {createPortal(
         <AnimatePresence>
           {fx && (
-            <motion.div key={fx.id} aria-hidden="true" className="fixed inset-0 z-[130] pointer-events-none overflow-hidden" exit={{ opacity: 0 }}>
-              {/* วงแสงแผ่ออกจากปุ่ม */}
-              {[0, 1, 2].map(i => (
-                <motion.span
-                  key={i}
-                  className="absolute rounded-full"
-                  style={{
-                    left: fx.x,
-                    top: fx.y,
-                    width: 80,
-                    height: 80,
-                    marginLeft: -40,
-                    marginTop: -40,
-                    border: `2px solid ${fx.to === 'dark' ? 'rgba(165,180,252,0.8)' : 'rgba(251,191,36,0.85)'}`,
-                    boxShadow: `0 0 40px 6px ${fx.to === 'dark' ? 'rgba(129,140,248,0.5)' : 'rgba(251,191,36,0.55)'}`,
-                  }}
-                  initial={{ scale: 0.3, opacity: 0.9 }}
-                  animate={{ scale: 14, opacity: 0 }}
-                  transition={{ duration: 1.1, delay: i * 0.14, ease: [0.22, 1, 0.36, 1] }}
+            <motion.div key={fx.id} aria-hidden="true" className="fixed inset-0 z-[130] pointer-events-none overflow-hidden" exit={{ opacity: 0, transition: { duration: 0.4 } }}>
+              {/* วงแสงนำหน้า: ขยายพร้อมขอบหน้ากากของธีมใหม่ */}
+              <motion.span
+                className="absolute rounded-full"
+                style={{
+                  left: fx.x,
+                  top: fx.y,
+                  width: 2,
+                  height: 2,
+                  marginLeft: -1,
+                  marginTop: -1,
+                  boxShadow:
+                    fx.to === 'dark'
+                      ? '0 0 0 2px rgba(199,210,254,0.85), 0 0 36px 8px rgba(129,140,248,0.55), inset 0 0 40px 6px rgba(99,102,241,0.35)'
+                      : '0 0 0 2px rgba(254,240,138,0.95), 0 0 40px 10px rgba(251,191,36,0.55), inset 0 0 40px 6px rgba(253,224,71,0.4)',
+                }}
+                initial={{ scale: 0, opacity: 1 }}
+                animate={{ scale: fx.r, opacity: [1, 1, 0.9, 0] }}
+                transition={{ scale: { duration: SEC, ease: EASE }, opacity: { duration: SEC, times: [0, 0.6, 0.85, 1] } }}
+              />
+              {/* จันทร์เสี้ยว/ตะวัน ที่ปุ่ม */}
+              <motion.div
+                className="absolute flex items-center justify-center rounded-full"
+                style={{
+                  left: fx.x,
+                  top: fx.y,
+                  width: 64,
+                  height: 64,
+                  marginLeft: -32,
+                  marginTop: -32,
+                  background: fx.to === 'dark' ? 'radial-gradient(circle, rgba(165,180,252,0.9), rgba(99,102,241,0.15) 70%)' : 'radial-gradient(circle, rgba(254,240,138,0.95), rgba(251,191,36,0.15) 70%)',
+                  color: fx.to === 'dark' ? '#EEF2FF' : '#92400E',
+                  boxShadow: fx.to === 'dark' ? '0 0 50px 14px rgba(129,140,248,0.55)' : '0 0 60px 18px rgba(251,191,36,0.6)',
+                }}
+                initial={{ scale: 0.2, opacity: 0, rotate: fx.to === 'dark' ? -40 : 40 }}
+                animate={{ scale: [0.2, 1.25, 1, 1.9], opacity: [0, 1, 1, 0], rotate: 0 }}
+                transition={{ duration: SEC * 0.9, times: [0, 0.25, 0.6, 1], ease: 'easeOut' }}
+              >
+                {fx.to === 'dark' ? <Moon className="w-8 h-8" fill="currentColor" strokeWidth={1.4} /> : <Sun className="w-8 h-8" strokeWidth={2} />}
+              </motion.div>
+              {/* ขอบจอมืดลงแล้วจาง (เฉพาะเข้าโหมดมืด) */}
+              {fx.to === 'dark' && (
+                <motion.div
+                  className="absolute inset-0"
+                  style={{ background: 'radial-gradient(ellipse at center, transparent 45%, rgba(11,13,19,0.65) 100%)' }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 1, 0] }}
+                  transition={{ duration: SEC * 1.2, times: [0, 0.45, 1], ease: 'easeInOut' }}
                 />
-              ))}
-              {/* ดาวตก (เฉพาะเปลี่ยนเป็นมืด) */}
-              {fx.to === 'dark' &&
-                [0, 1, 2].map(i => (
-                  <motion.span
-                    key={`m${i}`}
-                    className="absolute h-[2px] w-40 rounded-full"
-                    style={{ top: `${10 + i * 16}%`, left: '-12%', background: 'linear-gradient(90deg, transparent, #fff 70%, #c7d2fe)', rotate: 18 }}
-                    initial={{ x: 0, opacity: 0 }}
-                    animate={{ x: '125vw', y: 220, opacity: [0, 1, 0] }}
-                    transition={{ duration: 1.1, delay: 0.25 + i * 0.28, ease: 'easeIn' }}
-                  />
-                ))}
+              )}
             </motion.div>
           )}
         </AnimatePresence>,
@@ -80,3 +117,6 @@ export const DarkAmbience: React.FC = () => {
     </>
   );
 };
+
+// ให้ TS ไม่เตือน import ที่ใช้ในคอมเมนต์เท่านั้น
+void THEME_FX_EASE;
