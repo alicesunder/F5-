@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useDemoMode, setDemoMode } from '../lib/demoMode';
-import { MySpacePortal } from '../components/layout/MySpacePortal';
 import { AnimatePresence, motion } from 'motion/react';
 import { useAdmin } from '../contexts/AdminContext';
 import { GlobalHeader } from '../components/layout/GlobalHeader';
@@ -139,8 +138,6 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
           <button type="button" onClick={() => setDemoMode(false)} className="rounded-full bg-amber-950 text-amber-100 px-3 py-1 text-xs font-bold cursor-pointer">ปิดโหมด</button>
         </div>
       )}
-
-      <MySpacePortal />
 
       {/* System Modals */}
       <UserProfileModal

@@ -1,5 +1,5 @@
 import React from 'react';
-import { openMySpacePortal } from './MySpacePortal';
+import { MySpaceButton } from './MySpaceButton';
 import { motion } from 'motion/react';
 import { useAdmin } from '../../contexts/AdminContext';
 import { AppModule } from '../../types';
@@ -266,51 +266,8 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
                 </span>
               </motion.button>
 
-              {/* ฉัน (MY SPACE) Interactive Profile Card */}
-              <motion.button
-                type="button"
-                whileHover={{ x: 2 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={e => {
-                  if (activeModule === 'my-space') return handleSelectMenu('my-space');
-                  const r = e.currentTarget.getBoundingClientRect();
-                  onClose();
-                  openMySpacePortal(r.left + r.width / 2, r.top + r.height / 2);
-                }}
-                className={`w-full group relative p-2.5 rounded-2xl text-xs cursor-pointer text-left transition-all border ${
-                  activeModule === 'my-space'
-                    ? 'bg-gradient-to-r from-[#1D68B0] to-[#2583D8] text-white border-transparent shadow-md shadow-sky-900/20'
-                    : 'bg-gradient-to-br from-sky-50/90 via-indigo-50/50 to-white dark:from-sky-950/30 dark:via-slate-900 dark:to-slate-900 border-sky-200/70 dark:border-sky-500/20 hover:border-sky-400 text-slate-800 dark:text-slate-100'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div
-                      className={`w-8 h-8 rounded-xl flex items-center justify-center font-black text-[11px] shrink-0 shadow-xs ${
-                        activeModule === 'my-space'
-                          ? 'bg-white text-[#1D68B0]'
-                          : 'bg-gradient-to-br from-[#2583D8] to-[#5B2A86] text-white'
-                      }`}
-                    >
-                      <User className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="font-extrabold truncate leading-tight">
-                        ฉัน (MY SPACE)
-                      </div>
-                      <div
-                        className={`text-[10px] truncate mt-0.5 ${
-                          activeModule === 'my-space'
-                            ? 'text-sky-100'
-                            : 'text-sky-700 dark:text-sky-300 font-medium'
-                        }`}
-                      >
-                        ข้อมูลส่วนตัว · เงินเดือน · งาน
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.button>
+              {/* ฉัน (MY SPACE) */}
+              <MySpaceButton active={activeModule === 'my-space'} onOpen={() => handleSelectMenu('my-space')} />
             </div>
 
             {/* หมวดที่ 2: ระบบ 4 สายงานหลัก (Colorful Tactile Cards) */}
