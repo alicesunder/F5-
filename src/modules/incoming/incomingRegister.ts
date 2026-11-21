@@ -129,10 +129,19 @@ const cellText = (v: unknown): string => {
   }
   return String(v).trim();
 };
+/** Excel อ่านปี พ.ศ. 2 หลัก (เช่น 69) เป็น ค.ศ. 1969 → บวก 57 ให้เป็น 2026 (หนังสือราชการก่อนปี 2000 ไม่มีในระบบนี้) */
+const fixTwoDigitBuddhistYear = (iso: string) => {
+  const m = iso.match(/^(\d{4})-(\d{2}-\d{2})$/);
+  if (!m) return iso;
+  const y = Number(m[1]);
+  return y >= 1930 && y <= 1999 ? `${y + 57}-${m[2]}` : iso;
+};
 const cellDate = (v: unknown): string => {
-  if (v instanceof Date) return v.toISOString().slice(0, 10);
-  if (typeof v === 'number') return excelSerialToIso(v);
+  if (v instanceof Date) return fixTwoDigitBuddhistYear(v.toISOString().slice(0, 10));
+  if (typeof v === 'number') return fixTwoDigitBuddhistYear(excelSerialToIso(v));
   const s = cellText(v);
+  const two = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2})$/);
+  if (two) return `${2500 + Number(two[3]) - 543}-${two[2].padStart(2, '0')}-${two[1].padStart(2, '0')}`;
   const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
   if (m) {
     let y = Number(m[3]);

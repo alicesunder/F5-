@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAdmin } from '../../contexts/AdminContext';
 import { Meeting } from '../../types';
 import { X, Calendar, Clock, MapPin, Plus, Trash2 } from 'lucide-react';
+import { fiscalYearBE, toThaiDigits } from '../../lib/fiscalYear';
 
 interface NewMeetingModalProps {
   isOpen: boolean;
@@ -22,8 +23,8 @@ export const NewMeetingModal: React.FC<NewMeetingModalProps> = ({
   const { addMeeting, currentUser, personnel } = useAdmin();
 
   const [monthIndex, setMonthIndex] = useState(new Date().getMonth());
-  const [meetingNumber, setMeetingNumber] = useState(`${new Date().getMonth() + 1}/2569`);
-  const [title, setTitle] = useState(`การประชุมฝ่ายอำนวยการ ประจำเดือน ${MONTH_NAMES[new Date().getMonth()]} ๒๕๖๙`);
+  const [meetingNumber, setMeetingNumber] = useState(`${new Date().getMonth() + 1}/${new Date().getFullYear() + 543}`);
+  const [title, setTitle] = useState(`การประชุมฝ่ายอำนวยการ ประจำเดือน ${MONTH_NAMES[new Date().getMonth()]} ${toThaiDigits(new Date().getFullYear() + 543)}`);
   const [meetingDate, setMeetingDate] = useState(new Date().toISOString().slice(0, 10));
   const [meetingTime, setMeetingTime] = useState('09:30');
   const [location, setLocation] = useState('');
@@ -36,8 +37,8 @@ export const NewMeetingModal: React.FC<NewMeetingModalProps> = ({
   const handleMonthChange = (idx: number) => {
     setMonthIndex(idx);
     const mName = MONTH_NAMES[idx];
-    setMeetingNumber(`${idx + 1}/2569`);
-    setTitle(`การประชุมฝ่ายอำนวยการ ประจำเดือน ${mName} ๒๕๖๙`);
+    setMeetingNumber(`${idx + 1}/${new Date().getFullYear() + 543}`);
+    setTitle(`การประชุมฝ่ายอำนวยการ ประจำเดือน ${mName} ${toThaiDigits(new Date().getFullYear() + 543)}`);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -48,7 +49,7 @@ export const NewMeetingModal: React.FC<NewMeetingModalProps> = ({
       meeting_number: meetingNumber,
       month_label: MONTH_NAMES[monthIndex],
       title: title.trim(),
-      fiscal_year: 2569,
+      fiscal_year: fiscalYearBE(new Date(meetingDate || Date.now())),
       meeting_date: meetingDate,
       meeting_time: meetingTime,
       location,

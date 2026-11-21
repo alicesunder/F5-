@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { Pagination } from '../components/common/Pagination';
 import { ConfirmModal } from '../components/common/ConfirmModal';
+import { fiscalYearBE, toThaiDigits } from '../lib/fiscalYear';
 
 const BUDGET_CATEGORIES: BudgetCategory[] = [
   'งบบุคลากร',
@@ -64,7 +65,7 @@ export const BudgetPage: React.FC = () => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // Form State
-  const [formFiscalYear, setFormFiscalYear] = useState<number>(2569);
+  const [formFiscalYear, setFormFiscalYear] = useState<number>(fiscalYearBE());
   const [formCategory, setFormCategory] = useState<BudgetCategory>('งบดำเนินงาน');
   const [formProjectName, setFormProjectName] = useState('');
   const [formAllocated, setFormAllocated] = useState<number>(0);
@@ -114,7 +115,7 @@ export const BudgetPage: React.FC = () => {
   // Open Add
   const handleOpenAdd = () => {
     setEditingItem(null);
-    setFormFiscalYear(2569);
+    setFormFiscalYear(fiscalYearBE());
     setFormCategory('งบดำเนินงาน');
     setFormProjectName('');
     setFormAllocated(0);
@@ -192,7 +193,7 @@ export const BudgetPage: React.FC = () => {
               01 // TOTAL FISCAL ALLOCATION
             </div>
             <div className="text-[13px] text-[rgba(17,19,21,0.6)]">
-              งบประมาณจัดสรรรวม (ปี 2569)
+              งบประมาณจัดสรรรวม (ปี {fiscalYearBE()})
             </div>
             <div className="text-3xl sm:text-4xl font-light tracking-tight text-[#111315] font-mono mt-1">
               {formatCurrency(kpis.totalBudget)}

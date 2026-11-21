@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { Pagination } from '../components/common/Pagination';
 import { ConfirmModal } from '../components/common/ConfirmModal';
+import { fiscalYearBE, toThaiDigits } from '../lib/fiscalYear';
 
 const VEHICLE_TYPES: VehicleType[] = [
   'รถตู้ส่วนกลาง',
@@ -319,7 +320,7 @@ export const TravelPage: React.FC = () => {
             <div className="text-[12px] text-[rgba(17,19,21,0.6)]">ภารกิจไปราชการทั้งหมด</div>
             <div className="text-3xl font-light font-mono text-[#111315] mt-1">{travelRecords.length}</div>
           </div>
-          <div className="text-[10px] font-mono text-[rgba(17,19,21,0.45)] mt-3">ปีงบประมาณ ๒๕๖๙</div>
+          <div className="text-[10px] font-mono text-[rgba(17,19,21,0.45)] mt-3">ปีงบประมาณ {toThaiDigits(fiscalYearBE())}</div>
         </div>
 
         <div className="glass rounded-[22px] p-5 flex flex-col justify-between">

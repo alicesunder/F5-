@@ -23,6 +23,7 @@ import {
 import { formatThaiDate } from '../utils/formatters';
 import { MeetingDetailModal } from '../components/meetings/MeetingDetailModal';
 import { NewMeetingModal } from '../components/meetings/NewMeetingModal';
+import { fiscalYearBE, toThaiDigits } from '../lib/fiscalYear';
 
 export const MonthlyMeetingsPage: React.FC = () => {
   const { meetings, deleteMeeting } = useAdmin();
@@ -128,7 +129,7 @@ export const MonthlyMeetingsPage: React.FC = () => {
             <div className="text-[12px] text-[rgba(17,19,21,0.6)]">การประชุมทั้งหมด</div>
             <div className="text-3xl font-light font-mono text-[#111315] mt-1">{stats.total}</div>
           </div>
-          <div className="text-[10px] font-mono text-[rgba(17,19,21,0.45)] mt-3">ประจำปีงบประมาณ ๒๕๖๙</div>
+          <div className="text-[10px] font-mono text-[rgba(17,19,21,0.45)] mt-3">ประจำปีงบประมาณ {toThaiDigits(fiscalYearBE())}</div>
         </div>
 
         <div className="glass rounded-[22px] p-5 flex flex-col justify-between">

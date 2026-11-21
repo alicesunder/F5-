@@ -157,21 +157,29 @@ export const DisasterReports: React.FC<DisasterReportsProps> = ({
             ศูนย์อำนวยการและประสานงานสาธารณภัย (ศปภ.) กรมป้องกันและบรรเทาสาธารณภัย
           </p>
           <p className="text-[11px] text-slate-500 font-mono">
-            ฉบับที่ {reportPeriod === 'daily' ? '128/2569' : '18/2569'} ประจำวันที่ {todayFormatted}
+            ฉบับที่ ........../.......... ประจำวันที่ {todayFormatted}
           </p>
         </div>
 
-        {/* Section 1: Executive Summary */}
+        {/* Section 1: Executive Summary — ใช้ตัวเลขจากข้อมูลจริงในระบบเท่านั้น */}
         <div className="space-y-3">
           <h4 className="text-sm font-bold text-slate-900 border-b border-slate-200 pb-1.5">
             1. สรุปภาพรวมสถานการณ์ (Executive Summary)
           </h4>
-          <p className="text-xs text-slate-700 leading-relaxed indent-6">
-            ตามที่ได้เกิดสถานการณ์ร่องมรสุมพาดผ่านภาคเหนือและภาคตะวันออกเฉียงเหนือตอนบน ส่งผลให้เกิดฝนตกหนักสะสมในพื้นที่จังหวัดเชียงราย น่าน สุโขทัย และอุบลราชธานี ระหว่างวันที่ 8-10 กันยายน 2569 มีพื้นที่ได้รับผลกระทบรวมทั้งสิ้น{' '}
-            <strong className="text-slate-900">{stats.totalIncidents} เหตุการณ์</strong> ใน 4 จังหวัด 5 อำเภอ รวมทั้งสิ้น{' '}
-            <strong className="text-slate-900">{stats.affectedHouseholdsTotal.toLocaleString()} ครัวเรือน</strong> ราษฎรได้รับความเดือดร้อน{' '}
-            <strong className="text-slate-900">{stats.affectedPeopleTotal.toLocaleString()} คน</strong> ผู้บาดเจ็บ 4 ราย ไม่มีผู้สูญหายหรือเสียชีวิต
-          </p>
+          {incidents.length === 0 ? (
+            <p className="text-xs text-slate-500 leading-relaxed indent-6">
+              ยังไม่มีเหตุการณ์สาธารณภัยที่บันทึกในระบบ จึงยังไม่มีข้อมูลสรุป
+            </p>
+          ) : (
+            <p className="text-xs text-slate-700 leading-relaxed indent-6">
+              ขณะนี้มีเหตุการณ์ที่บันทึกในระบบรวม{' '}
+              <strong className="text-slate-900">{stats.totalIncidents} เหตุการณ์</strong> ใน{' '}
+              <strong className="text-slate-900">{new Set(incidents.map(i => i.province)).size} จังหวัด {new Set(incidents.map(i => `${i.province}/${i.district}`)).size} อำเภอ</strong> ครัวเรือนที่ได้รับผลกระทบรวม{' '}
+              <strong className="text-slate-900">{stats.affectedHouseholdsTotal.toLocaleString()} ครัวเรือน</strong> ราษฎรได้รับความเดือดร้อน{' '}
+              <strong className="text-slate-900">{stats.affectedPeopleTotal.toLocaleString()} คน</strong>
+              {' '}(ข้อมูลผู้บาดเจ็บ ผู้สูญหาย และผู้เสียชีวิต: ให้เจ้าหน้าที่ตรวจสอบและกรอกก่อนเสนอ)
+            </p>
+          )}
         </div>
 
         {/* Section 2: Key Metric Tables */}
@@ -224,17 +232,16 @@ export const DisasterReports: React.FC<DisasterReportsProps> = ({
           </div>
         </div>
 
-        {/* Section 3: Mobilization & Resources */}
+        {/* Section 3: ให้เจ้าหน้าที่กรอกเอง (ระบบยังไม่มีข้อมูลส่วนนี้ จึงไม่แสดงตัวเลขสมมติ) */}
         <div className="space-y-3">
           <h4 className="text-sm font-bold text-slate-900 border-b border-slate-200 pb-1.5">
             3. การระดมกำลังพลและยุทโธปกรณ์สนับสนุน
           </h4>
-          <ul className="text-xs text-slate-700 space-y-1.5 list-disc list-inside">
-            <li>จัดตั้งศูนย์พักพิงชั่วคราว ณ เทศบาลตำบลเวียงพางคำ และ โรงเรียนบ้านห้วยขาบ รวม 2 แห่ง รองรับประชาชน 385 คน</li>
-            <li>สนับสนุนเรือท้องแบนติดเครื่องยนต์กู้ภัย 16 ลำ และรถยกสูงเคลื่อนย้ายผู้ประสบภัย 8 คัน</li>
-            <li>ติดตั้งเครื่องสูบน้ำขนาดใหญ่ระบายน้ำลงสู่ทุ่งรับน้ำบางระกำและแม่น้ำมูล รวม 18 เครื่อง</li>
-            <li>แจกจ่ายถุงยังชีพพระราชทานและน้ำดื่มสะอาดแล้ว 1,500 ชุด</li>
-          </ul>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            ........................................................................................................
+            <br />
+            (กรอกรายละเอียดศูนย์พักพิง กำลังพล เครื่องมือ และสิ่งของที่แจกจ่าย จากรายงานของหน่วยปฏิบัติ)
+          </p>
         </div>
 
         {/* Signatures */}
@@ -242,12 +249,12 @@ export const DisasterReports: React.FC<DisasterReportsProps> = ({
           <div className="space-y-1">
             <div className="h-10" />
             <p className="font-semibold text-slate-900">(...................................)</p>
-            <p className="text-slate-500">หัวหน้าฝ่ายปฏิบัติการส่วนหน้า</p>
+            <p className="text-slate-500">ผู้จัดทำรายงาน</p>
           </div>
           <div className="space-y-1">
             <div className="h-10" />
-            <p className="font-semibold text-slate-900">(นายวิโรจน์ ธนกิจจา)</p>
-            <p className="text-slate-500">ผู้อำนวยการศูนย์ป้องกันและบรรเทาสาธารณภัย</p>
+            <p className="font-semibold text-slate-900">(...................................)</p>
+            <p className="text-slate-500">ผู้บังคับบัญชา / ผู้อนุมัติ</p>
           </div>
         </div>
       </div>

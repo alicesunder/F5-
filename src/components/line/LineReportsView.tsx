@@ -181,9 +181,7 @@ export const LineReportsView: React.FC<Props> = ({ dept }) => {
             <MessageSquareText className="w-6 h-6 text-white" />
           </motion.div>
           <div className="min-w-0 flex-1">
-            <h2 className="text-xl sm:text-2xl font-black leading-tight" style={{ color: '#fff' }}>
-              รายงานจาก LINE{dept ? ` · ${LINE_DEPT_META[dept].label}` : ''}
-            </h2>
+            {React.createElement(dept ? 'h2' : 'h1', { className: 'text-xl sm:text-2xl font-black leading-tight', style: { color: '#fff' } }, `รายงานจาก LINE${dept ? ` · ${LINE_DEPT_META[dept].label}` : ''}`)}
             <p className="text-xs sm:text-sm" style={{ color: '#D1FAE5' }}>
               เฉพาะข้อความที่เป็นเรื่องงาน · ระบบกรองข้อความคุยเล่นออกให้อัตโนมัติ และจัดเข้าแผนกให้
             </p>
