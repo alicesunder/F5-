@@ -189,6 +189,234 @@ const conscience = () => ['กก.ตชด.11', 'กก.ตชด.12', 'กก.
 const volRegistry = () =>
   Array.from({ length: 10 }, (_, i) => ({ id: `demo-vr-${i}`, kind: i % 2 ? 'course904' : 'applicant', rank: pick(['ด.ต.', 'ส.ต.อ.', 'ร.ต.ท.'], i), name: `รายชื่อ ตัวอย่าง ${pad(i + 1)}`, unit: pick(UNITS, i), course: i % 2 ? `รุ่นตัวอย่าง ${i}` : '', date: iso(day(-i * 9)), note: '', createdAt: stamp() }));
 
+
+// ---------- หน้าหลักภาพรวม / ภารกิจรวม / งานด่วน ----------
+const DEPTS = ['admin', 'relations', 'disaster', 'volunteer'] as const;
+const dashMissions = () =>
+  Array.from({ length: 10 }, (_, i) => ({
+    id: `demo-dm-${i}`,
+    missionCode: `M-2570-${300 + i}`,
+    title: `${pick(['ประชุมคณะกรรมการ', 'ถ่ายภาพกิจกรรมโครงการ', 'ช่วยเหลือผู้ประสบอุทกภัย', 'จิตอาสาพัฒนาชุมชน', 'ตรวจเยี่ยมหน่วย', 'บริจาคโลหิต'], i)} (ตัวอย่าง)`,
+    primaryDepartment: pick(DEPTS, i),
+    supportingDepartments: [pick(DEPTS, i + 1)],
+    date: iso(day(i * 2 - 6)),
+    time: '09:00 - 16:00',
+    location: 'สถานที่ตัวอย่าง',
+    province: pick(PROVINCES, i),
+    responsibleOfficer: 'ผู้รับผิดชอบ ตัวอย่าง',
+    targetUnit: pick(UNITS, i),
+    participantsCount: 15 + i * 5,
+    attire: 'เครื่องแบบสนาม',
+    status: pick(['สร้าง', 'มอบหมาย', 'รับทราบ', 'ดำเนินการ', 'ส่งผล', 'ตรวจ', 'ปิดภารกิจ'] as const, i),
+    description: 'ภารกิจตัวอย่างเพื่อแสดงหน้าจอ',
+    deadlineDate: iso(day(i * 2 - 4)),
+    hasReport: i % 3 === 0,
+    reportStatus: i % 3 === 0 ? pick(['ส่งแล้ว', 'รอตรวจ', 'ผ่าน'] as const, i) : undefined,
+    imagesCount: i % 4,
+    documentsCount: i % 3,
+  }));
+
+const dashReports = () =>
+  Array.from({ length: 5 }, (_, i) => ({
+    id: `demo-dr-${i}`,
+    reportCode: `R-2570-${50 + i}`,
+    missionId: `demo-dm-${i * 2}`,
+    missionTitle: `ภารกิจตัวอย่าง ${i + 1}`,
+    departmentKey: pick(DEPTS, i),
+    submittingUnit: pick(UNITS, i),
+    submittedBy: 'ผู้ส่ง ตัวอย่าง',
+    submittedDate: iso(day(-i)),
+    operationalResult: 'ผลการปฏิบัติตัวอย่าง',
+    personnelCount: 20 + i * 4,
+    beneficiariesCount: 100 + i * 60,
+    locationDetails: 'พื้นที่ตัวอย่าง',
+    problemsObstacles: '-',
+    solutionsDone: '-',
+    status: pick(['ส่งแล้ว', 'รอตรวจ', 'ผ่าน', 'ขอแก้ไข', 'ส่งแล้ว'] as const, i),
+    images: [],
+    attachedDocs: [],
+  }));
+
+const dashTasks = () =>
+  Array.from({ length: 8 }, (_, i) => ({
+    id: `demo-dt-${i}`,
+    title: `${pick(['ตรวจสอบรายงานจากหน่วย', 'ติดตามหนังสือเร่งด่วน', 'ส่งรายงานประจำสัปดาห์', 'อนุมัติแผนปฏิบัติงาน'], i)} (ตัวอย่าง)`,
+    sourceModule: pick(['mission', 'report', 'document', 'approval'] as const, i),
+    departmentKey: pick(DEPTS, i),
+    urgency: pick(['ปกติ', 'ภายใน 7 วัน', 'เร่งด่วน', 'เกินกำหนด'] as const, i),
+    responsibleOfficer: 'ผู้รับผิดชอบ ตัวอย่าง',
+    targetUnit: pick(UNITS, i),
+    deadlineDate: iso(day(i - 2)),
+    status: pick(['รอดำเนินการ', 'กำลังดำเนินการ', 'รอตรวจ'] as const, i),
+    actionUrlModule: 'dashboard',
+  }));
+
+const adminMissions = () =>
+  Array.from({ length: 5 }, (_, i) => ({
+    id: `demo-am-${i}`,
+    missionCode: `MS-2570-${40 + i}`,
+    missionName: `ภารกิจกำลังพลตัวอย่าง ${i + 1}`,
+    unitId: pick(UNITS, i),
+    unitName: pick(UNITS, i),
+    startDate: iso(day(i - 3)),
+    endDate: iso(day(i)),
+    location: 'สถานที่ตัวอย่าง',
+    province: pick(PROVINCES, i),
+    objective: 'วัตถุประสงค์ตัวอย่าง',
+    commanderId: '',
+    personnelIds: [],
+    status: pick(['กำลังดำเนินการ', 'วางแผน', 'เสร็จสิ้น', 'รอดำเนินการ'], i),
+    createdAt: stamp(),
+  }));
+
+const volReports = () =>
+  Array.from({ length: 4 }, (_, i) => ({
+    id: `demo-vrp-${i}`,
+    missionId: `demo-vm-${i}`,
+    missionCode: `V-2570-${900 + i}`,
+    missionTitle: `ภารกิจจิตอาสาตัวอย่าง ${i + 1}`,
+    unitId: pick(UNITS, i),
+    unitName: pick(UNITS, i),
+    reporterName: 'ผู้รายงาน ตัวอย่าง',
+    reporterRank: 'ร.ต.อ.',
+    reporterPosition: 'ผู้ประสานงาน',
+    reporterPhone: '08 0000 0000',
+    submittedAt: `${thai(day(-i))} 16:45 น.`,
+    rawSubmittedAt: day(-i).toISOString(),
+    outcomeSummary: 'สรุปผลตัวอย่าง',
+    actualPersonnelCount: 30 + i * 5,
+    participantBeneficiariesCount: 200 + i * 80,
+    location: 'สถานที่ตัวอย่าง',
+    executionTime: '08:30 - 16:30',
+    keyAchievements: ['ผลงานตัวอย่าง'],
+    problemsAndObstacles: [],
+    photos: [],
+    documents: [],
+    status: pick(['SUBMITTED', 'PENDING_REVIEW', 'APPROVED', 'NOT_SUBMITTED'], i),
+  }));
+
+const notifications = () =>
+  Array.from({ length: 4 }, (_, i) => ({
+    id: `demo-nt-${i}`,
+    title: pick(['หนังสือรับใหม่', 'งานใกล้ครบกำหนด', 'รายงานรอตรวจ', 'เหตุการณ์ใหม่'], i) + ' (ตัวอย่าง)',
+    message: 'ข้อความแจ้งเตือนตัวอย่าง',
+    type: pick(['urgent', 'warning', 'info', 'success'] as const, i),
+    module: pick(['incoming', 'mission', 'document', 'mission'], i),
+    time: `${i * 12 + 5} นาทีที่แล้ว`,
+    isRead: i > 1,
+  }));
+
+const activityLogs = () =>
+  Array.from({ length: 6 }, (_, i) => ({
+    id: `demo-al-${i}`,
+    time: `${pad(8 + i)}:${pad(i * 7)}`,
+    date: iso(day(-Math.floor(i / 2))),
+    actor: 'ผู้ใช้ ตัวอย่าง',
+    action: pick(['ลงรับหนังสือ', 'บันทึกเวร', 'ส่งรายงาน', 'แก้ไขข้อมูล'], i),
+    module: pick(['หนังสือรับ', 'ระบบ', 'เอกสาร'], i),
+    details: 'รายการตัวอย่าง',
+    type: pick(['create', 'update', 'status'], i),
+  }));
+
+
+// ---------- ปฏิทินภารกิจ ฝอ.5 ----------
+const schedMissions = () =>
+  Array.from({ length: 12 }, (_, i) => {
+    const d = day(i * 2 - 8);
+    return {
+      id: `demo-sm-${i}`,
+      date: thai(d),
+      rawDate: iso(d),
+      dayNumber: d.getDate(),
+      monthYear: `${['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'][d.getMonth()]} ${d.getFullYear() + 543}`,
+      time: '09.00-16.00 น.',
+      title: `${pick(['พิธีถวายพระพร', 'ประชุมบริหาร บช.ตชด.', 'กิจกรรมจิตอาสาพัฒนา', 'ตรวจเยี่ยมหน่วย', 'แถลงข่าวโครงการ', 'บริจาคโลหิต'], i)} (ตัวอย่าง)`,
+      location: 'สถานที่ตัวอย่าง',
+      attendees: 'ผู้เข้าร่วมตัวอย่าง',
+      uniform: 'เครื่องแบบปกติขาว',
+      responsible: pick(['อก.', 'จอส.', 'มชส.', 'พชช.'], i),
+      category: pick(['อำนวยการ', 'จิตอาสา', 'มวลชนสัมพันธ์', 'สาธารณภัย', 'พิธีการ'] as const, i),
+      status: pick(['รอดำเนินการ', 'อยู่ระหว่างดำเนินการ', 'ดำเนินการแล้ว'] as const, i),
+      remarks: '',
+      createdAt: stamp(),
+    };
+  });
+
+// ---------- ศูนย์ปฏิบัติการ PR ----------
+const prPages = () =>
+  ['เพจ ตชด. (ตัวอย่าง)', 'เพจข่าวชายแดน (ตัวอย่าง)', 'เพจจิตอาสา (ตัวอย่าง)'].map((name, i) => ({
+    id: `demo-pg-${i}`,
+    name,
+    handle: `@demo${i}`,
+    category: 'หน่วยงานรัฐ',
+    avatar: '',
+    followers: 120000 + i * 45000,
+    postsToday: 3 + i,
+    bppPostsToday: 2 + i,
+    latestPostMinutesAgo: 20 + i * 15,
+    engagement: 4200 + i * 900,
+    averageEngagement: 3800 + i * 600,
+    status: 'monitoring',
+    verified: true,
+    history7Days: Array.from({ length: 7 }, (_, k) => ({ day: `วัน ${k + 1}`, totalPosts: 2 + (k % 4), bppPosts: 1 + (k % 3), engagement: 2000 + k * 300 + i * 200 })),
+    sentimentBreakdown: { positive: 70, neutral: 25, negative: 5 },
+  }));
+
+const prPosts = () =>
+  Array.from({ length: 8 }, (_, i) => ({
+    id: `demo-ps-${i}`,
+    pageId: `demo-pg-${i % 3}`,
+    pageName: `เพจตัวอย่าง ${(i % 3) + 1}`,
+    pageAvatar: '',
+    isVerified: true,
+    timestamp: day(-Math.floor(i / 3)).toISOString(),
+    minutesAgo: 30 + i * 90,
+    content: `โพสต์ตัวอย่าง: ${pick(['กิจกรรมจิตอาสาพัฒนาชุมชน', 'ช่วยเหลือผู้ประสบภัย', 'ครู ตชด. สอนนักเรียน', 'โครงการสร้างจิตสำนึก'], i)} (ข้อความตัวอย่าง)`,
+    keywords: ['ตชด.'],
+    category: pick(['จิตอาสา/ช่วยเหลือ', 'ภัยพิบัติ', 'การศึกษา/ครู ตชด.', 'กิจกรรมองค์กร'] as const, i),
+    sentiment: pick(['positive', 'neutral', 'positive'] as const, i),
+    engagement: { likes: 800 + i * 210, comments: 40 + i * 9, shares: 60 + i * 14 },
+    isImportant: i % 3 === 0,
+    bppRelated: true,
+    sourceUrl: '#',
+    reachEstimate: 12000 + i * 3000,
+  }));
+
+const prMissions = () =>
+  Array.from({ length: 5 }, (_, i) => ({
+    id: `demo-ph-${i}`,
+    title: `ภารกิจภาพถ่ายตัวอย่าง ${i + 1}`,
+    description: 'ถ่ายภาพกิจกรรมตามร้องขอ (ตัวอย่าง)',
+    date: iso(day(i - 2)),
+    displayDate: thai(day(i - 2)),
+    startTime: '09:00',
+    endTime: '12:00',
+    location: 'สถานที่ตัวอย่าง',
+    province: pick(PROVINCES, i),
+    personnelId: 'demo',
+    personnelName: 'ช่างภาพ ตัวอย่าง',
+    personnelRank: 'ส.ต.อ.',
+    teamCount: 2,
+    category: pick(['จิตอาสาพระราชทาน', 'ตรวจเยี่ยมหน่วย', 'แถลงข่าวและประชาสัมพันธ์', 'ช่วยเหลือผู้ประสบภัย'] as const, i),
+    priority: pick(['urgent', 'high', 'medium', 'low'] as const, i),
+    status: pick(['pending', 'in_progress', 'completed'] as const, i),
+    deliverablesRequired: 20,
+    deliverablesDelivered: (i * 6) % 21,
+    deliverablesPhotos: [],
+    timeline: [],
+  }));
+
+const prAlerts = () =>
+  Array.from({ length: 4 }, (_, i) => ({
+    id: `demo-pa-${i}`,
+    title: `แจ้งเตือนตัวอย่าง ${i + 1}`,
+    message: 'ข้อความแจ้งเตือนตัวอย่าง',
+    severity: pick(['critical', 'high', 'medium', 'info'] as const, i),
+    timestamp: day(-i).toISOString(),
+    minutesAgo: 15 + i * 40,
+    read: i > 1,
+  }));
+
 /** ชื่อ collection -> ตัวสร้างข้อมูลจำลอง (collection ที่ไม่อยู่ในรายการนี้ใช้ข้อมูลจริงแบบอ่านอย่างเดียว) */
 export const DEMO: Record<string, () => object[]> = {
   'admin.incoming_register': incoming,
@@ -204,6 +432,18 @@ export const DEMO: Record<string, () => object[]> = {
   'dev.awards': devAwards,
   'pr.conscience_2570': conscience,
   'vol.registry': volRegistry,
+  'dashboard.missions': dashMissions,
+  'dashboard.reports': dashReports,
+  'dashboard.tasks': dashTasks,
+  'admin.missions': adminMissions,
+  'volunteer.reports': volReports,
+  'admin.notifications': notifications,
+  'admin.activity_logs': activityLogs,
+  'schedule.missions': schedMissions,
+  'pr.pages': prPages,
+  'pr.posts': prPosts,
+  'pr.missions': prMissions,
+  'pr.alerts': prAlerts,
 };
 
 // ---------- รายงานจาก LINE ----------
