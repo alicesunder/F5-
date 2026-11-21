@@ -1,3 +1,4 @@
+import { flushSync } from 'react-dom';
 import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
@@ -115,6 +116,44 @@ const DEFAULT_SETTINGS: SystemSettingsState = {
 const INITIAL_AUDIT_LOGS: SettingsAuditItem[] = [];
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+/** ตำแหน่งที่ผู้ใช้กดล่าสุด (ใช้เป็นจุดกำเนิดของวงกลมเปลี่ยนธีม) */
+let lastPointer = { x: typeof window === 'undefined' ? 0 : window.innerWidth - 120, y: 40 };
+if (typeof window !== 'undefined') {
+  window.addEventListener('pointerdown', e => (lastPointer = { x: e.clientX, y: e.clientY }), { capture: true, passive: true });
+}
+
+export const THEME_FX_EVENT = 'fo5:theme-fx';
+
+function runThemeTransition(to: 'light' | 'dark', change: () => void) {
+  const root = document.documentElement;
+  const { x, y } = lastPointer;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const start = (document as Document & { startViewTransition?: (cb: () => void) => { ready: Promise<void> } }).startViewTransition;
+  window.dispatchEvent(new CustomEvent(THEME_FX_EVENT, { detail: { to, x, y } }));
+  if (reduce || !start) {
+    change();
+    return;
+  }
+  root.dataset.themeFx = to;
+  const vt = start.call(document, () => {
+    root.classList.toggle('dark', to === 'dark');
+    root.classList.toggle('light', to === 'light');
+    change();
+  });
+  const r = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+  vt.ready
+    .then(() => {
+      root.animate(
+        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
+        { duration: 900, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', pseudoElement: '::view-transition-new(root)' },
+      );
+    })
+    .catch(() => undefined);
+  (vt as unknown as { finished?: Promise<void> }).finished?.finally(() => {
+    delete root.dataset.themeFx;
+  });
+}
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Load initial theme from localStorage
@@ -267,7 +306,15 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Update theme function
   const setTheme = (mode: ThemeMode) => {
-    setThemeState(mode);
+    const next: 'light' | 'dark' = mode === 'system' ? (systemPrefersDark ? 'dark' : 'light') : mode;
+    if (next !== resolvedTheme) {
+      // เปลี่ยนสว่าง↔มืด: เผยธีมใหม่เป็นวงกลมขยายออกจากจุดที่กด (View Transitions) + ส่งสัญญาณให้เอฟเฟกต์ดาว/ประกาย
+      runThemeTransition(next, () => {
+        flushSync(() => setThemeState(mode));
+      });
+    } else {
+      setThemeState(mode);
+    }
     setSettings(prev => ({ ...prev, theme: mode }));
     setSaveStatus('saving');
     setTimeout(() => setSaveStatus('saved'), 350);

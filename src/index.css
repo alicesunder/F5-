@@ -1113,3 +1113,23 @@ html.dark .lg-prism-sm, [data-theme="dark"] .lg-prism-sm { opacity: 0.1; }
 /* เมนูข้าง: ซ่อนแถบเลื่อนจริง ๆ เพื่อให้แถบฝ่ายที่เลือกยื่นไปชนขอบและต่อกับหน้าเนื้อหาได้ */
 .fo5-sidebar-scroll { scrollbar-width: none; }
 .fo5-sidebar-scroll::-webkit-scrollbar { display: none; width: 0 !important; }
+
+/* ===== เปลี่ยนธีมแบบวงกลมเผยออกจากจุดที่กด (View Transitions) ===== */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) { z-index: 2; }
+
+/* ดาวระยิบระยับเบื้องหลัง (เห็นเฉพาะโหมดมืด) */
+.fo5-stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0; transition: opacity 1.2s ease; }
+html.dark .fo5-stars, [data-theme="dark"] .fo5-stars { opacity: 1; }
+.fo5-stars i {
+  position: absolute; border-radius: 9999px; background: #fff;
+  box-shadow: 0 0 6px 1px rgba(180, 200, 255, 0.8);
+  animation: fo5-twinkle 3.4s ease-in-out infinite;
+}
+@keyframes fo5-twinkle { 0%, 100% { opacity: 0.15; transform: scale(0.7); } 50% { opacity: 1; transform: scale(1.15); } }
+@media (prefers-reduced-motion: reduce) { .fo5-stars i { animation: none; opacity: 0.5; } }

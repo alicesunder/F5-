@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { DarkAmbience } from '../components/layout/DarkAmbience';
 import { useDemoMode, setDemoMode } from '../lib/demoMode';
 import { AnimatePresence, motion } from 'motion/react';
 import { useAdmin } from '../contexts/AdminContext';
@@ -92,6 +93,8 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
           boxShadow: `0 0 22px 3px ${deptColor ?? '#8B46C8'}66`,
         }}
       />
+
+      <DarkAmbience />
 
       {/* Global Unified Sidebar (Left) */}
       <GlobalSidebar
