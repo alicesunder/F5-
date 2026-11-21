@@ -122,6 +122,21 @@ if (typeof window !== 'undefined') {
   window.addEventListener('pointerdown', e => (lastPointer = { x: e.clientX, y: e.clientY }), { capture: true, passive: true });
 }
 
+/** ตั้ง class/แอตทริบิวต์ของธีมบน html และ body ในที่เดียว (ใช้ทั้งตอนเริ่มและตอนสลับ เพื่อไม่ให้ body เปลี่ยนช้ากว่า html แล้วกะพริบ) */
+function applyThemeDom(mode: 'light' | 'dark') {
+  const root = document.documentElement;
+  const dark = mode === 'dark';
+  root.classList.toggle('dark', dark);
+  root.classList.toggle('light', !dark);
+  root.setAttribute('data-theme', mode);
+  root.style.colorScheme = mode;
+  if (document.body) {
+    document.body.classList.toggle('dark', dark);
+    document.body.classList.toggle('light', !dark);
+    document.body.setAttribute('data-theme', mode);
+  }
+}
+
 export const THEME_FX_EVENT = 'fo5:theme-fx';
 /** ความยาวของอนิเมชั่นสลับธีม (ms) ใช้ร่วมกับวงแสง/ดาวใน DarkAmbience */
 export const THEME_FX_MS = 1150;
@@ -142,10 +157,7 @@ function runThemeTransition(to: 'light' | 'dark', change: () => void) {
   root.style.setProperty('--fx-x', `${x}px`);
   root.style.setProperty('--fx-y', `${y}px`);
   // ในจังหวะถ่ายภาพ: สลับแค่ class (เร็วมาก) แล้วค่อยอัปเดต React หลังเริ่มเล่นอนิเมชั่น เพื่อไม่ให้สะดุด
-  const vt = start.call(document, () => {
-    root.classList.toggle('dark', to === 'dark');
-    root.classList.toggle('light', to === 'light');
-  });
+  const vt = start.call(document, () => applyThemeDom(to));
   vt.ready
     .then(() => {
       window.setTimeout(change, 60);
@@ -246,28 +258,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (typeof document === 'undefined') return;
     const root = document.documentElement;
 
-    // Apply dark/light class, data-theme, and colorScheme strictly
-    if (resolvedTheme === 'dark') {
-      root.classList.add('dark');
-      root.classList.remove('light');
-      root.setAttribute('data-theme', 'dark');
-      root.style.colorScheme = 'dark';
-      if (document.body) {
-        document.body.classList.add('dark');
-        document.body.classList.remove('light');
-        document.body.setAttribute('data-theme', 'dark');
-      }
-    } else {
-      root.classList.remove('dark');
-      root.classList.add('light');
-      root.setAttribute('data-theme', 'light');
-      root.style.colorScheme = 'light';
-      if (document.body) {
-        document.body.classList.remove('dark');
-        document.body.classList.add('light');
-        document.body.setAttribute('data-theme', 'light');
-      }
-    }
+    applyThemeDom(resolvedTheme);
 
     // Apply density dataset
     root.setAttribute('data-density', settings.density);

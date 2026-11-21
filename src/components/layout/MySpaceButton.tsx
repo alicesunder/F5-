@@ -107,7 +107,7 @@ export const MySpaceButton: React.FC<{ active: boolean; onOpen: () => void }> = 
           <span className="absolute -right-0.5 -bottom-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-white" />
         </div>
         <div className="min-w-0">
-          <div className="font-extrabold truncate leading-tight">ฉัน (MY SPACE)</div>
+          <div className="font-bpp text-[13px] font-extrabold truncate leading-tight">ฉัน (MY SPACE)</div>
           <div className={`text-[10px] truncate mt-0.5 ${active ? 'text-sky-100' : 'text-sky-700 dark:text-sky-300 font-medium'}`}>
             ข้อมูลส่วนตัว · เงินเดือน · งาน
           </div>

@@ -693,8 +693,8 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
                           ภารกิจทั้งหมด
                         </span>
                         <strong
-                          className="text-base font-mono tabular-nums font-black"
-                          style={{ color: dept.color }}
+                          className="dept-ink text-base font-mono tabular-nums font-black"
+                          style={{ '--c': dept.color } as React.CSSProperties}
                         >
                           {dept.missionCount} งาน
                         </strong>

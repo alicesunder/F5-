@@ -193,7 +193,7 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
                 </div>
               </div>
               <div className="min-w-0">
-                <div className="text-sm font-extrabold tracking-tight bg-gradient-to-r from-[#5B2A86] via-[#2583D8] to-[#42A77A] bg-clip-text text-transparent dark:from-purple-300 dark:via-sky-300 dark:to-emerald-300 leading-tight">
+                <div className="font-bpp text-sm whitespace-nowrap font-extrabold tracking-tight bg-gradient-to-r from-[#5B2A86] via-[#2583D8] to-[#42A77A] bg-clip-text text-transparent dark:from-purple-300 dark:via-sky-300 dark:to-emerald-300 leading-tight">
                   ฝอ.5 COMMAND STUDIO
                 </div>
                 <div className="text-[11px] text-slate-500 dark:text-[#8E96A4] font-medium mt-0.5 truncate">
@@ -243,7 +243,7 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
                     <Home className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <span className="truncate block">หน้าหลักภาพรวม</span>
+                    <span className="font-bpp truncate block text-[13px]">หน้าหลักภาพรวม</span>
                     <span
                       className={`text-[10px] block truncate ${
                         activeModule === 'dashboard'
@@ -333,7 +333,7 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
                             <Icon className="w-4 h-4" />
                           </div>
                           <div className="min-w-0">
-                            <span className={`block truncate leading-tight ${isActive ? 'font-extrabold text-white' : 'font-bold text-slate-800 dark:text-slate-100'}`}>
+                            <span className={`font-bpp text-[13px] block truncate leading-tight ${isActive ? 'font-extrabold text-white' : 'font-bold text-slate-800 dark:text-slate-100'}`}>
                               {item.label}
                             </span>
                             <span className={`block text-[10px] truncate mt-0.5 ${isActive ? 'text-white/85' : 'text-slate-500 dark:text-slate-400'}`}>

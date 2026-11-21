@@ -65,7 +65,7 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
           className="absolute bottom-[5%] left-[28%] w-[480px] h-[480px] rounded-full opacity-30 dark:opacity-15 blur-[120px] transition-all duration-700"
           style={{
             background:
-              'radial-gradient(circle, rgba(232,155,34,0.35) 0%, rgba(66,167,122,0.22) 55%, transparent 75%)',
+              'radial-gradient(circle, rgba(99,102,241,0.26) 0%, rgba(56,189,248,0.16) 55%, transparent 75%)',
           }}
         />
       </div>

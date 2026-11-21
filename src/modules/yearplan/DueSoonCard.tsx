@@ -44,7 +44,7 @@ export const DueSoonCard: React.FC = () => {
             const c = d === 'all' ? '#334155' : DEPT_THEME[d].color;
             const n = d === 'all' ? pending.length : pending.filter(o => o.item.dept === d).length;
             return (
-              <button key={d} type="button" onClick={() => setDept(d)} aria-pressed={on} className="shrink-0 rounded-full px-3 py-1 text-xs font-bold cursor-pointer border" style={on ? { background: c, color: '#fff', borderColor: c } : { borderColor: '#E2E8F0', color: c }}>
+              <button key={d} type="button" onClick={() => setDept(d)} aria-pressed={on} className={`shrink-0 rounded-full px-3 py-1 text-xs font-bold cursor-pointer border ${on ? '' : 'dept-ink'}`} style={on ? { background: c, color: '#fff', borderColor: c } : ({ borderColor: '#E2E8F0', '--c': c } as React.CSSProperties)}>
                 {d === 'all' ? 'ทั้งหมด' : SHORT[d]} {n}
               </button>
             );
@@ -61,7 +61,7 @@ export const DueSoonCard: React.FC = () => {
             return (
               <li key={o.key} className="flex items-start gap-3 rounded-2xl border border-slate-200/70 dark:border-white/10 bg-white dark:bg-[#161B26] p-2.5">
                 {o.item.checklist ? (
-                  <button type="button" onClick={() => open(o.item.dept)} className="shrink-0 rounded-xl border-2 px-2 h-8 text-[11px] font-black cursor-pointer" style={{ borderColor: t.color, color: t.color }}>เปิดรายการ</button>
+                  <button type="button" onClick={() => open(o.item.dept)} className="dept-ink shrink-0 rounded-xl border-2 px-2 h-8 text-[11px] font-black cursor-pointer" style={{ borderColor: t.color, '--c': t.color } as React.CSSProperties}>เปิดรายการ</button>
                 ) : (
                   <CheckButton checked={false} color={t.color} onClick={() => toggle(o)} label="ทำแล้ว" />
                 )}
@@ -69,7 +69,7 @@ export const DueSoonCard: React.FC = () => {
                   <div className="text-sm font-bold text-slate-900 dark:text-white leading-snug">{o.item.title}</div>
                   <div className="mt-1 flex flex-wrap items-center gap-1.5">
                     <DueBadge due={o.due} />
-                    <button type="button" onClick={() => open(o.item.dept)} className="text-[11px] font-bold hover:underline cursor-pointer" style={{ color: t.color }} title={DEPT_LABEL[o.item.dept]}>{SHORT[o.item.dept]}</button>
+                    <button type="button" onClick={() => open(o.item.dept)} className="dept-ink text-[11px] font-bold hover:underline cursor-pointer" style={{ '--c': t.color } as React.CSSProperties} title={DEPT_LABEL[o.item.dept]}>{SHORT[o.item.dept]}</button>
                     <span className="text-[11px] text-slate-400">{describeSchedule(o.item)}</span>
                   </div>
                 </div>

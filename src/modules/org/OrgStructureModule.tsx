@@ -50,7 +50,7 @@ const LeadCard: React.FC<{ p: OrgPerson; url?: string; onOpen: (p: OrgPerson) =>
       style={{ borderTop: `4px solid ${m.color}` }}
     >
       <Avatar p={p} url={url} className={`${size === 'lg' ? 'w-32 h-40' : 'w-24 h-[7.5rem]'} rounded-2xl ring-1 ring-slate-200 dark:ring-white/10`} />
-      <div className="mt-2 text-[11px] font-bold" style={{ color: m.color }}>{p.rank}</div>
+      <div className="dept-ink mt-2 text-[11px] font-bold" style={{ '--c': m.color } as React.CSSProperties}>{p.rank}</div>
       <div className="text-sm font-black text-slate-900 dark:text-white leading-tight">{p.name}</div>
       <div className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400 leading-snug line-clamp-2">{p.position}</div>
       <AttachedBadge p={p} />
@@ -85,7 +85,7 @@ const SectionBlock: React.FC<{
   const m = SECTION_META[head.section] ?? SECTION_META.command;
   return (
     <section className="rounded-3xl border p-3 sm:p-4" style={{ background: m.soft, borderColor: `${m.color}33` }} aria-label={m.label}>
-      <h3 className="mb-3 flex items-center justify-between gap-2 text-sm font-black" style={{ color: m.color }}>
+      <h3 className="dept-ink mb-3 flex items-center justify-between gap-2 text-sm font-black" style={{ '--c': m.color } as React.CSSProperties}>
         <span>{m.label}</span>
         <span className="shrink-0 rounded-full bg-white/80 dark:bg-white/10 px-2 py-0.5 text-[11px]">{members.length + 1} นาย</span>
       </h3>
@@ -158,7 +158,7 @@ const PersonDialog: React.FC<{
         {!editing ? (
           <div className="p-5 sm:p-6 flex flex-col items-center text-center">
             <Avatar p={person} url={url} className="w-40 h-52 rounded-3xl ring-1 ring-slate-200 dark:ring-white/10 shadow" />
-            <div className="mt-4 text-xs font-bold" style={{ color: m.color }}>{m.label}</div>
+            <div className="dept-ink mt-4 text-xs font-bold" style={{ '--c': m.color } as React.CSSProperties}>{m.label}</div>
             <div className="mt-1 text-xl font-black text-slate-900 dark:text-white">{fullName(person)}</div>
             <div className="mt-1 text-sm text-slate-600 dark:text-slate-300">{person.position}</div>
             <AttachedBadge p={person} />

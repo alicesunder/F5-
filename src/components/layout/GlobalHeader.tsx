@@ -75,7 +75,7 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
               />
             </div>
             <div className="min-w-0">
-              <span className="text-sm sm:text-base font-extrabold bg-gradient-to-r from-[#5B2A86] via-[#1D68B0] to-[#267853] dark:from-purple-200 dark:via-sky-200 dark:to-emerald-200 bg-clip-text text-transparent tracking-tight truncate block">
+              <span className="font-bpp text-sm sm:text-base font-extrabold bg-gradient-to-r from-[#5B2A86] via-[#1D68B0] to-[#267853] dark:from-purple-200 dark:via-sky-200 dark:to-emerald-200 bg-clip-text text-transparent tracking-tight truncate block">
                 ศูนย์บริหารและประมวลผลข้อมูล ฝ่ายอำนวยการ 5 (ฝอ.5 บก.อก.บช.ตชด.)
               </span>
             </div>
