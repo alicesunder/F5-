@@ -1,5 +1,4 @@
-import { flushSync } from 'react-dom';
-import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo, startTransition } from 'react';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type DisplayDensity = 'comfortable' | 'standard' | 'compact';
@@ -136,14 +135,15 @@ function runThemeTransition(to: 'light' | 'dark', change: () => void) {
     return;
   }
   root.dataset.themeFx = to;
+  // ในจังหวะถ่ายภาพ: สลับแค่ class (เร็วมาก) แล้วค่อยอัปเดต React หลังเริ่มเล่นอนิเมชั่น เพื่อไม่ให้สะดุด
   const vt = start.call(document, () => {
     root.classList.toggle('dark', to === 'dark');
     root.classList.toggle('light', to === 'light');
-    change();
   });
   const r = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
   vt.ready
     .then(() => {
+      window.setTimeout(change, 60);
       root.animate(
         { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
         { duration: 900, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', pseudoElement: '::view-transition-new(root)' },
@@ -309,9 +309,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const next: 'light' | 'dark' = mode === 'system' ? (systemPrefersDark ? 'dark' : 'light') : mode;
     if (next !== resolvedTheme) {
       // เปลี่ยนสว่าง↔มืด: เผยธีมใหม่เป็นวงกลมขยายออกจากจุดที่กด (View Transitions) + ส่งสัญญาณให้เอฟเฟกต์ดาว/ประกาย
-      runThemeTransition(next, () => {
-        flushSync(() => setThemeState(mode));
-      });
+      runThemeTransition(next, () => startTransition(() => setThemeState(mode)));
     } else {
       setThemeState(mode);
     }

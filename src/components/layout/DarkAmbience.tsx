@@ -9,7 +9,7 @@ import { THEME_FX_EVENT } from '../../contexts/ThemeContext';
 export const DarkAmbience: React.FC = () => {
   const stars = useMemo(
     () =>
-      Array.from({ length: 70 }, (_, i) => {
+      Array.from({ length: 48 }, (_, i) => {
         const seed = (i * 9301 + 49297) % 233280;
         const r = (n: number) => ((seed * (n + 3)) % 1000) / 1000;
         return { x: r(1) * 100, y: r(2) * 100, s: 1 + r(3) * 2, d: r(4) * 4, o: 0.5 + r(5) * 0.5 };
