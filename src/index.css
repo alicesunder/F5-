@@ -1649,3 +1649,36 @@ html.dark [class~="bg-fuchsia-50/95"],html.dark [class~="bg-fuchsia-100/95"],htm
 /* โหมดมืด: ปุ่มกรองที่ใส่สีพื้นอ่อนผ่าน style ตรง ๆ */
 html.dark [style*="background-color: rgb(247, 247, 249)"] { background-color: #1E2433 !important; color: #CBD5E1 !important; }
 html.dark [style*="background: rgb(247, 247, 249)"] { background: #1E2433 !important; color: #CBD5E1 !important; }
+
+/* ===== หน้าโครงสร้าง ฝอ.5: ออโรร่า · การ์ดเอียงตามเมาส์ · วงแหวนแสงหมุน ===== */
+@property --org-a { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes org-drift-a { 0% { transform: translate3d(-8%, -6%, 0) scale(1); } 50% { transform: translate3d(10%, 8%, 0) scale(1.25); } 100% { transform: translate3d(-8%, -6%, 0) scale(1); } }
+@keyframes org-drift-b { 0% { transform: translate3d(8%, 10%, 0) scale(1.15); } 50% { transform: translate3d(-12%, -4%, 0) scale(0.95); } 100% { transform: translate3d(8%, 10%, 0) scale(1.15); } }
+@keyframes org-spin { to { --org-a: 360deg; } }
+@keyframes org-pulse { 0%, 100% { box-shadow: 0 0 0 0 var(--c, #8b5cf6); opacity: 1; } 70% { box-shadow: 0 0 0 14px transparent; } }
+@keyframes org-shine { from { transform: translateX(-120%) skewX(-18deg); } to { transform: translateX(260%) skewX(-18deg); } }
+
+.org-hero { position: relative; overflow: hidden; isolation: isolate; background: linear-gradient(135deg, #1e1b4b 0%, #312e81 45%, #1e3a8a 100%); }
+.org-hero::before, .org-hero::after { content: ''; position: absolute; z-index: -1; width: 70%; aspect-ratio: 1; border-radius: 50%; will-change: transform; }
+.org-hero::before { left: -15%; top: -60%; background: radial-gradient(circle, rgba(168,85,247,0.75), transparent 62%); animation: org-drift-a 14s ease-in-out infinite; }
+.org-hero::after { right: -15%; bottom: -80%; background: radial-gradient(circle, rgba(56,189,248,0.65), transparent 62%); animation: org-drift-b 17s ease-in-out infinite; }
+.org-hero .org-shine { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.org-hero .org-shine::after { content: ''; position: absolute; top: 0; bottom: 0; width: 22%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent); animation: org-shine 7s ease-in-out infinite; }
+
+.org-chip { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.22); backdrop-filter: blur(6px); }
+
+.org-tilt { transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s; transform-style: preserve-3d; will-change: transform; position: relative; }
+.org-tilt::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity 0.25s; background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 0%), rgba(255,255,255,0.55), transparent 65%); mix-blend-mode: soft-light; }
+.org-tilt:hover::after { opacity: 1; }
+.org-tilt:hover { box-shadow: 0 18px 40px -14px color-mix(in srgb, var(--c, #6d28d9) 55%, transparent); }
+
+.org-ring { padding: 3px; border-radius: 1.4rem; background: conic-gradient(from var(--org-a), var(--c), color-mix(in srgb, var(--c) 15%, transparent), var(--c)); animation: org-spin 6s linear infinite; }
+.org-ring > * { border-radius: calc(1.4rem - 3px); }
+.org-dot { animation: org-pulse 2.4s ease-out infinite; }
+
+.org-line { background: linear-gradient(to bottom, color-mix(in srgb, var(--c, #8b5cf6) 70%, transparent), color-mix(in srgb, var(--c, #8b5cf6) 25%, transparent)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .org-hero::before, .org-hero::after, .org-hero .org-shine::after, .org-ring, .org-dot { animation: none; }
+  .org-tilt { transform: none !important; }
+}

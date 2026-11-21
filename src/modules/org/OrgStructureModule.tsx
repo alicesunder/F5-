@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Network, LayoutGrid, Search, Phone, X, Pencil, Plus, Trash2, Camera, Users, UserRound, Loader2 } from 'lucide-react';
+import { motion, useInView } from 'motion/react';
+import { Network, LayoutGrid, Search, Phone, X, Pencil, Plus, Trash2, Camera, Users, UserRound, Loader2, Sparkles } from 'lucide-react';
 import { useAdmin } from '../../contexts/AdminContext';
 import {
   OrgPerson,
@@ -18,8 +19,56 @@ import {
 } from './orgStaff';
 
 type View = 'tree' | 'sections';
+const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number];
+const cvar = (c: string) => ({ '--c': c } as React.CSSProperties);
 
 // ---------- ชิ้นส่วนแสดงผล ----------
+
+/** ตัวเลขนับขึ้นเมื่อเข้าจอ */
+const CountUp: React.FC<{ to: number }> = ({ to }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const seen = useInView(ref, { once: true });
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    if (!seen) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return setN(to);
+    const t0 = performance.now();
+    let raf = 0;
+    const tick = (t: number) => {
+      const p = Math.min(1, (t - t0) / 900);
+      setN(Math.round(to * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [seen, to]);
+  return <span ref={ref}>{n}</span>;
+};
+
+/** การ์ดเอียงตามตำแหน่งเมาส์ พร้อมแสงสะท้อนตามเมาส์ */
+const useTilt = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const onMove = (e: React.PointerEvent) => {
+    if (e.pointerType !== 'mouse') return;
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    el.style.setProperty('--ry', `${(x - 0.5) * 10}deg`);
+    el.style.setProperty('--rx', `${(0.5 - y) * 8}deg`);
+    el.style.setProperty('--mx', `${x * 100}%`);
+    el.style.setProperty('--my', `${y * 100}%`);
+  };
+  const onLeave = () => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.setProperty('--ry', '0deg');
+    el.style.setProperty('--rx', '0deg');
+  };
+  return { ref, onPointerMove: onMove, onPointerLeave: onLeave };
+};
 
 const Avatar: React.FC<{ p: OrgPerson; url?: string; className?: string }> = ({ p, url, className = '' }) => {
   const m = SECTION_META[p.section] ?? SECTION_META.command;
@@ -39,67 +88,122 @@ const AttachedBadge: React.FC<{ p: OrgPerson }> = ({ p }) =>
     </span>
   ) : null;
 
-/** การ์ดใหญ่ (หัวหน้า): รูปแนวตั้ง */
-const LeadCard: React.FC<{ p: OrgPerson; url?: string; onOpen: (p: OrgPerson) => void; size?: 'lg' | 'md' }> = ({ p, url, onOpen, size = 'md' }) => {
+/** การ์ดใหญ่ (หัวหน้า): รูปแนวตั้งในวงแหวนแสงสีประจำงาน */
+const LeadCard: React.FC<{ p: OrgPerson; url?: string; onOpen: (p: OrgPerson) => void; size?: 'lg' | 'md'; delay?: number }> = ({ p, url, onOpen, size = 'md', delay = 0 }) => {
   const m = SECTION_META[p.section] ?? SECTION_META.command;
+  const tilt = useTilt();
   return (
-    <button
-      type="button"
-      onClick={() => onOpen(p)}
-      className={`group w-full ${size === 'lg' ? 'max-w-[15rem]' : 'max-w-[13rem]'} mx-auto flex flex-col items-center text-center rounded-3xl bg-white dark:bg-[#161B26] border border-slate-200/80 dark:border-white/10 p-3 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition cursor-pointer`}
-      style={{ borderTop: `4px solid ${m.color}` }}
+    <motion.div
+      initial={{ opacity: 0, y: 26, scale: 0.94 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.6, ease: EASE, delay }}
+      className={`mx-auto w-full ${size === 'lg' ? 'max-w-[16rem]' : 'max-w-[14rem]'}`}
     >
-      <Avatar p={p} url={url} className={`${size === 'lg' ? 'w-32 h-40' : 'w-24 h-[7.5rem]'} rounded-2xl ring-1 ring-slate-200 dark:ring-white/10`} />
-      <div className="dept-ink mt-2 text-[11px] font-bold" style={{ '--c': m.color } as React.CSSProperties}>{p.rank}</div>
-      <div className="text-sm font-black text-slate-900 dark:text-white leading-tight">{p.name}</div>
-      <div className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400 leading-snug line-clamp-2">{p.position}</div>
-      <AttachedBadge p={p} />
-    </button>
+      <div {...tilt} className="org-tilt rounded-[1.7rem]" style={cvar(m.color)}>
+        <button
+          type="button"
+          onClick={() => onOpen(p)}
+          className="lg-glass-strong group w-full flex flex-col items-center text-center rounded-[1.7rem] border border-slate-200/80 dark:border-white/10 bg-white dark:bg-[#161B26] p-3 pb-4 cursor-pointer overflow-hidden"
+          style={cvar(m.color)}
+        >
+          <div className="org-ring" style={cvar(m.color)}>
+            <Avatar p={p} url={url} className={`${size === 'lg' ? 'w-36 h-44' : 'w-28 h-36'} block`} />
+          </div>
+          <span className="dept-ink mt-3 rounded-full px-3 py-0.5 text-[11px] font-black border" style={{ ...cvar(m.color), borderColor: `${m.color}55`, background: `${m.color}12` }}>
+            {p.rank || m.short}
+          </span>
+          <div className="mt-1.5 text-[15px] font-black text-slate-900 dark:text-white leading-tight">{p.name}</div>
+          <div className="mt-0.5 text-[11px] text-slate-500 dark:text-slate-400 leading-snug line-clamp-2">{p.position}</div>
+          <AttachedBadge p={p} />
+        </button>
+      </div>
+    </motion.div>
   );
 };
 
-/** การ์ดเล็ก (ลูกทีม): รูปซ้าย ข้อความขวา */
-const MemberCard: React.FC<{ p: OrgPerson; url?: string; onOpen: (p: OrgPerson) => void }> = ({ p, url, onOpen }) => (
-  <button
-    type="button"
-    onClick={() => onOpen(p)}
-    className="w-full flex items-center gap-3 rounded-2xl bg-white dark:bg-[#161B26] border border-slate-200/80 dark:border-white/10 p-2 pr-3 text-left hover:shadow-md hover:border-slate-300 dark:hover:border-white/20 transition cursor-pointer"
-  >
-    <Avatar p={p} url={url} className="w-12 h-14 shrink-0 rounded-xl ring-1 ring-slate-200 dark:ring-white/10" />
-    <div className="min-w-0">
-      <div className="text-[13px] font-bold text-slate-900 dark:text-white leading-tight">
-        <span className="text-slate-500 dark:text-slate-400 font-semibold">{p.rank}</span> {p.name}
+/** การ์ดเล็ก (ลูกทีม): รูปซ้าย ข้อความขวา แถบสีประจำงานด้านซ้าย */
+const MemberCard: React.FC<{ p: OrgPerson; url?: string; onOpen: (p: OrgPerson) => void; i?: number }> = ({ p, url, onOpen, i = 0 }) => {
+  const m = SECTION_META[p.section] ?? SECTION_META.command;
+  const tilt = useTilt();
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -14 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, margin: '-20px' }}
+      transition={{ duration: 0.45, ease: EASE, delay: Math.min(i, 8) * 0.04 }}
+    >
+      <div {...tilt} className="org-tilt rounded-2xl" style={cvar(m.color)}>
+        <button
+          type="button"
+          onClick={() => onOpen(p)}
+          className="w-full flex items-center gap-3 rounded-2xl bg-white dark:bg-[#161B26] border border-slate-200/80 dark:border-white/10 p-2 pr-3 text-left cursor-pointer overflow-hidden"
+          style={{ borderLeft: `4px solid ${m.color}` }}
+        >
+          <Avatar p={p} url={url} className="w-12 h-14 shrink-0 rounded-xl ring-1 ring-slate-200 dark:ring-white/10" />
+          <div className="min-w-0">
+            <div className="text-[13px] font-bold text-slate-900 dark:text-white leading-tight">
+              <span className="text-slate-500 dark:text-slate-400 font-semibold">{p.rank}</span> {p.name}
+            </div>
+            <div className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug truncate">{p.position}</div>
+            <AttachedBadge p={p} />
+          </div>
+        </button>
       </div>
-      <div className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug truncate">{p.position}</div>
-      <AttachedBadge p={p} />
-    </div>
-  </button>
-);
+    </motion.div>
+  );
+};
 
 const SectionBlock: React.FC<{
   head: OrgPerson;
   members: OrgPerson[];
   urls: Record<string, string>;
   onOpen: (p: OrgPerson) => void;
-}> = ({ head, members, urls, onOpen }) => {
+  delay?: number;
+}> = ({ head, members, urls, onOpen, delay = 0 }) => {
   const m = SECTION_META[head.section] ?? SECTION_META.command;
   return (
-    <section className="dept-soft rounded-3xl border p-3 sm:p-4" style={{ background: m.soft, borderColor: `${m.color}33`, '--c': m.color } as React.CSSProperties} aria-label={m.label}>
-      <h3 className="dept-ink mb-3 flex items-center justify-between gap-2 text-sm font-black" style={{ '--c': m.color } as React.CSSProperties}>
-        <span>{m.label}</span>
+    <motion.section
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.6, ease: EASE, delay }}
+      className="dept-soft relative overflow-hidden rounded-3xl border p-3 sm:p-4"
+      style={{ background: m.soft, borderColor: `${m.color}33`, '--c': m.color } as React.CSSProperties}
+      aria-label={m.label}
+    >
+      <span aria-hidden="true" className="pointer-events-none absolute -right-10 -top-10 w-36 h-36 rounded-full opacity-25" style={{ background: `radial-gradient(circle, ${m.color}, transparent 65%)` }} />
+      <h3 className="dept-ink relative mb-3 flex items-center justify-between gap-2 text-sm font-black" style={cvar(m.color)}>
+        <span className="inline-flex items-center gap-2">
+          <span className="org-dot inline-block w-2.5 h-2.5 rounded-full" style={{ background: m.color, ...cvar(m.color) }} />
+          {m.label}
+        </span>
         <span className="shrink-0 rounded-full bg-white/80 dark:bg-white/10 px-2 py-0.5 text-[11px]">{members.length + 1} นาย</span>
       </h3>
       <LeadCard p={head} url={urls[head.photo]} onOpen={onOpen} />
       {members.length > 0 && (
-        <div className="mt-3 grid gap-2 grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-1">
-          {members.map(c => (
-            <MemberCard key={c.id} p={c} url={urls[c.photo]} onOpen={onOpen} />
+        <div className="relative mt-3 grid gap-2 grid-cols-1 sm:grid-cols-2 lg:grid-cols-1">
+          {members.map((c, i) => (
+            <MemberCard key={c.id} p={c} url={urls[c.photo]} onOpen={onOpen} i={i} />
           ))}
         </div>
       )}
-    </section>
+    </motion.section>
   );
 };
+
+/** เส้นเชื่อมผัง: วาดลงมาเมื่อเข้าจอ */
+const VLine: React.FC<{ color?: string; h?: number; delay?: number }> = ({ color = '#8b5cf6', h = 28, delay = 0 }) => (
+  <motion.div
+    aria-hidden="true"
+    initial={{ scaleY: 0 }}
+    whileInView={{ scaleY: 1 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.5, ease: EASE, delay }}
+    className="org-line mx-auto w-[3px] rounded-full origin-top"
+    style={{ height: h, ...cvar(color) }}
+  />
+);
 
 // ---------- หน้าต่างรายละเอียด / แก้ไข ----------
 
@@ -273,6 +377,7 @@ const PersonDialog: React.FC<{
   );
 };
 
+
 // ---------- หน้าหลัก ----------
 
 export const OrgStructureModule: React.FC = () => {
@@ -337,41 +442,74 @@ export const OrgStructureModule: React.FC = () => {
 
   const onOpen = (p: OrgPerson) => setOpen({ p, isNew: false });
 
+  const stats: { label: string; n: number; color?: string }[] = [
+    { label: 'กำลังพลทั้งหมด', n: staff.length },
+    { label: 'สังกัด ฝอ.5', n: staff.length - attached },
+    { label: 'ช่วยราชการ', n: attached },
+    ...WORK_SECTIONS.map(s => ({ label: SECTION_META[s].short, n: staff.filter(p => p.section === s).length, color: SECTION_META[s].color })),
+  ];
+
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 py-5 sm:py-6 space-y-5">
-      {/* หัวเรื่อง */}
-      <header className="rounded-3xl bg-gradient-to-r from-[#4C1D95] via-[#5B21B6] to-[#1D4ED8] text-white p-5 sm:p-6 shadow-lg">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 py-5 sm:py-6 space-y-6">
+      {/* ฮีโร่ */}
+      <motion.header
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: EASE }}
+        className="org-hero rounded-[2rem] text-white p-5 sm:p-7 shadow-xl"
+      >
+        <div className="org-shine" aria-hidden="true" />
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-white p-1.5 shadow shrink-0">
+          <div className="flex items-center gap-4">
+            <motion.div
+              initial={{ scale: 0, rotate: -90 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: 'spring', stiffness: 220, damping: 14, delay: 0.15 }}
+              className="w-14 h-14 rounded-2xl bg-white p-1.5 shadow-lg shrink-0 ring-4 ring-white/25"
+            >
               <img src="/assets/fo5-logo.png" alt="" className="w-full h-full object-contain" />
-            </div>
+            </motion.div>
             <div>
-              <h1 className="text-xl sm:text-2xl font-black leading-tight" style={{ color: '#fff' }}>โครงสร้าง ฝอ.5 บก.อก.บช.ตชด.</h1>
-              <p className="text-sm" style={{ color: '#EDE9FE' }}>ผังการบังคับบัญชาและกำลังพลตามสายงาน · กดที่ชื่อเพื่อดูเบอร์โทร</p>
+              <div className="inline-flex items-center gap-1.5 text-[11px] font-bold tracking-widest uppercase text-violet-200">
+                <Sparkles className="w-3.5 h-3.5" /> ORGANIZATION
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black leading-tight" style={{ color: '#fff' }}>โครงสร้าง ฝอ.5 บก.อก.บช.ตชด.</h1>
+              <p className="text-sm" style={{ color: '#E0E7FF' }}>ผังการบังคับบัญชาและกำลังพลตามสายงาน · แตะที่ชื่อเพื่อดูเบอร์โทร</p>
             </div>
           </div>
           {canEdit && (
-            <button type="button" onClick={openNew} className="inline-flex items-center gap-1.5 rounded-2xl bg-white text-[#4C1D95] px-4 py-2 text-sm font-bold shadow hover:bg-purple-50 cursor-pointer">
+            <button type="button" onClick={openNew} className="inline-flex items-center gap-1.5 rounded-2xl bg-white text-[#4C1D95] px-4 py-2.5 text-sm font-bold shadow-lg hover:scale-105 active:scale-95 transition cursor-pointer">
               <Plus className="w-4 h-4" /> เพิ่มบุคลากร
             </button>
           )}
         </div>
         {staff.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold">
-            <span className="rounded-full bg-white/20 px-3 py-1 inline-flex items-center gap-1"><Users className="w-3.5 h-3.5" /> รวม {staff.length} นาย</span>
-            <span className="rounded-full bg-white/15 px-3 py-1">สังกัด ฝอ.5 {staff.length - attached} นาย</span>
-            <span className="rounded-full bg-white/15 px-3 py-1">ช่วยราชการ/ปฏิบัติหน้าที่ {attached} นาย</span>
-            {WORK_SECTIONS.map(s => (
-              <span key={s} className="rounded-full bg-white/10 px-3 py-1">{SECTION_META[s].short} {staff.filter(p => p.section === s).length}</span>
+          <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+            {stats.map((s, i) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: EASE, delay: 0.25 + i * 0.06 }}
+                className="org-chip rounded-2xl px-3 py-2"
+              >
+                <div className="text-2xl font-black leading-none tabular-nums" style={{ color: '#fff' }}>
+                  <CountUp to={s.n} />
+                </div>
+                <div className="mt-1 flex items-center gap-1.5 text-[11px] font-semibold leading-tight" style={{ color: '#E0E7FF' }}>
+                  {s.color && <span className="w-2 h-2 rounded-full shrink-0" style={{ background: s.color, boxShadow: `0 0 8px ${s.color}` }} />}
+                  {i === 0 && <Users className="w-3 h-3 shrink-0" />}
+                  <span className="truncate">{s.label}</span>
+                </div>
+              </motion.div>
             ))}
           </div>
         )}
-      </header>
+      </motion.header>
 
       {/* แถบเครื่องมือ */}
       <div className="flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between">
-        <div className="inline-flex rounded-2xl bg-slate-100 dark:bg-white/5 p-1 self-start" role="tablist">
+        <div className="lg-glass inline-flex rounded-2xl p-1 self-start relative" role="tablist">
           {([
             ['tree', 'ผังบังคับบัญชา', Network],
             ['sections', 'ตามงาน', LayoutGrid],
@@ -382,20 +520,25 @@ export const OrgStructureModule: React.FC = () => {
               role="tab"
               aria-selected={view === id}
               onClick={() => setView(id)}
-              className={`inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-bold cursor-pointer transition ${view === id ? 'bg-white dark:bg-[#1E2433] text-[#4C1D95] dark:text-purple-200 shadow-sm' : 'text-slate-500 dark:text-slate-400'}`}
+              className={`relative inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-bold cursor-pointer transition-colors ${view === id ? 'text-[#4C1D95] dark:text-purple-100' : 'text-slate-500 dark:text-slate-400'}`}
             >
-              <Icon className="w-4 h-4" /> {label}
+              {view === id && (
+                <motion.span layoutId="org-tab-pill" className="absolute inset-0 rounded-xl bg-white dark:bg-white/15 shadow-sm" transition={{ type: 'spring', stiffness: 420, damping: 32 }} />
+              )}
+              <span className="relative inline-flex items-center gap-1.5">
+                <Icon className="w-4 h-4" /> {label}
+              </span>
             </button>
           ))}
         </div>
-        <label className="relative sm:w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        <label className="relative sm:w-72 group">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-violet-500 transition-colors" />
           <input
             value={q}
             onChange={e => setQ(e.target.value)}
             placeholder="ค้นหาชื่อ ตำแหน่ง หรือเบอร์"
             aria-label="ค้นหาบุคลากร"
-            className="w-full rounded-2xl border border-slate-300 dark:border-white/15 bg-white dark:bg-white/5 pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-white"
+            className="w-full rounded-2xl border border-slate-300 dark:border-white/15 bg-white dark:bg-white/5 pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-4 focus:ring-violet-500/20 focus:border-violet-400 transition"
           />
         </label>
       </div>
@@ -411,49 +554,65 @@ export const OrgStructureModule: React.FC = () => {
       {results ? (
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {results.length === 0 && <div className="text-sm text-slate-500 py-8">ไม่พบ "{q}"</div>}
-          {results.map(p => <MemberCard key={p.id} p={p} url={urls[p.photo]} onOpen={onOpen} />)}
+          {results.map((p, i) => <MemberCard key={p.id} p={p} url={urls[p.photo]} onOpen={onOpen} i={i} />)}
         </div>
       ) : view === 'tree' && top ? (
-        <div className="space-y-5">
+        <div>
           <LeadCard p={top} url={urls[top.photo]} onOpen={onOpen} size="lg" />
           {deputies.length > 0 && (
             <>
-              <div className="hidden md:block mx-auto h-5 w-px bg-slate-300 dark:bg-white/15" aria-hidden="true" />
-              <div className={`grid gap-5 ${deputies.length >= 3 ? 'md:grid-cols-3' : deputies.length === 2 ? 'md:grid-cols-2' : ''} items-start`}>
-                {deputies.map(d => (
-                  <div key={d.id} className="space-y-4">
-                    <LeadCard p={d} url={urls[d.photo]} onOpen={onOpen} />
-                    {(kids.get(d.id) ?? []).map(head => (
-                      <SectionBlock key={head.id} head={head} members={descendants(head.id)} urls={urls} onOpen={onOpen} />
-                    ))}
-                  </div>
-                ))}
+              <VLine color={SECTION_META.command.color} h={30} delay={0.2} />
+              {/* ราวเชื่อมแนวนอน (จอกว้าง) */}
+              <div className="relative">
+                {deputies.length > 1 && (
+                  <motion.div
+                    aria-hidden="true"
+                    initial={{ scaleX: 0 }}
+                    whileInView={{ scaleX: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.7, ease: EASE, delay: 0.4 }}
+                    className="hidden md:block absolute top-0 h-[3px] rounded-full org-line"
+                    style={{ left: `${50 / deputies.length}%`, right: `${50 / deputies.length}%`, ...cvar(SECTION_META.command.color) }}
+                  />
+                )}
+                <div className={`grid gap-6 ${deputies.length >= 3 ? 'md:grid-cols-3' : deputies.length === 2 ? 'md:grid-cols-2' : ''} items-start`}>
+                  {deputies.map((d, di) => (
+                    <div key={d.id} className="space-y-3">
+                      <div className="hidden md:block"><VLine color={SECTION_META.command.color} h={22} delay={0.6 + di * 0.1} /></div>
+                      <LeadCard p={d} url={urls[d.photo]} onOpen={onOpen} delay={0.1 * di} />
+                      {(kids.get(d.id) ?? []).length > 0 && <VLine color={SECTION_META[(kids.get(d.id) ?? [])[0].section]?.color} h={22} />}
+                      {(kids.get(d.id) ?? []).map((head, hi) => (
+                        <SectionBlock key={head.id} head={head} members={descendants(head.id)} urls={urls} onOpen={onOpen} delay={0.08 * hi} />
+                      ))}
+                    </div>
+                  ))}
+                </div>
               </div>
             </>
           )}
           {/* คนที่ไม่ได้อยู่ใต้ผัง (เช่น เพิ่มใหม่ยังไม่ได้ระบุผู้บังคับบัญชา) */}
           {roots.length > 1 && (
-            <section className="rounded-3xl border border-dashed border-slate-300 dark:border-white/15 p-4">
+            <section className="mt-6 rounded-3xl border border-dashed border-slate-300 dark:border-white/15 p-4">
               <h3 className="mb-3 text-sm font-black text-slate-500">ยังไม่ได้ระบุผู้บังคับบัญชา</h3>
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                {roots.slice(1).map(p => <MemberCard key={p.id} p={p} url={urls[p.photo]} onOpen={onOpen} />)}
+                {roots.slice(1).map((p, i) => <MemberCard key={p.id} p={p} url={urls[p.photo]} onOpen={onOpen} i={i} />)}
               </div>
             </section>
           )}
         </div>
       ) : staff.length > 0 ? (
-        <div className="space-y-5">
-          <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
-            {sorted.filter(p => p.section === 'command').map(p => (
-              <LeadCard key={p.id} p={p} url={urls[p.photo]} onOpen={onOpen} />
+        <div className="space-y-6">
+          <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+            {sorted.filter(p => p.section === 'command').map((p, i) => (
+              <LeadCard key={p.id} p={p} url={urls[p.photo]} onOpen={onOpen} delay={i * 0.06} />
             ))}
           </div>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 items-start">
-            {WORK_SECTIONS.map(s => {
+            {WORK_SECTIONS.map((s, i) => {
               const people = sorted.filter(p => p.section === s);
               const head = people.find(p => !people.some(o => o.id === p.parent)) ?? people[0];
               if (!head) return null;
-              return <SectionBlock key={s} head={head} members={people.filter(p => p !== head)} urls={urls} onOpen={onOpen} />;
+              return <SectionBlock key={s} head={head} members={people.filter(p => p !== head)} urls={urls} onOpen={onOpen} delay={i * 0.08} />;
             })}
           </div>
         </div>
