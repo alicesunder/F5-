@@ -71,4 +71,4 @@ export interface RelationsStats {
   totalViews: number;
 }
 
-export type RelationsActiveTab = 'operations' | 'year-plan' | 'management' | 'media' | 'public';
+export type RelationsActiveTab = 'operations' | 'year-plan' | 'incoming' | 'management' | 'media' | 'public';

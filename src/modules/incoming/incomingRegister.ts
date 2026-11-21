@@ -31,8 +31,9 @@ export const ACTION_DEPT: Record<string, 'admin' | 'relations' | 'disaster' | 'v
   'อก.': 'admin',
   'จอส.': 'volunteer',
   'พชช.': 'disaster',
+  'มชส.': 'relations',
 };
-export const DEFAULT_ACTIONS = ['อก.', 'จอส.', 'พชช.'];
+export const DEFAULT_ACTIONS = ['อก.', 'จอส.', 'พชช.', 'มชส.'];
 
 /** หาฝ่ายจากรหัสการปฏิบัติ (รหัสที่ไม่รู้จัก แต่มีคำว่า ปชส/มวลชน/ประชาสัมพันธ์ ถือเป็นงานประชาสัมพันธ์) */
 export function deptOfAction(code: string) {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { IncomingRegisterPage } from '../incoming/IncomingRegisterPage';
 import { YearPlanView } from '../yearplan/YearPlanView';
 import { consumeYearPlanTab } from '../yearplan/yearPlan';
 import { useAdmin } from '../../contexts/AdminContext';
@@ -171,6 +172,7 @@ const RelationsContent: React.FC = () => {
 
             <div className="liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6">
               {activeTab === 'year-plan' && <YearPlanView dept="relations" />}
+              {activeTab === 'incoming' && <IncomingRegisterPage dept="relations" />}
 
               {/* Tab 1: News Management CMS */}
               {activeTab === 'management' && (
