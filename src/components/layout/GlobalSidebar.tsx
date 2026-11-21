@@ -1,4 +1,5 @@
 import React from 'react';
+import { openMySpacePortal } from './MySpacePortal';
 import { motion } from 'motion/react';
 import { useAdmin } from '../../contexts/AdminContext';
 import { AppModule } from '../../types';
@@ -270,7 +271,12 @@ export const GlobalSidebar: React.FC<GlobalSidebarProps> = ({
                 type="button"
                 whileHover={{ x: 2 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => handleSelectMenu('my-space')}
+                onClick={e => {
+                  if (activeModule === 'my-space') return handleSelectMenu('my-space');
+                  const r = e.currentTarget.getBoundingClientRect();
+                  onClose();
+                  openMySpacePortal(r.left + r.width / 2, r.top + r.height / 2);
+                }}
                 className={`w-full group relative p-2.5 rounded-2xl text-xs cursor-pointer text-left transition-all border ${
                   activeModule === 'my-space'
                     ? 'bg-gradient-to-r from-[#1D68B0] to-[#2583D8] text-white border-transparent shadow-md shadow-sky-900/20'

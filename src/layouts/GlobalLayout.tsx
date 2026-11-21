@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { MySpacePortal } from '../components/layout/MySpacePortal';
 import { AnimatePresence, motion } from 'motion/react';
 import { useAdmin } from '../contexts/AdminContext';
 import { GlobalHeader } from '../components/layout/GlobalHeader';
@@ -128,6 +129,8 @@ export const GlobalLayout: React.FC<GlobalLayoutProps> = ({ children }) => {
           </main>
         </div>
       </div>
+
+      <MySpacePortal />
 
       {/* System Modals */}
       <UserProfileModal
