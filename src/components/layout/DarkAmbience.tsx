@@ -60,23 +60,23 @@ export const DarkAmbience: React.FC = () => {
         <AnimatePresence>
           {fx && (
             <motion.div key={fx.id} aria-hidden="true" className="fixed inset-0 z-[130] pointer-events-none overflow-hidden" exit={{ opacity: 0, transition: { duration: 0.4 } }}>
-              {/* วงแสงนำหน้า: ขยายพร้อมขอบหน้ากากของธีมใหม่ */}
+              {/* วงแสงนำหน้า: วงแหวนบางที่ขยายตามขอบหน้ากาก (ใช้ไล่สีวงแหวน ไม่ใช้เงา เพราะเงาจะขยายตามจนเต็มจอ) */}
               <motion.span
                 className="absolute rounded-full"
                 style={{
                   left: fx.x,
                   top: fx.y,
-                  width: 2,
-                  height: 2,
-                  marginLeft: -1,
-                  marginTop: -1,
-                  boxShadow:
+                  width: 200,
+                  height: 200,
+                  marginLeft: -100,
+                  marginTop: -100,
+                  background:
                     fx.to === 'dark'
-                      ? '0 0 0 2px rgba(199,210,254,0.85), 0 0 36px 8px rgba(129,140,248,0.55), inset 0 0 40px 6px rgba(99,102,241,0.35)'
-                      : '0 0 0 2px rgba(254,240,138,0.95), 0 0 40px 10px rgba(251,191,36,0.55), inset 0 0 40px 6px rgba(253,224,71,0.4)',
+                      ? 'radial-gradient(circle, transparent 0%, transparent 44%, rgba(129,140,248,0.0) 45%, rgba(129,140,248,0.28) 47.5%, rgba(224,231,255,0.95) 49.4%, rgba(129,140,248,0.28) 50.6%, transparent 53%, transparent 100%)'
+                      : 'radial-gradient(circle, transparent 0%, transparent 44%, rgba(255,255,255,0) 45%, rgba(255,255,255,0.35) 47.5%, rgba(255,255,255,0.95) 49.4%, rgba(255,255,255,0.35) 50.6%, transparent 53%, transparent 100%)',
                 }}
                 initial={{ scale: 0, opacity: 1 }}
-                animate={{ scale: fx.r, opacity: [1, 1, 0.9, 0] }}
+                animate={{ scale: (fx.r * 2) / 200, opacity: [1, 1, 0.9, 0] }}
                 transition={{ scale: { duration: SEC, ease: EASE }, opacity: { duration: SEC, times: [0, 0.6, 0.85, 1] } }}
               />
               {/* จันทร์เสี้ยว/ตะวัน ที่ปุ่ม */}
@@ -89,9 +89,9 @@ export const DarkAmbience: React.FC = () => {
                   height: 64,
                   marginLeft: -32,
                   marginTop: -32,
-                  background: fx.to === 'dark' ? 'radial-gradient(circle, rgba(165,180,252,0.9), rgba(99,102,241,0.15) 70%)' : 'radial-gradient(circle, rgba(254,240,138,0.95), rgba(251,191,36,0.15) 70%)',
-                  color: fx.to === 'dark' ? '#EEF2FF' : '#92400E',
-                  boxShadow: fx.to === 'dark' ? '0 0 50px 14px rgba(129,140,248,0.55)' : '0 0 60px 18px rgba(251,191,36,0.6)',
+                  background: fx.to === 'dark' ? 'radial-gradient(circle, rgba(165,180,252,0.9), rgba(99,102,241,0.15) 70%)' : 'radial-gradient(circle, rgba(255,255,255,0.95), rgba(196,181,253,0.2) 70%)',
+                  color: fx.to === 'dark' ? '#EEF2FF' : '#6D28D9',
+                  boxShadow: fx.to === 'dark' ? '0 0 50px 14px rgba(129,140,248,0.55)' : '0 0 40px 10px rgba(167,139,250,0.4)',
                 }}
                 initial={{ scale: 0.2, opacity: 0, rotate: fx.to === 'dark' ? -40 : 40 }}
                 animate={{ scale: [0.2, 1.25, 1, 1.9], opacity: [0, 1, 1, 0], rotate: 0 }}

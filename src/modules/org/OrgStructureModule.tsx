@@ -26,7 +26,7 @@ const Avatar: React.FC<{ p: OrgPerson; url?: string; className?: string }> = ({ 
   return url ? (
     <img src={url} alt={fullName(p)} loading="lazy" className={`object-cover object-top bg-white ${className}`} />
   ) : (
-    <div className={`flex items-center justify-center ${className}`} style={{ background: m.soft, color: m.color }} aria-hidden="true">
+    <div className={`dept-soft dept-ink flex items-center justify-center ${className}`} style={{ background: m.soft, '--c': m.color } as React.CSSProperties} aria-hidden="true">
       <UserRound className="w-1/2 h-1/2 opacity-70" />
     </div>
   );
@@ -84,7 +84,7 @@ const SectionBlock: React.FC<{
 }> = ({ head, members, urls, onOpen }) => {
   const m = SECTION_META[head.section] ?? SECTION_META.command;
   return (
-    <section className="rounded-3xl border p-3 sm:p-4" style={{ background: m.soft, borderColor: `${m.color}33` }} aria-label={m.label}>
+    <section className="dept-soft rounded-3xl border p-3 sm:p-4" style={{ background: m.soft, borderColor: `${m.color}33`, '--c': m.color } as React.CSSProperties} aria-label={m.label}>
       <h3 className="dept-ink mb-3 flex items-center justify-between gap-2 text-sm font-black" style={{ '--c': m.color } as React.CSSProperties}>
         <span>{m.label}</span>
         <span className="shrink-0 rounded-full bg-white/80 dark:bg-white/10 px-2 py-0.5 text-[11px]">{members.length + 1} นาย</span>

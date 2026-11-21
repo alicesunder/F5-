@@ -1259,3 +1259,45 @@ html.dark .text-fuchsia-600, html.dark .text-fuchsia-700, html.dark .text-fuchsi
 /* ตัวหนังสือสีประจำฝ่าย (ส่งสีผ่านตัวแปร --c): โหมดมืดผสมขาวให้สว่างพอ */
 .dept-ink { color: var(--c); }
 html.dark .dept-ink { color: color-mix(in srgb, var(--c) 42%, white); }
+
+/* ===== โหมดมืด: พื้นขาวโปร่งและไล่สีอ่อน ต้องเป็นพื้นมืด (ไม่ใช่สีเทา) ===== */
+html.dark [class~="bg-white/40"] { background-color: rgba(21, 26, 38, 0.45); }
+html.dark [class~="bg-white/45"] { background-color: rgba(21, 26, 38, 0.50); }
+html.dark [class~="bg-white/50"] { background-color: rgba(21, 26, 38, 0.55); }
+html.dark [class~="bg-white/60"] { background-color: rgba(21, 26, 38, 0.65); }
+html.dark [class~="bg-white/65"] { background-color: rgba(21, 26, 38, 0.70); }
+html.dark [class~="bg-white/70"] { background-color: rgba(21, 26, 38, 0.75); }
+html.dark [class~="bg-white/75"] { background-color: rgba(21, 26, 38, 0.80); }
+html.dark [class~="bg-white/80"] { background-color: rgba(21, 26, 38, 0.85); }
+html.dark [class~="bg-white/85"] { background-color: rgba(21, 26, 38, 0.90); }
+html.dark [class~="bg-white/90"] { background-color: rgba(21, 26, 38, 0.95); }
+html.dark [class~="bg-white/95"] { background-color: rgba(21, 26, 38, 0.96); }
+html.dark [class*="from-white"], html.dark [class*="from-slate-50"], html.dark [class*="from-slate-100"] { --tw-gradient-from: #171C28; }
+html.dark [class*="from-blue-50"] { --tw-gradient-from: rgba(59,130,246, 0.16); }
+html.dark [class*="from-indigo-50"] { --tw-gradient-from: rgba(99,102,241, 0.16); }
+html.dark [class*="from-purple-50"] { --tw-gradient-from: rgba(168,85,247, 0.16); }
+html.dark [class*="from-sky-50"] { --tw-gradient-from: rgba(14,165,233, 0.16); }
+html.dark [class*="via-white"], html.dark [class*="via-slate-50"], html.dark [class*="via-slate-100"] { --tw-gradient-via: #171C28; }
+html.dark [class*="via-blue-50"] { --tw-gradient-via: rgba(59,130,246, 0.16); }
+html.dark [class*="via-indigo-50"] { --tw-gradient-via: rgba(99,102,241, 0.16); }
+html.dark [class*="via-purple-50"] { --tw-gradient-via: rgba(168,85,247, 0.16); }
+html.dark [class*="via-sky-50"] { --tw-gradient-via: rgba(14,165,233, 0.16); }
+html.dark [class*="to-white"], html.dark [class*="to-slate-50"], html.dark [class*="to-slate-100"] { --tw-gradient-to: #171C28; }
+html.dark [class*="to-blue-50"] { --tw-gradient-to: rgba(59,130,246, 0.16); }
+html.dark [class*="to-indigo-50"] { --tw-gradient-to: rgba(99,102,241, 0.16); }
+html.dark [class*="to-purple-50"] { --tw-gradient-to: rgba(168,85,247, 0.16); }
+html.dark [class*="to-sky-50"] { --tw-gradient-to: rgba(14,165,233, 0.16); }
+
+/* พื้นพาสเทลสีประจำฝ่าย: โหมดมืดเป็นพื้นมืดอมสีฝ่าย */
+html.dark .dept-soft { background: color-mix(in srgb, var(--c) 14%, #151A24) !important; }
+
+/* โหมดมืด: ค่าสีที่ใส่ผ่าน style ตรง ๆ (สีพาสเทล/สีตัวอักษรประจำฝ่าย) */
+html.dark [style*="background: rgb(243, 238, 255)"] { background: rgba(124, 58, 237, 0.18) !important; }
+html.dark [style*="background: rgb(234, 242, 255)"] { background: rgba(59, 130, 246, 0.18) !important; }
+html.dark [style*="background: rgb(255, 241, 230)"] { background: rgba(249, 115, 22, 0.18) !important; }
+html.dark [style*="background: rgb(232, 248, 241)"] { background: rgba(16, 185, 129, 0.18) !important; }
+html.dark [style*="color: rgb(91, 33, 182)"] { color: #C4B5FD !important; }
+html.dark [style*="color: rgb(29, 78, 216)"] { color: #93C5FD !important; }
+html.dark [style*="color: rgb(194, 65, 12)"] { color: #FDBA74 !important; }
+html.dark [style*="color: rgb(4, 120, 87)"] { color: #6EE7B7 !important; }
+html.dark [style*="color: rgb(71, 85, 105)"] { color: #CBD5E1 !important; }
