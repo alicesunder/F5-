@@ -72,7 +72,7 @@ export const DashboardModule: React.FC<DashboardModuleProps> = ({
             initial="initial"
             animate="animate"
             exit="exit"
-            className="liquid-glass-card rounded-3xl p-4 sm:p-6 iridescent-ambient"
+            className="liquid-glass-card rounded-3xl p-0 sm:p-6 iridescent-ambient max-sm:!bg-transparent max-sm:!border-0 max-sm:!shadow-none max-sm:!backdrop-filter-none"
           >
             {viewMode === 'task-center' ? (
               <UnifiedTaskCenterModule

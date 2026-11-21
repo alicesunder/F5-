@@ -261,7 +261,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
   const totalParticipants = missions.reduce((a, m) => a + m.participantsCount, 0);
 
   return (
-    <div className="w-full pb-16 space-y-8 select-none iridescent-ambient liquid-glass-card rounded-3xl p-4 sm:p-6">
+    <div className="w-full pb-16 space-y-8 select-none iridescent-ambient liquid-glass-card rounded-3xl p-0 sm:p-6 max-sm:!bg-transparent max-sm:!border-0 max-sm:!shadow-none max-sm:!backdrop-filter-none">
       {/* ========================================================================= */}
       {/* ROW 1: PANORAMIC COMMAND STUDIO HERO & RADIAL ENERGY DIAL                 */}
       {/* ========================================================================= */}
@@ -285,7 +285,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
         <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-white/10 blur-3xl pointer-events-none" />
         <div className="absolute -bottom-28 left-1/3 w-80 h-80 rounded-full bg-sky-400/15 blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 p-6 sm:p-8 space-y-6">
+        <div className="relative z-10 p-4 sm:p-8 space-y-5 sm:space-y-6">
           {/* Top Bar inside Hero: Live Status + Date */}
           <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-white/15">
             <div className="flex flex-wrap items-center gap-2.5 text-xs">
@@ -807,7 +807,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
         className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch"
       >
         {/* Left 7 Cols: Live Field Mission Spotlight */}
-        <div className="lg:col-span-7 liquid-glass-card iridescent-edge rounded-3xl p-6 flex flex-col justify-between space-y-5 relative overflow-hidden">
+        <div className="lg:col-span-7 liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6 flex flex-col justify-between space-y-5 relative overflow-hidden">
           <div
             className="absolute top-0 left-0 right-0 h-1.5"
             style={{ backgroundColor: nowDeptMeta.color }}
@@ -993,7 +993,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
         </div>
 
         {/* Right 5 Cols: Urgent Action Radar */}
-        <div className="lg:col-span-5 liquid-glass-card iridescent-edge rounded-3xl p-6 flex flex-col justify-between space-y-4 relative overflow-hidden">
+        <div className="lg:col-span-5 liquid-glass-card iridescent-edge rounded-3xl p-4 sm:p-6 flex flex-col justify-between space-y-4 relative overflow-hidden">
           <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-500 via-rose-500 to-[#5B2A86]" />
 
           <div className="space-y-3.5">
@@ -1156,7 +1156,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
               className="grid grid-cols-1 lg:grid-cols-12 gap-6"
             >
               {/* Left 7 Cols: Interactive Mission Explorer */}
-              <div className="lg:col-span-7 liquid-glass-card rounded-3xl p-6 space-y-4">
+              <div className="lg:col-span-7 liquid-glass-card rounded-3xl p-4 sm:p-6 space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-white/10">
                   <div>
                     <h3 className="text-base font-black text-slate-900 dark:text-white tracking-tight">
@@ -1343,7 +1343,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
               </div>
 
               {/* Right 5 Cols: Weekly Calendar & Duty Roster */}
-              <div className="lg:col-span-5 liquid-glass-card rounded-3xl p-6 flex flex-col justify-between space-y-4">
+              <div className="lg:col-span-5 liquid-glass-card rounded-3xl p-4 sm:p-6 flex flex-col justify-between space-y-4">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/10">
                     <div>
@@ -1453,7 +1453,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
               className="grid grid-cols-1 lg:grid-cols-12 gap-6"
             >
               {/* Left 6 Cols: Official Documents */}
-              <div className="lg:col-span-6 liquid-glass-card rounded-3xl p-6 space-y-4">
+              <div className="lg:col-span-6 liquid-glass-card rounded-3xl p-4 sm:p-6 space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/10">
                   <div>
                     <h3 className="text-base font-black text-slate-900 dark:text-white">
@@ -1502,7 +1502,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
               </div>
 
               {/* Right 6 Cols: PR News Highlights */}
-              <div className="lg:col-span-6 liquid-glass-card rounded-3xl p-6 space-y-4">
+              <div className="lg:col-span-6 liquid-glass-card rounded-3xl p-4 sm:p-6 space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-white/10">
                   <div>
                     <h3 className="text-base font-black text-slate-900 dark:text-white">
@@ -1560,7 +1560,7 @@ export const OperationalCommandHome: React.FC<OperationalCommandHomeProps> = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.2 }}
-              className="liquid-glass-card rounded-3xl p-6 space-y-5"
+              className="liquid-glass-card rounded-3xl p-4 sm:p-6 space-y-5"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-white/10">
                 <div>

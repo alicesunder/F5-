@@ -132,6 +132,11 @@ export const LineReportsView: React.FC<Props> = ({ dept }) => {
   }, [scoped]);
 
   const selected = visible.find(r => r.id === selectedId) || null;
+  const detailRef = React.useRef<HTMLDivElement>(null);
+  // มือถือ: แตะรายการแล้วเลื่อนไปที่รายละเอียดทันที
+  useEffect(() => {
+    if (selectedId && window.innerWidth < 1024) detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [selectedId]);
   const imageUrls = useSignedUrls(selected?.mediaPaths ?? []);
   const countBy = <K extends string>(key: (r: LineReport) => K, value: K) => scoped.filter(r => key(r) === value).length;
 
@@ -140,7 +145,7 @@ export const LineReportsView: React.FC<Props> = ({ dept }) => {
   const hiddenChat = allRaw.length - all.length;
 
   const chip = (active: boolean) =>
-    `px-3 py-1.5 rounded-full text-xs font-bold border transition cursor-pointer ${
+    `shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold border transition cursor-pointer ${
       active
         ? 'bg-[#5B2A86] border-[#5B2A86] text-white shadow-md shadow-violet-500/25'
         : 'bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-[#5B2A86]'
@@ -281,7 +286,7 @@ export const LineReportsView: React.FC<Props> = ({ dept }) => {
         </div>
       )}
 
-      <div className="flex flex-wrap gap-2" role="group" aria-label="กรองตามแผนกและสถานะ">
+      <div className="flex gap-2 overflow-x-auto no-scrollbar sm:flex-wrap -mx-1 px-1 pb-1" role="group" aria-label="กรองตามแผนกและสถานะ">
         {!dept && (
           <>
             <button type="button" className={chip(deptFilter === 'all')} onClick={() => setDeptFilter('all')}>
@@ -292,7 +297,7 @@ export const LineReportsView: React.FC<Props> = ({ dept }) => {
                 {LINE_DEPT_META[d].label} {countBy(r => r.dept, d)}
               </button>
             ))}
-            <span className="w-px bg-slate-200 dark:bg-white/10 mx-1" aria-hidden="true" />
+            <span className="w-px shrink-0 bg-slate-200 dark:bg-white/10 mx-1" aria-hidden="true" />
           </>
         )}
         <button type="button" className={chip(statusFilter === 'all')} onClick={() => setStatusFilter('all')}>
@@ -366,7 +371,7 @@ export const LineReportsView: React.FC<Props> = ({ dept }) => {
           )}
         </ul>
 
-        <div className={`${selected ? '' : 'hidden lg:block'} lg:sticky lg:top-4`}>
+        <div ref={detailRef} className={`${selected ? '' : 'hidden lg:block'} lg:sticky lg:top-4 scroll-mt-16`}>
           <AnimatePresence mode="wait">
             {selected ? (
               <motion.article

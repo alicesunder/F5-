@@ -77,7 +77,7 @@ export const Breadcrumb: React.FC<BreadcrumbProps> = ({ customItems }) => {
   return (
     <nav
       aria-label="Breadcrumb"
-      className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 dark:text-slate-300 py-2.5 px-4 sm:px-6 lg:px-8 border-b border-slate-200/70 dark:border-white/10 bg-white/75 dark:bg-[#141822]/75 backdrop-blur-md select-none"
+      className={`${customItems && customItems.length ? 'flex' : 'hidden sm:flex'} flex-wrap items-center justify-between gap-2 text-xs text-slate-600 dark:text-slate-300 py-2.5 px-4 sm:px-6 lg:px-8 border-b border-slate-200/70 dark:border-white/10 bg-white/75 dark:bg-[#141822]/75 backdrop-blur-md select-none`}
     >
       {/* Left: Breadcrumb Trail */}
       <div className="flex items-center gap-1.5 min-w-0">

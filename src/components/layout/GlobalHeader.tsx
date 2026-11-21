@@ -50,13 +50,13 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
 
   return (
     <>
-      <header className="sticky top-0 z-30 lg-glass-strong border-b border-slate-200/80 dark:border-white/10 h-16 flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 select-none shadow-[0_4px_20px_rgba(91,42,134,0.04)]">
+      <header className="sticky top-0 z-30 lg-glass-strong border-b border-slate-200/80 dark:border-white/10 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4 px-3 sm:px-6 lg:px-8 select-none shadow-[0_4px_20px_rgba(91,42,134,0.04)]">
         {/* Zone 1: Mobile Menu Trigger & Vibrant Brand Identity */}
         <div className="flex items-center gap-3 min-w-0">
           <button
             type="button"
             onClick={onToggleSidebar}
-            className="p-2 rounded-xl text-slate-600 hover:text-[#5B2A86] dark:text-slate-300 dark:hover:text-white hover:bg-purple-50 dark:hover:bg-white/10 transition lg:hidden cursor-pointer shrink-0"
+            className="p-2 rounded-xl text-slate-600 hover:text-[#5B2A86] dark:text-slate-300 dark:hover:text-white hover:bg-purple-50 dark:hover:bg-white/10 transition hidden cursor-pointer shrink-0"
             aria-label="เปิดเมนูนำทาง"
           >
             <Menu className="w-5 h-5" />
@@ -76,8 +76,10 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
             </div>
             <div className="min-w-0">
               <span className="font-bpp text-sm sm:text-base font-extrabold bg-gradient-to-r from-[#5B2A86] via-[#1D68B0] to-[#267853] dark:from-purple-200 dark:via-sky-200 dark:to-emerald-200 bg-clip-text text-transparent tracking-tight truncate block">
-                ศูนย์บริหารและประมวลผลข้อมูล ฝ่ายอำนวยการ 5 (ฝอ.5 บก.อก.บช.ตชด.)
+                <span className="sm:hidden">ฝอ.5 บก.อก.บช.ตชด.</span>
+                <span className="hidden sm:inline">ศูนย์บริหารและประมวลผลข้อมูล ฝ่ายอำนวยการ 5 (ฝอ.5 บก.อก.บช.ตชด.)</span>
               </span>
+              <span className="sm:hidden block truncate text-[10px] font-semibold text-slate-500 dark:text-slate-400 leading-none mt-0.5">ศูนย์บริหารข้อมูล · COMMAND</span>
             </div>
           </button>
         </div>
@@ -149,7 +151,7 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
             <button
               type="button"
               onClick={() => setIsProfileDropdownOpen(prev => !prev)}
-              className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-2xl bg-gradient-to-r from-purple-50/80 to-sky-50/80 dark:from-white/5 dark:to-white/10 hover:from-purple-100/80 hover:to-sky-100/80 border border-purple-200/60 dark:border-white/10 transition cursor-pointer text-left"
+              className="flex items-center gap-2.5 p-1 sm:px-2.5 sm:py-1.5 rounded-2xl bg-gradient-to-r from-purple-50/80 to-sky-50/80 dark:from-white/5 dark:to-white/10 hover:from-purple-100/80 hover:to-sky-100/80 border border-purple-200/60 dark:border-white/10 transition cursor-pointer text-left"
             >
               <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#5B2A86] via-[#2583D8] to-[#42A77A] flex items-center justify-center text-white font-bold text-xs flex-shrink-0 shadow-xs">
                 <User className="w-4 h-4" />

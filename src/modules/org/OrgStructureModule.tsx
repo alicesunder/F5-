@@ -484,14 +484,14 @@ export const OrgStructureModule: React.FC = () => {
           )}
         </div>
         {staff.length > 0 && (
-          <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+          <div className="mt-5 grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-1.5 sm:gap-2">
             {stats.map((s, i) => (
               <motion.div
                 key={s.label}
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: EASE, delay: 0.25 + i * 0.06 }}
-                className="org-chip rounded-2xl px-3 py-2"
+                className="org-chip rounded-2xl px-2.5 sm:px-3 py-2"
               >
                 <div className="text-2xl font-black leading-none tabular-nums" style={{ color: '#fff' }}>
                   <CountUp to={s.n} />

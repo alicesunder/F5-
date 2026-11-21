@@ -1682,3 +1682,25 @@ html.dark [style*="background: rgb(247, 247, 249)"] { background: #1E2433 !impor
   .org-hero::before, .org-hero::after, .org-hero .org-shine::after, .org-ring, .org-dot { animation: none; }
   .org-tilt { transform: none !important; }
 }
+
+/* ===== มือถือ: ใช้งานง่าย อ่านชัด ลื่น ===== */
+@media (max-width: 767px) {
+  /* กัน iOS ซูมเข้าอัตโนมัติเมื่อแตะช่องกรอก */
+  input:not([type='checkbox']):not([type='radio']), select, textarea { font-size: 16px !important; }
+  /* ตัวหนังสือเนื้อหาไม่เล็กเกินไป */
+  .text-\[10px\] { font-size: 11px; }
+  /* ลดเงาฟุ้งและการเบลอพื้นหลังที่หนักเครื่องบนมือถือ */
+  .lg-prism { display: none; }
+  .lg-glass, .lg-glass-strong { backdrop-filter: blur(12px) saturate(1.3); -webkit-backdrop-filter: blur(12px) saturate(1.3); }
+}
+@media (pointer: coarse) {
+  button, [role='button'], a, summary, select { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  /* ปุ่มเล็ก (แท็บ/ชิป) ให้นิ้วแตะได้ถนัดขึ้น */
+  button.rounded-full:not(.no-tap), button.rounded-xl:not(.no-tap) { min-height: 36px; }
+}
+html { -webkit-text-size-adjust: 100%; }
+body { overscroll-behavior-y: none; }
+@media (max-width: 639px) {
+  .liquid-glass-card.p-6 { padding: 1rem; }
+  .liquid-glass-card.p-5 { padding: 0.9rem; }
+}
